@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technician Applications - Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Poppins',sans-serif; }
+        body { background:#f4fbf8; color:#0f2a23; }
+        .admin-container { display:flex; min-height:100vh; }
+        .sidebar {
+            width:280px; background:#0b3b2f; color:white; padding:2rem; position:fixed; height:100vh;
+        }
+        .sidebar h2 { margin-bottom:2rem; }
+        .sidebar a {
+            display:block; color:white; text-decoration:none; padding:1rem; border-radius:40px;
+            margin-bottom:0.5rem; transition:0.3s;
+        }
+        .sidebar a:hover, .sidebar a.active { background:#e67e22; }
+        .main-content { margin-left:280px; padding:2rem; width:100%; }
+        .header {
+            background:white; border-radius:30px; padding:1.5rem; margin-bottom:2rem;
+            display:flex; justify-content:space-between; align-items:center;
+        }
+        .page-title h1 { color:#0b3b2f; }
+        .stats {
+            display:grid; grid-template-columns:repeat(3,1fr); gap:1.5rem; margin-bottom:2rem;
+        }
+        .stat-card {
+            background:white; border-radius:30px; padding:1.5rem; box-shadow:0 5px 15px rgba(0,0,0,0.05);
+        }
+        .stat-card h3 { font-size:2rem; color:#e67e22; }
+        .filter-tabs {
+            display:flex; gap:1rem; margin-bottom:2rem; flex-wrap:wrap;
+        }
+        .filter-tab {
+            padding:0.8rem 2rem; border:2px solid #d5e6df; background:white; border-radius:40px;
+            cursor:pointer; transition:0.3s;
+        }
+        .filter-tab:hover, .filter-tab.active {
+            background:#e67e22; color:white; border-color:#e67e22;
+        }
+        .applications-grid {
+            display:grid; grid-template-columns:repeat(auto-fill, minmax(350px,1fr)); gap:1.5rem;
+        }
+        .application-card {
+            background:white; border-radius:30px; padding:1.5rem; border:2px solid #d5e6df;
+            transition:0.3s;
+        }
+        .application-card:hover { border-color:#e67e22; transform:translateY(-5px); }
+        .card-header {
+            display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;
+        }
+        .name { font-size:1.2rem; font-weight:600; color:#0b3b2f; }
+        .status {
+            padding:0.3rem 1rem; border-radius:30px; font-size:0.8rem; font-weight:600;
+        }
+        .status.pending { background:#ffc107; color:#0f2a23; }
+        .status.approved { background:#28a745; color:white; }
+        .status.rejected { background:#dc3545; color:white; }
+        .detail-item {
+            display:flex; align-items:center; gap:0.5rem; margin-bottom:0.5rem;
+            color:#4a5f58; font-size:0.9rem;
+        }
+        .detail-item i { color:#e67e22; width:20px; }
+        .cv-link {
+            display:inline-block; margin-top:0.5rem; color:#e67e22; text-decoration:none;
+        }
+        .action-buttons {
+            display:flex; gap:1rem; margin-top:1.5rem;
+        }
+        .btn {
+            flex:1; padding:0.8rem; border:none; border-radius:40px; cursor:pointer;
+            font-weight:600; transition:0.3s;
+        }
+        .btn.approve { background:#28a745; color:white; }
+        .btn.reject { background:#dc3545; color:white; }
+        .btn:hover { transform:translateY(-3px); opacity:0.9; }
+        .btn:disabled { opacity:0.5; cursor:not-allowed; }
+        .notes-input {
+            width:100%; padding:0.8rem; border:2px solid #d5e6df; border-radius:30px;
+            margin-top:1rem; font-size:0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <div class="sidebar">
+            <h2><i class="fas fa-recycle"></i> ZanEwaste</h2>
+            <a href="index.html"><i class="fas fa-dashboard"></i> Dashboard</a>
+            <a href="agents.html"><i class="fas fa-users"></i> Agents</a>
+            <a href="technician_applications.html" class="active"><i class="fas fa-tools"></i> Technician Applications</a>
+            <a href="tasks.html"><i class="fas fa-tasks"></i> Tasks</a>
+            <a href="projects.html"><i class="fas fa-project-diagram"></i> Projects</a>
+            <a href="#" onclick="logout()" style="margin-top:2rem;"><i class="fas fa-sign-out-alt"></i> Logout</a>
+        </div>
+        
+        <div class="main-content">
+            <div class="header">
+                <div class="page-title">
+                    <h1>Technician Applications</h1>
+                    <p>Kagua na uidhinishe maombi ya mafundi</p>
+                </div>
+                <div class="user-info">
+                    <span id="currentDate"></span>
+                </div>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-card">
+                    <h3 id="pendingCount">0</h3>
+                    <p>Zinazosubiri</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="approvedCount">0</h3>
+                    <p>Wameidhinishwa</p>
+                </div>
+                <div class="stat-card">
+                    <h3 id="rejectedCount">0</h3>
+                    <p>Wamekataliwa</p>
+                </div>
+            </div>
+            
+            <div class="filter-tabs">
+                <button class="filter-tab active" data-filter="all">Zote</button>
+                <button class="filter-tab" data-filter="pending">Zinazosubiri</button>
+                <button class="filter-tab" data-filter="approved">Wameidhinishwa</button>
+                <button class="filter-tab" data-filter="rejected">Wamekataliwa</button>
+            </div>
+            
+            <div class="applications-grid" id="applicationsGrid">
+                <p>Loading...</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const token = localStorage.getItem('token');
+        if(!token) {
+            window.location.href = 'login.html';
+        }
+
+        let applications = [];
+
+        async function loadApplications() {
+            try {
+                const res = await fetch('http://localhost/ewaste-website/api/technician/get_applications.php', {
+                    headers: { 'Authorization': 'Bearer ' + token }
+                });
+                const data = await res.json();
+                if(data.success) {
+                    applications = data.data;
+                    displayApplications('all');
+                    updateStats();
+                }
+            } catch(err) {
+                console.error(err);
+            }
+        }
+
+        function displayApplications(filter) {
+            const grid = document.getElementById('applicationsGrid');
+            let filtered = applications;
+            if(filter !== 'all') {
+                filtered = applications.filter(a => a.status === filter);
+            }
+            
+            if(filtered.length === 0) {
+                grid.innerHTML = '<p>Hakuna maombi</p>';
+                return;
+            }
+            
+            grid.innerHTML = filtered.map(app => `
+                <div class="application-card" data-id="${app.id}">
+                    <div class="card-header">
+                        <span class="name">${app.first_name} ${app.last_name}</span>
+                        <span class="status ${app.status}">${app.status}</span>
+                    </div>
+                    <div class="detail-item"><i class="fas fa-envelope"></i> ${app.email}</div>
+                    <div class="detail-item"><i class="fas fa-phone"></i> ${app.phone || 'N/A'}</div>
+                    <div class="detail-item"><i class="fas fa-tag"></i> ${app.specialization}</div>
+                    <div class="detail-item"><i class="fas fa-calendar"></i> Uzoefu: ${app.experience_years} yrs</div>
+                    <div class="detail-item"><i class="fas fa-clock"></i> Alijiunga: ${new Date(app.applied_at).toLocaleDateString()}</div>
+                    ${app.cv_path ? `<a href="${app.cv_path}" target="_blank" class="cv-link"><i class="fas fa-file-pdf"></i> Angalia CV</a>` : ''}
+                    
+                    ${app.status === 'pending' ? `
+                        <textarea class="notes-input" id="notes-${app.id}" placeholder="Maelezo (si lazima)"></textarea>
+                        <div class="action-buttons">
+                            <button class="btn approve" onclick="handleApplication(${app.id}, 'approved')">Idhinisha</button>
+                            <button class="btn reject" onclick="handleApplication(${app.id}, 'rejected')">Kataa</button>
+                        </div>
+                    ` : `
+                        <div class="detail-item"><i class="fas fa-comment"></i> ${app.review_notes || 'Hakuna maelezo'}</div>
+                    `}
+                </div>
+            `).join('');
+        }
+
+        function updateStats() {
+            const pending = applications.filter(a => a.status === 'pending').length;
+            const approved = applications.filter(a => a.status === 'approved').length;
+            const rejected = applications.filter(a => a.status === 'rejected').length;
+            document.getElementById('pendingCount').textContent = pending;
+            document.getElementById('approvedCount').textContent = approved;
+            document.getElementById('rejectedCount').textContent = rejected;
+        }
+
+        async function handleApplication(userId, status) {
+            const notes = document.getElementById(`notes-${userId}`)?.value || '';
+            
+            try {
+                const res = await fetch('http://localhost/ewaste-website/api/technician/approve.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({ user_id: userId, status, notes })
+                });
+                const data = await res.json();
+                if(data.success) {
+                    alert('Imekamilika');
+                    loadApplications();
+                } else {
+                    alert('Hitilafu: ' + data.message);
+                }
+            } catch(err) {
+                alert('Hitilafu ya mtandao');
+            }
+        }
+
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                displayApplications(this.dataset.filter);
+            });
+        });
+
+        function logout() {
+            localStorage.clear();
+            window.location.href = 'login.html';
+        }
+
+        document.getElementById('currentDate').textContent = new Date().toLocaleDateString('sw-TZ', {
+            weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+        });
+
+        loadApplications();
+    </script>
+</body>
+</html>

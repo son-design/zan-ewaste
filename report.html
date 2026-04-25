@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report E-Waste - ZanEwaste Hub | Ripoti Taka</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* ===== REPORT PAGE SPECIFIC STYLES ===== */
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 120px 5% 60px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .header-content h1 i {
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        .breadcrumb i {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        /* Floating elements */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .float-item {
+            position: absolute;
+            font-size: 3rem;
+            color: rgba(255,255,255,0.1);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .float-item:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .float-item:nth-child(2) { top: 60%; right: 15%; animation-delay: 2s; }
+        .float-item:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 1s; }
+        .float-item:nth-child(4) { top: 30%; right: 25%; animation-delay: 3s; }
+
+        /* Report Form Section */
+        .report-form-section {
+            padding: 5rem 5%;
+            background: var(--bg);
+        }
+
+        .form-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: var(--card);
+            border-radius: 50px;
+            padding: 3rem;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+            animation: fadeInUp 1s ease;
+        }
+
+        /* Progress Steps */
+        .form-progress {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .form-progress::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+        }
+
+        .progress-step {
+            position: relative;
+            z-index: 2;
+            text-align: center;
+            flex: 1;
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            background: var(--border);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.5rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .progress-step.active .step-number {
+            background: var(--accent);
+            color: white;
+            animation: pulse 2s infinite;
+        }
+
+        .step-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .progress-step.active .step-label {
+            color: var(--accent);
+            font-weight: 600;
+        }
+
+        /* Form Steps */
+        .form-step {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .form-step.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .form-step h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .form-step h3 i {
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .form-group label i {
+            color: var(--accent);
+            margin-right: 0.3rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            font-size: 1rem;
+            background: var(--card);
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(230,126,34,0.2);
+        }
+
+        .form-group textarea {
+            border-radius: 30px;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        /* Radio & Checkbox Styles */
+        .condition-options {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .condition-option {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .condition-option:hover {
+            border-color: var(--accent);
+            background: rgba(230,126,34,0.05);
+        }
+
+        .condition-option input[type="radio"] {
+            width: auto;
+            margin-right: 0.5rem;
+        }
+
+        .condition-option i {
+            color: var(--accent);
+        }
+
+        /* File Upload */
+        .photo-upload-area {
+            border: 3px dashed var(--border);
+            border-radius: 40px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+            background: var(--card);
+        }
+
+        .photo-upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(230,126,34,0.05);
+        }
+
+        .photo-upload-area i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .photo-upload-area input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .photo-previews {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 20px;
+            height: 20px;
+            background: #dc3545;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Form Navigation */
+        .form-navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 2rem;
+            gap: 1rem;
+        }
+
+        .btn-prev,
+        .btn-next,
+        .btn-submit {
+            padding: 1rem 2.5rem;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid transparent;
+        }
+
+        .btn-prev {
+            background: var(--border);
+            color: var(--text);
+            border-color: var(--border);
+        }
+
+        .btn-prev:hover {
+            background: var(--text-muted);
+            color: white;
+            transform: translateX(-5px);
+            border-color: var(--text-muted);
+        }
+
+        .btn-next,
+        .btn-submit {
+            background: var(--accent);
+            color: white;
+            margin-left: auto;
+            border-color: var(--accent);
+        }
+
+        .btn-next:hover,
+        .btn-submit:hover {
+            background: var(--primary);
+            transform: translateX(5px);
+            border-color: var(--primary);
+        }
+
+        /* Confirmation Panel */
+        .confirmation-panel {
+            background: var(--bg);
+            border-radius: 40px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .confirm-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .confirm-section h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .confirm-section h4 i {
+            color: var(--accent);
+        }
+
+        .confirm-details {
+            background: var(--card);
+            padding: 1rem;
+            border-radius: 30px;
+            border: 1px solid var(--border);
+        }
+
+        .confirm-details p {
+            margin: 0.5rem 0;
+            color: var(--text);
+        }
+
+        /* Checkbox */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+        }
+
+        .checkbox-container input {
+            width: auto;
+        }
+
+        /* Success Modal */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card);
+            padding: 3rem;
+            border-radius: 60px;
+            text-align: center;
+            z-index: 2000;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            animation: slideInUp 0.5s ease;
+            border: 2px solid var(--accent);
+        }
+
+        .success-modal.show {
+            display: block;
+        }
+
+        .success-modal i {
+            font-size: 5rem;
+            color: #28a745;
+            margin-bottom: 1rem;
+            animation: bounce 1s infinite;
+        }
+
+        .success-modal h2 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .success-modal p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .success-modal .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .success-modal .btn-primary:hover {
+            background: var(--primary);
+            transform: scale(1.05);
+        }
+
+        /* Language toggle classes */
+        .sw { display: inline; }
+        .en { display: none; }
+        
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        /* Dark theme adjustments */
+        [data-theme="dark"] .form-container {
+            background: var(--card-dark);
+        }
+
+        [data-theme="dark"] .confirmation-panel {
+            background: var(--bg-dark);
+        }
+
+        [data-theme="dark"] .condition-option {
+            background: var(--card-dark);
+        }
+
+        [data-theme="dark"] .photo-upload-area {
+            background: var(--card-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .condition-options {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-navigation {
+                flex-direction: column;
+            }
+            
+            .btn-prev,
+            .btn-next,
+            .btn-submit {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-recycle"></i>
+                <span>Zan<span>Ewaste</span></span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html" class="sw">Nyumbani</a>
+                <a href="index.html" class="en">Home</a>
+                
+                <a href="about.html" class="sw">Kuhusu</a>
+                <a href="about.html" class="en">About</a>
+                
+                <a href="projects.html" class="sw">Miradi</a>
+                <a href="projects.html" class="en">Projects</a>
+                
+                <a href="gallery.html" class="sw">Matunzio</a>
+                <a href="gallery.html" class="en">Gallery</a>
+                
+                <a href="report.html" class="active sw">Ripoti Taka</a>
+                <a href="report.html" class="active en">Report</a>
+                
+                <a href="contact.html" class="sw">Mawasiliano</a>
+                <a href="contact.html" class="en">Contact</a>
+                
+                <a href="founder.html" class="sw">Founder</a>
+                <a href="founder.html" class="en">Founder</a>
+                
+                <a href="partners.html" class="sw">Washirika</a>
+                <a href="partners.html" class="en">Partners</a>
+            </div>
+            
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                <button class="lang-toggle" id="langToggle">
+                    <span class="lang-sw">SW</span>
+                    <span class="lang-separator">|</span>
+                    <span class="lang-en">EN</span>
+                </button>
+                
+                <button class="mobile-menu" id="mobileMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header with Floating Elements -->
+    <section class="page-header">
+        <div class="floating-elements">
+            <i class="fas fa-mobile-alt float-item"></i>
+            <i class="fas fa-laptop float-item"></i>
+            <i class="fas fa-tv float-item"></i>
+            <i class="fas fa-battery-full float-item"></i>
+        </div>
+        
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-edit"></i>
+                <span class="sw">Ripoti Taka za Kielektroniki</span>
+                <span class="en">Report E-Waste</span>
+            </h1>
+            <div class="breadcrumb">
+                <a href="index.html" class="sw">Nyumbani</a>
+                <a href="index.html" class="en">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span class="sw">Ripoti</span>
+                <span class="en">Report</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Report Form Section -->
+    <section class="report-form-section">
+        <div class="form-container">
+            <!-- Progress Steps -->
+            <div class="form-progress">
+                <div class="progress-step active" data-step="1">
+                    <div class="step-number">1</div>
+                    <div class="step-label sw">Taarifa Binafsi</div>
+                    <div class="step-label en">Personal Info</div>
+                </div>
+                <div class="progress-step" data-step="2">
+                    <div class="step-number">2</div>
+                    <div class="step-label sw">Taarifa za Kifaa</div>
+                    <div class="step-label en">Device Info</div>
+                </div>
+                <div class="progress-step" data-step="3">
+                    <div class="step-number">3</div>
+                    <div class="step-label sw">Eneo</div>
+                    <div class="step-label en">Location</div>
+                </div>
+                <div class="progress-step" data-step="4">
+                    <div class="step-number">4</div>
+                    <div class="step-label sw">Thibitisha</div>
+                    <div class="step-label en">Confirm</div>
+                </div>
+            </div>
+
+            <form id="reportForm">
+                <!-- Step 1: Personal Info -->
+                <div class="form-step active" id="step1">
+                    <h3>
+                        <i class="fas fa-user"></i>
+                        <span class="sw">Taarifa Binafsi</span>
+                        <span class="en">Personal Information</span>
+                    </h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-user"></i>
+                                <span class="sw">Jina Kamili *</span>
+                                <span class="en">Full Name *</span>
+                            </label>
+                            <input type="text" id="fullName" placeholder="e.g., Ibrahim Son" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-phone"></i>
+                                <span class="sw">Namba ya Simu *</span>
+                                <span class="en">Phone Number *</span>
+                            </label>
+                            <input type="tel" id="phone" placeholder="+255 7XX XXX XXX" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-envelope"></i>
+                                <span class="sw">Barua Pepe</span>
+                                <span class="en">Email</span>
+                            </label>
+                            <input type="email" id="email" placeholder="example@email.com">
+                        </div>
+                    </div>
+                    
+                    <div class="form-navigation">
+                        <button type="button" class="btn-next" onclick="nextStep(2)">
+                            <span class="sw">Inayofuata</span>
+                            <span class="en">Next</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 2: Device Info -->
+                <div class="form-step" id="step2">
+                    <h3>
+                        <i class="fas fa-mobile-alt"></i>
+                        <span class="sw">Taarifa za Kifaa</span>
+                        <span class="en">Device Information</span>
+                    </h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-tag"></i>
+                                <span class="sw">Aina ya Kifaa *</span>
+                                <span class="en">Device Type *</span>
+                            </label>
+                            <select id="deviceType" required>
+                                <option value="" class="sw">-- Chagua aina --</option>
+                                <option value="" class="en">-- Select type --</option>
+                                <option value="mobile" class="sw">Simu ya Mkononi</option>
+                                <option value="mobile" class="en">Mobile Phone</option>
+                                <option value="laptop" class="sw">Laptop</option>
+                                <option value="laptop" class="en">Laptop</option>
+                                <option value="tablet" class="sw">Tablet</option>
+                                <option value="tablet" class="en">Tablet</option>
+                                <option value="tv" class="sw">TV/Monitor</option>
+                                <option value="tv" class="en">TV/Monitor</option>
+                                <option value="printer" class="sw">Printer</option>
+                                <option value="printer" class="en">Printer</option>
+                                <option value="battery" class="sw">Battery</option>
+                                <option value="battery" class="en">Battery</option>
+                                <option value="other" class="sw">Nyingine</option>
+                                <option value="other" class="en">Other</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-trademark"></i>
+                                <span class="sw">Brand / Mtengenezaji</span>
+                                <span class="en">Brand / Manufacturer</span>
+                            </label>
+                            <input type="text" id="brand" placeholder="e.g., Samsung, Dell">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-barcode"></i>
+                                <span class="sw">Model</span>
+                                <span class="en">Model</span>
+                            </label>
+                            <input type="text" id="model" placeholder="e.g., Galaxy S21">
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>
+                                <i class="fas fa-info-circle"></i>
+                                <span class="sw">Hali ya Kifaa *</span>
+                                <span class="en">Device Condition *</span>
+                            </label>
+                            <div class="condition-options">
+                                <label class="condition-option">
+                                    <input type="radio" name="condition" value="working" checked>
+                                    <i class="fas fa-check-circle"></i>
+                                    <span class="sw">Inafanya kazi</span>
+                                    <span class="en">Working</span>
+                                </label>
+                                <label class="condition-option">
+                                    <input type="radio" name="condition" value="repairable">
+                                    <i class="fas fa-tools"></i>
+                                    <span class="sw">Inakarabati</span>
+                                    <span class="en">Repairable</span>
+                                </label>
+                                <label class="condition-option">
+                                    <input type="radio" name="condition" value="parts">
+                                    <i class="fas fa-cogs"></i>
+                                    <span class="sw">Ya vipuri</span>
+                                    <span class="en">For parts</span>
+                                </label>
+                                <label class="condition-option">
+                                    <input type="radio" name="condition" value="scrap">
+                                    <i class="fas fa-skull-crosswalk"></i>
+                                    <span class="sw">Chakavu</span>
+                                    <span class="en">Scrap</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-weight"></i>
+                                <span class="sw">Uzito (kg) *</span>
+                                <span class="en">Weight (kg) *</span>
+                            </label>
+                            <input type="number" id="weight" step="0.1" min="0.1" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-cubes"></i>
+                                <span class="sw">Idadi *</span>
+                                <span class="en">Quantity *</span>
+                            </label>
+                            <input type="number" id="quantity" min="1" value="1" required>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>
+                                <i class="fas fa-camera"></i>
+                                <span class="sw">Picha za Kifaa</span>
+                                <span class="en">Device Photos</span>
+                            </label>
+                            <div class="photo-upload-area" id="photoUploadArea">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                                <p class="sw">Bonyeza kupakia picha</p>
+                                <p class="en">Click to upload photos</p>
+                                <input type="file" id="devicePhotos" multiple accept="image/*">
+                            </div>
+                            <div class="photo-previews" id="photoPreviews"></div>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>
+                                <i class="fas fa-pencil-alt"></i>
+                                <span class="sw">Maelezo ya Ziada</span>
+                                <span class="en">Additional Notes</span>
+                            </label>
+                            <textarea id="description" rows="3" placeholder="Elezea zaidi kuhusu kifaa..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <div class="form-navigation">
+                        <button type="button" class="btn-prev" onclick="prevStep(1)">
+                            <i class="fas fa-arrow-left"></i>
+                            <span class="sw">Nyuma</span>
+                            <span class="en">Previous</span>
+                        </button>
+                        <button type="button" class="btn-next" onclick="nextStep(3)">
+                            <span class="sw">Inayofuata</span>
+                            <span class="en">Next</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 3: Location -->
+                <div class="form-step" id="step3">
+                    <h3>
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span class="sw">Eneo na Mahali</span>
+                        <span class="en">Location</span>
+                    </h3>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-globe"></i>
+                                <span class="sw">Mkoa *</span>
+                                <span class="en">Region *</span>
+                            </label>
+                            <select id="region" required>
+                                <option value="" class="sw">-- Chagua Mkoa --</option>
+                                <option value="" class="en">-- Select Region --</option>
+                                <option value="Unguja North" class="sw">Unguja Kaskazini</option>
+                                <option value="Unguja North" class="en">Unguja North</option>
+                                <option value="Unguja South" class="sw">Unguja Kusini</option>
+                                <option value="Unguja South" class="en">Unguja South</option>
+                                <option value="Urban West" class="sw">Mjini Magharibi</option>
+                                <option value="Urban West" class="en">Urban West</option>
+                                <option value="Pemba North" class="sw">Pemba Kaskazini</option>
+                                <option value="Pemba North" class="en">Pemba North</option>
+                                <option value="Pemba South" class="sw">Pemba Kusini</option>
+                                <option value="Pemba South" class="en">Pemba South</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-city"></i>
+                                <span class="sw">Wilaya *</span>
+                                <span class="en">District *</span>
+                            </label>
+                            <select id="district" required>
+                                <option value="" class="sw">-- Chagua Wilaya --</option>
+                                <option value="" class="en">-- Select District --</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-map-pin"></i>
+                                <span class="sw">Shehia *</span>
+                                <span class="en">Ward *</span>
+                            </label>
+                            <select id="ward" required>
+                                <option value="" class="sw">-- Chagua Shehia --</option>
+                                <option value="" class="en">-- Select Ward --</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group full-width">
+                            <label>
+                                <i class="fas fa-home"></i>
+                                <span class="sw">Mtaa / Eneo Maalum</span>
+                                <span class="en">Street / Specific Area</span>
+                            </label>
+                            <input type="text" id="street" placeholder="e.g., Mkunazini, Stone Town">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-calendar-alt"></i>
+                                <span class="sw">Tarehe ya Kuchukua</span>
+                                <span class="en">Pickup Date</span>
+                            </label>
+                            <input type="date" id="pickupDate">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>
+                                <i class="fas fa-clock"></i>
+                                <span class="sw">Muda Unaofaa</span>
+                                <span class="en">Preferred Time</span>
+                            </label>
+                            <select id="pickupTime">
+                                <option value="morning" class="sw">Asubuhi (8am - 12pm)</option>
+                                <option value="morning" class="en">Morning (8am - 12pm)</option>
+                                <option value="afternoon" class="sw">Mchana (12pm - 4pm)</option>
+                                <option value="afternoon" class="en">Afternoon (12pm - 4pm)</option>
+                                <option value="evening" class="sw">Jioni (4pm - 7pm)</option>
+                                <option value="evening" class="en">Evening (4pm - 7pm)</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-navigation">
+                        <button type="button" class="btn-prev" onclick="prevStep(2)">
+                            <i class="fas fa-arrow-left"></i>
+                            <span class="sw">Nyuma</span>
+                            <span class="en">Previous</span>
+                        </button>
+                        <button type="button" class="btn-next" onclick="nextStep(4)">
+                            <span class="sw">Inayofuata</span>
+                            <span class="en">Next</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Step 4: Confirmation -->
+                <div class="form-step" id="step4">
+                    <h3>
+                        <i class="fas fa-check-circle"></i>
+                        <span class="sw">Thibitisha Maelezo</span>
+                        <span class="en">Confirm Details</span>
+                    </h3>
+                    
+                    <div class="confirmation-panel">
+                        <div class="confirm-section">
+                            <h4><i class="fas fa-user"></i> <span class="sw">Taarifa Binafsi</span><span class="en">Personal Info</span></h4>
+                            <div class="confirm-details" id="confirmPersonal"></div>
+                        </div>
+                        
+                        <div class="confirm-section">
+                            <h4><i class="fas fa-mobile-alt"></i> <span class="sw">Taarifa za Kifaa</span><span class="en">Device Info</span></h4>
+                            <div class="confirm-details" id="confirmDevice"></div>
+                        </div>
+                        
+                        <div class="confirm-section">
+                            <h4><i class="fas fa-map-marker-alt"></i> <span class="sw">Eneo</span><span class="en">Location</span></h4>
+                            <div class="confirm-details" id="confirmLocation"></div>
+                        </div>
+                        
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <label class="checkbox-container">
+                                <input type="checkbox" id="agreeTerms" required>
+                                <span class="checkmark"></span>
+                                <span class="sw">Nakubali sheria na masharti</span>
+                                <span class="en">I agree to the terms and conditions</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-navigation">
+                        <button type="button" class="btn-prev" onclick="prevStep(3)">
+                            <i class="fas fa-arrow-left"></i>
+                            <span class="sw">Nyuma</span>
+                            <span class="en">Previous</span>
+                        </button>
+                        <button type="submit" class="btn-submit">
+                            <i class="fas fa-paper-plane"></i>
+                            <span class="sw">Wasilisha</span>
+                            <span class="en">Submit</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Success Modal -->
+    <div class="success-modal" id="successModal">
+        <i class="fas fa-check-circle"></i>
+        <h2 class="sw">Imefanikiwa!</h2>
+        <h2 class="en">Success!</h2>
+        <p class="sw">Ripoti yako imepokelewa. Tutawasiliana nawe hivi karibuni.</p>
+        <p class="en">Your report has been received. We'll contact you soon.</p>
+        <button class="btn-primary" onclick="window.location.href='index.html'">
+            <span class="sw">Nyumbani</span>
+            <span class="en">Home</span>
+        </button>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-recycle"></i>
+                    <span>Zan<span>Ewaste</span></span>
+                </div>
+                <p class="sw">Mfumo wa kwanza wa kidijitali wa usimamizi wa taka za kielektroniki Zanzibar.</p>
+                <p class="en">First digital e-waste management system in Zanzibar.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Viungo vya Haraka</h4>
+                <h4 class="en">Quick Links</h4>
+                <ul>
+                    <li><a href="index.html" class="sw">Nyumbani</a></li>
+                    <li><a href="index.html" class="en">Home</a></li>
+                    <li><a href="about.html" class="sw">Kuhusu</a></li>
+                    <li><a href="about.html" class="en">About</a></li>
+                    <li><a href="projects.html" class="sw">Miradi</a></li>
+                    <li><a href="projects.html" class="en">Projects</a></li>
+                    <li><a href="contact.html" class="sw">Mawasiliano</a></li>
+                    <li><a href="contact.html" class="en">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Taarifa za Mawasiliano</h4>
+                <h4 class="en">Contact Info</h4>
+                <p><i class="fas fa-envelope"></i> sonibrahimdigtech@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +255 775 05 780</p>
+                <p><i class="fab fa-instagram"></i> e_wastezanzibar25</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Tufuate</h4>
+                <h4 class="en">Follow Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 <strong>SonDigital</strong> | 
+                <span class="sw">Haki zote zimehifadhiwa</span>
+                <span class="en">All rights reserved</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ===== THEME TOGGLE =====
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        // Load saved theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        
+        // ===== LANGUAGE TOGGLE =====
+        const langToggle = document.getElementById('langToggle');
+        
+        // Load saved language
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        updateLangButtons(savedLang);
+        
+        langToggle.addEventListener('click', function() {
+            const currentLang = html.getAttribute('data-lang');
+            const newLang = currentLang === 'sw' ? 'en' : 'sw';
+            
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+            updateLangButtons(newLang);
+        });
+        
+        function updateLangButtons(lang) {
+            const langSw = document.querySelector('.lang-sw');
+            const langEn = document.querySelector('.lang-en');
+            
+            if (lang === 'sw') {
+                langSw.style.color = 'var(--accent)';
+                langSw.style.fontWeight = '700';
+                langEn.style.color = '';
+                langEn.style.fontWeight = '';
+            } else {
+                langEn.style.color = 'var(--accent)';
+                langEn.style.fontWeight = '700';
+                langSw.style.color = '';
+                langSw.style.fontWeight = '';
+            }
+        }
+        
+        // ===== MOBILE MENU =====
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        mobileMenu.addEventListener('click', function() {
+            navMenu.classList.toggle('show');
+            const icon = this.querySelector('i');
+            icon.className = navMenu.classList.contains('show') ? 'fas fa-times' : 'fas fa-bars';
+        });
+
+        // ===== LOCATION DATA =====
+        const locationData = {
+            'Unguja North': {
+                districts: ['Kaskazini A', 'Kaskazini B'],
+                wards: {
+                    'Kaskazini A': ['Matemwe', 'Nungwi', 'Kiwengwa', 'Gamba', 'Donge'],
+                    'Kaskazini B': ['Mangapwani', 'Mkokotoni', 'Kibva', 'Tazari']
+                }
+            },
+            'Unguja South': {
+                districts: ['Kusini', 'Kati'],
+                wards: {
+                    'Kusini': ['Jambiani', 'Paje', 'Bwejuu', 'Makunduchi', 'Kizimkazi'],
+                    'Kati': ['Uroa', 'Pongwe', 'Chwaka', 'Michamvi']
+                }
+            },
+            'Urban West': {
+                districts: ['Magharibi A', 'Magharibi B'],
+                wards: {
+                    'Magharibi A': ['Stone Town', 'Bububu', 'Fuoni', 'Mtoni', 'Kianga'],
+                    'Magharibi B': ['Welezo', 'Dole', 'Malandole', 'Moga']
+                }
+            },
+            'Pemba North': {
+                districts: ['Wete', 'Micheweni'],
+                wards: {
+                    'Wete': ['Konde', 'Tumbe', 'Kojani', 'Wingwi', 'Mgogoni'],
+                    'Micheweni': ['Maziwa Ng\'ombe', 'Shumba Mjini', 'Kiwani', 'Msuka']
+                }
+            },
+            'Pemba South': {
+                districts: ['Chake Chake', 'Mkoani'],
+                wards: {
+                    'Chake Chake': ['Chambani', 'Wambaa', 'Kiwani', 'Mtambwe', 'Shamiani'],
+                    'Mkoani': ['Mkoani town', 'Kengeja', 'Kisiwa Panza', 'Mvumoni']
+                }
+            }
+        };
+
+        // Initialize location dropdowns
+        const regionSelect = document.getElementById('region');
+        const districtSelect = document.getElementById('district');
+        const wardSelect = document.getElementById('ward');
+
+        regionSelect.addEventListener('change', function() {
+            const region = this.value;
+            districtSelect.innerHTML = '<option value="" class="sw">-- Chagua Wilaya --</option><option value="" class="en">-- Select District --</option>';
+            wardSelect.innerHTML = '<option value="" class="sw">-- Chagua Shehia --</option><option value="" class="en">-- Select Ward --</option>';
+            
+            if (region && locationData[region]) {
+                locationData[region].districts.forEach(district => {
+                    const option = document.createElement('option');
+                    option.value = district;
+                    option.classList.add('sw');
+                    option.textContent = district;
+                    districtSelect.appendChild(option);
+                    
+                    const optionEn = document.createElement('option');
+                    optionEn.value = district;
+                    optionEn.classList.add('en');
+                    optionEn.textContent = district;
+                    districtSelect.appendChild(optionEn);
+                });
+            }
+        });
+
+        districtSelect.addEventListener('change', function() {
+            const region = regionSelect.value;
+            const district = this.value;
+            wardSelect.innerHTML = '<option value="" class="sw">-- Chagua Shehia --</option><option value="" class="en">-- Select Ward --</option>';
+            
+            if (region && district && locationData[region]?.wards[district]) {
+                locationData[region].wards[district].forEach(ward => {
+                    const option = document.createElement('option');
+                    option.value = ward;
+                    option.classList.add('sw');
+                    option.textContent = ward;
+                    wardSelect.appendChild(option);
+                    
+                    const optionEn = document.createElement('option');
+                    optionEn.value = ward;
+                    optionEn.classList.add('en');
+                    optionEn.textContent = ward;
+                    wardSelect.appendChild(optionEn);
+                });
+            }
+        });
+
+        // ===== FORM STEP FUNCTIONS =====
+        function nextStep(step) {
+            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+            document.getElementById(`step${step}`).classList.add('active');
+            
+            document.querySelectorAll('.progress-step').forEach((p, index) => {
+                if (index + 1 <= step) {
+                    p.classList.add('active');
+                } else {
+                    p.classList.remove('active');
+                }
+            });
+            
+            if (step === 4) updateConfirmation();
+        }
+
+        function prevStep(step) {
+            document.querySelectorAll('.form-step').forEach(s => s.classList.remove('active'));
+            document.getElementById(`step${step}`).classList.add('active');
+            
+            document.querySelectorAll('.progress-step').forEach((p, index) => {
+                if (index + 1 <= step) {
+                    p.classList.add('active');
+                } else {
+                    p.classList.remove('active');
+                }
+            });
+        }
+
+        function updateConfirmation() {
+            const name = document.getElementById('fullName').value || 'Not provided';
+            const phone = document.getElementById('phone').value || 'Not provided';
+            const device = document.getElementById('deviceType').options[document.getElementById('deviceType').selectedIndex]?.text || 'Not selected';
+            const region = document.getElementById('region').options[document.getElementById('region').selectedIndex]?.text || 'Not selected';
+            
+            document.getElementById('confirmPersonal').innerHTML = `
+                <p><strong>Name:</strong> ${name}</p>
+                <p><strong>Phone:</strong> ${phone}</p>
+            `;
+            
+            document.getElementById('confirmDevice').innerHTML = `
+                <p><strong>Device:</strong> ${device}</p>
+            `;
+            
+            document.getElementById('confirmLocation').innerHTML = `
+                <p><strong>Region:</strong> ${region}</p>
+            `;
+        }
+
+        // Photo preview
+        document.getElementById('devicePhotos')?.addEventListener('change', function(e) {
+            const preview = document.getElementById('photoPreviews');
+            preview.innerHTML = '';
+            
+            Array.from(this.files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'preview-item';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview">
+                        <button class="remove-btn" onclick="this.parentElement.remove()">&times;</button>
+                    `;
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        // Form submission
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            document.getElementById('successModal').classList.add('show');
+        });
+
+        // Close modal with click outside
+        window.addEventListener('click', function(e) {
+            const modal = document.getElementById('successModal');
+            if (e.target === modal) {
+                modal.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

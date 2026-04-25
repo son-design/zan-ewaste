@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - ZanEwaste Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        /* Gallery specific styles - zinaendana na mfumo */
+        .admin-upload-section {
+            padding: 2rem 5%;
+            text-align: center;
+        }
+
+        .upload-panel {
+            background: var(--card);
+            border-radius: 50px;
+            padding: 2.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow);
+            border: 2px dashed var(--accent);
+            animation: slideIn 0.5s ease;
+        }
+
+        .upload-panel h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+            position: relative;
+            display: inline-block;
+        }
+
+        .upload-panel h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .upload-area {
+            border: 3px dashed var(--border);
+            border-radius: 40px;
+            padding: 3rem;
+            text-align: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            background: var(--bg);
+            margin-bottom: 1.5rem;
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(230, 126, 34, 0.05);
+            transform: translateY(-5px);
+        }
+
+        .upload-area i {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            animation: float 3s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .upload-area p {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .upload-area input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-preview {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 30px;
+            min-height: 120px;
+        }
+
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 20px;
+            overflow: hidden;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .preview-item img,
+        .preview-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 25px;
+            height: 25px;
+            background: rgba(220, 53, 69, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .preview-item .remove-btn:hover {
+            background: #dc3545;
+            transform: scale(1.1);
+        }
+
+        .upload-details {
+            display: grid;
+            gap: 1.2rem;
+            margin-top: 1.5rem;
+        }
+
+        .upload-details input,
+        .upload-details select,
+        .upload-details textarea {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            font-size: 1rem;
+            background: var(--card);
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .upload-details input:focus,
+        .upload-details select:focus,
+        .upload-details textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(230, 126, 34, 0.2);
+        }
+
+        .upload-details textarea {
+            border-radius: 30px;
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .gallery-grid {
+            padding: 3rem 5% 5rem;
+        }
+
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 1;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 40px -15px rgba(230, 126, 34, 0.4);
+        }
+
+        .gallery-item img,
+        .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .gallery-item:hover img,
+        .gallery-item:hover video {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(11, 59, 47, 0.9), transparent);
+            color: white;
+            padding: 1.5rem;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            transform: translateY(0);
+        }
+
+        .gallery-overlay h4 {
+            font-size: 1.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .gallery-overlay p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .gallery-overlay i {
+            color: var(--accent);
+        }
+
+        .media-badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            z-index: 2;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+        }
+
+        .play-icon {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(230, 126, 34, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            z-index: 2;
+            transition: var(--transition);
+        }
+
+        .gallery-item:hover .play-icon {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: var(--accent);
+        }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .lightbox.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .lightbox-content {
+            position: relative;
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .lightbox-content img,
+        .lightbox-content video {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 30px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+
+        .lightbox-info {
+            position: absolute;
+            bottom: -60px;
+            left: 0;
+            right: 0;
+            color: white;
+            text-align: center;
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            z-index: 2001;
+            transition: var(--transition);
+        }
+
+        .lightbox-close:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        .lightbox-prev,
+        .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 3rem;
+            cursor: pointer;
+            padding: 1rem;
+            z-index: 2001;
+            transition: var(--transition);
+        }
+
+        .lightbox-prev {
+            left: 20px;
+        }
+
+        .lightbox-next {
+            right: 20px;
+        }
+
+        .lightbox-prev:hover,
+        .lightbox-next:hover {
+            color: var(--accent);
+            transform: translateY(-50%) scale(1.2);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* Category filter */
+        .gallery-filter {
+            padding: 2rem 5%;
+            text-align: center;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 0.8rem 2rem;
+            border: 2px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-btn:hover,
+        .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .filter-btn i {
+            font-size: 1rem;
+        }
+
+        /* No media message */
+        .no-media {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 5rem;
+            background: var(--card);
+            border-radius: 50px;
+            color: var(--text-muted);
+        }
+
+        .no-media i {
+            font-size: 4rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-recycle"></i>
+                <span>Zan<span>Ewaste</span></span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html">Nyumbani</a>
+                <a href="about.html">Kuhusu</a>
+                <a href="projects.html">Miradi</a>
+                <a href="gallery.html" class="active">Matunzio</a>
+                <a href="report.html">Ripoti Taka</a>
+                <a href="contact.html">Mawasiliano</a>
+                <a href="founder.html">Founder</a>
+                <a href="partners.html">Washirika</a>
+            </div>
+            
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button class="lang-toggle" id="langToggle">
+                    <span class="lang-sw">SW</span>
+                    <span class="lang-separator">|</span>
+                    <span class="lang-en">EN</span>
+                </button>
+                <button class="mobile-menu" id="mobileMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="header-content">
+            <h1>
+                <span class="sw">Matunzio Yetu</span>
+                <span class="en">Our Gallery</span>
+            </h1>
+            <div class="breadcrumb">
+                <a href="index.html">Nyumbani</a>
+                <i class="fas fa-chevron-right"></i>
+                <span class="sw">Matunzio</span>
+                <span class="en">Gallery</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Upload Section -->
+    <section class="admin-upload-section">
+        <button class="btn btn-primary" onclick="showAdminPanel()">
+            <i class="fas fa-upload"></i> 
+            <span class="sw">Pakia Media</span>
+            <span class="en">Upload Media</span>
+        </button>
+        
+        <div class="upload-panel" id="uploadPanel" style="display:none;">
+            <h3>
+                <span class="sw">Pakia Picha na Video</span>
+                <span class="en">Upload Photos & Videos</span>
+            </h3>
+            
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="upload-area" id="dropArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p class="sw">Buruta picha/video hapa au bonyeza kuchagua</p>
+                    <p class="en">Drag photos/videos here or click to select</p>
+                    <input type="file" id="fileInput" multiple accept="image/*,video/*">
+                </div>
+                
+                <div class="upload-preview" id="preview"></div>
+                
+                <div class="upload-details">
+                    <input type="text" id="mediaTitle" class="sw" placeholder="Kichwa cha media">
+                    <input type="text" id="mediaTitleEn" class="en" placeholder="Media title">
+                    
+                    <select id="mediaCategory">
+                        <option value="collection" class="sw">Ukusanyaji</option>
+                        <option value="collection" class="en">Collection</option>
+                        <option value="recycling" class="sw">Uchakataji</option>
+                        <option value="recycling" class="en">Recycling</option>
+                        <option value="events" class="sw">Matukio</option>
+                        <option value="events" class="en">Events</option>
+                        <option value="training" class="sw">Mafunzo</option>
+                        <option value="training" class="en">Training</option>
+                    </select>
+                    
+                    <textarea id="mediaDesc" class="sw" placeholder="Maelezo"></textarea>
+                    <textarea id="mediaDescEn" class="en" placeholder="Description"></textarea>
+                    
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-upload"></i>
+                        <span class="sw">Pakia</span>
+                        <span class="en">Upload</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Gallery Filter -->
+    <section class="gallery-filter">
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">
+                <i class="fas fa-th-large"></i>
+                <span class="sw">Zote</span>
+                <span class="en">All</span>
+            </button>
+            <button class="filter-btn" data-filter="image">
+                <i class="fas fa-image"></i>
+                <span class="sw">Picha</span>
+                <span class="en">Photos</span>
+            </button>
+            <button class="filter-btn" data-filter="video">
+                <i class="fas fa-video"></i>
+                <span class="sw">Video</span>
+                <span class="en">Videos</span>
+            </button>
+            <button class="filter-btn" data-filter="collection">
+                <i class="fas fa-truck"></i>
+                <span class="sw">Ukusanyaji</span>
+                <span class="en">Collection</span>
+            </button>
+            <button class="filter-btn" data-filter="recycling">
+                <i class="fas fa-recycle"></i>
+                <span class="sw">Uchakataji</span>
+                <span class="en">Recycling</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Gallery Grid -->
+    <section class="gallery-grid">
+        <div class="gallery-container" id="galleryGrid">
+            <!-- Media itaongezwa hapa na JavaScript -->
+        </div>
+    </section>
+
+    <!-- Lightbox -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox-content">
+            <img id="lightboxImage" src="" alt="" style="display: none;">
+            <video id="lightboxVideo" controls style="display: none;"></video>
+            <div class="lightbox-info">
+                <h3 id="lightboxTitle"></h3>
+                <p id="lightboxDesc"></p>
+            </div>
+        </div>
+        <a class="lightbox-prev" onclick="changeMedia(-1)">&#10094;</a>
+        <a class="lightbox-next" onclick="changeMedia(1)">&#10095;</a>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-recycle"></i>
+                    <span>Zan<span>Ewaste</span></span>
+                </div>
+                <p class="sw">Mfumo wa kwanza wa kidijitali wa usimamizi wa taka za kielektroniki Zanzibar.</p>
+                <p class="en">First digital e-waste management system in Zanzibar.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Viungo vya Haraka</h4>
+                <h4 class="en">Quick Links</h4>
+                <ul>
+                    <li><a href="index.html">Nyumbani</a></li>
+                    <li><a href="about.html">Kuhusu</a></li>
+                    <li><a href="projects.html">Miradi</a></li>
+                    <li><a href="contact.html">Mawasiliano</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Taarifa za Mawasiliano</h4>
+                <h4 class="en">Contact Info</h4>
+                <p><i class="fas fa-envelope"></i> sonibrahimdigtech@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +255 775 05 780</p>
+                <p><i class="fab fa-instagram"></i> e_wastezanzibar25</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Tufuate</h4>
+                <h4 class="en">Follow Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-youtube"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 <strong>SonDigital</strong> | 
+                <span class="sw">Haki zote zimehifadhiwa</span>
+                <span class="en">All rights reserved</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // Gallery data
+        let galleryItems = [];
+        let currentIndex = 0;
+        let filteredItems = [];
+
+        // Load gallery on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadGallery();
+            initFilters();
+            initUpload();
+        });
+
+        // Load gallery items from localStorage or use defaults
+        function loadGallery() {
+            const saved = localStorage.getItem('galleryItems');
+            if (saved) {
+                galleryItems = JSON.parse(saved);
+            } else {
+                // Default items
+                galleryItems = [
+                    {
+                        id: 1,
+                        type: 'image',
+                        src: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400',
+                        title: 'Ukusanyaji Stone Town',
+                        titleEn: 'Stone Town Collection',
+                        category: 'collection',
+                        description: 'Wakusanyaji wakichukua taka Stone Town'
+                    },
+                    {
+                        id: 2,
+                        type: 'image',
+                        src: 'https://images.unsplash.com/photo-1542293787935-c9e299b880cc?w=400',
+                        title: 'Uchakataji Pemba',
+                        titleEn: 'Recycling Pemba',
+                        category: 'recycling',
+                        description: 'Kituo kipya cha uchakataji Pemba'
+                    },
+                    {
+                        id: 3,
+                        type: 'video',
+                        src: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                        thumbnail: 'https://images.unsplash.com/photo-1574180045827-681f8a1a9622?w=400',
+                        title: 'Mchakato wa Uchakataji',
+                        titleEn: 'Recycling Process',
+                        category: 'recycling',
+                        description: 'Video inayoonesha jinsi tunavyochakata'
+                    }
+                ];
+            }
+            displayGallery(galleryItems);
+        }
+
+        // Display gallery
+        function displayGallery(items) {
+            const container = document.getElementById('galleryGrid');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            if (items.length === 0) {
+                container.innerHTML = `
+                    <div class="no-media">
+                        <i class="fas fa-images"></i>
+                        <p class="sw">Hakuna media bado. Bonyeza "Pakia Media" kuongeza.</p>
+                        <p class="en">No media yet. Click "Upload Media" to add.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            items.forEach((item, index) => {
+                const div = document.createElement('div');
+                div.className = 'gallery-item';
+                div.setAttribute('data-index', index);
+                
+                if (item.type === 'image') {
+                    div.innerHTML = `
+                        <img src="${item.src}" alt="${item.title}">
+                        <span class="media-badge"><i class="fas fa-image"></i> Photo</span>
+                        <div class="gallery-overlay">
+                            <h4>${document.documentElement.getAttribute('data-lang') === 'sw' ? item.title : item.titleEn}</h4>
+                            <p><i class="fas fa-tag"></i> ${item.category}</p>
+                        </div>
+                    `;
+                } else {
+                    div.innerHTML = `
+                        <video src="${item.src}" poster="${item.thumbnail || item.src}"></video>
+                        <span class="media-badge"><i class="fas fa-video"></i> Video</span>
+                        <div class="play-icon"><i class="fas fa-play"></i></div>
+                        <div class="gallery-overlay">
+                            <h4>${document.documentElement.getAttribute('data-lang') === 'sw' ? item.title : item.titleEn}</h4>
+                            <p><i class="fas fa-tag"></i> ${item.category}</p>
+                        </div>
+                    `;
+                }
+                
+                div.onclick = () => openLightbox(index);
+                container.appendChild(div);
+            });
+        }
+
+        // Filter functionality
+        function initFilters() {
+            const filterBtns = document.querySelectorAll('.filter-btn');
+            
+            filterBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    filterBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    const filter = this.dataset.filter;
+                    
+                    if (filter === 'all') {
+                        filteredItems = galleryItems;
+                    } else {
+                        filteredItems = galleryItems.filter(item => 
+                            item.type === filter || item.category === filter
+                        );
+                    }
+                    
+                    displayGallery(filteredItems);
+                });
+            });
+        }
+
+        // Lightbox functions
+        function openLightbox(index) {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxImg = document.getElementById('lightboxImage');
+            const lightboxVideo = document.getElementById('lightboxVideo');
+            const lightboxTitle = document.getElementById('lightboxTitle');
+            const lightboxDesc = document.getElementById('lightboxDesc');
+            
+            currentIndex = index;
+            const item = filteredItems[index];
+            
+            if (item.type === 'image') {
+                lightboxImg.src = item.src;
+                lightboxImg.style.display = 'block';
+                lightboxVideo.style.display = 'none';
+            } else {
+                lightboxVideo.src = item.src;
+                lightboxVideo.style.display = 'block';
+                lightboxImg.style.display = 'none';
+            }
+            
+            lightboxTitle.textContent = document.documentElement.getAttribute('data-lang') === 'sw' ? item.title : item.titleEn;
+            lightboxDesc.textContent = item.description || '';
+            
+            lightbox.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeLightbox() {
+            const lightbox = document.getElementById('lightbox');
+            const lightboxVideo = document.getElementById('lightboxVideo');
+            
+            lightbox.classList.remove('show');
+            document.body.style.overflow = '';
+            lightboxVideo.pause();
+        }
+
+        function changeMedia(direction) {
+            const newIndex = currentIndex + direction;
+            if (newIndex >= 0 && newIndex < filteredItems.length) {
+                openLightbox(newIndex);
+            }
+        }
+
+        // Admin panel
+        function showAdminPanel() {
+            const password = prompt('Enter admin password:');
+            if (password === 'admin123') {
+                document.getElementById('uploadPanel').style.display = 'block';
+            } else {
+                alert('Invalid password!');
+            }
+        }
+
+        // File upload preview
+        function initUpload() {
+            const fileInput = document.getElementById('fileInput');
+            const preview = document.getElementById('preview');
+            
+            fileInput.addEventListener('change', function() {
+                preview.innerHTML = '';
+                
+                Array.from(this.files).forEach((file, index) => {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const previewItem = document.createElement('div');
+                        previewItem.className = 'preview-item';
+                        
+                        if (file.type.startsWith('image/')) {
+                            previewItem.innerHTML = `
+                                <img src="${e.target.result}" alt="Preview">
+                                <button class="remove-btn" onclick="removeFile(${index})">&times;</button>
+                            `;
+                        } else {
+                            previewItem.innerHTML = `
+                                <video src="${e.target.result}"></video>
+                                <button class="remove-btn" onclick="removeFile(${index})">&times;</button>
+                            `;
+                        }
+                        
+                        preview.appendChild(previewItem);
+                    };
+                    
+                    reader.readAsDataURL(file);
+                });
+            });
+        }
+
+        function removeFile(index) {
+            // Implementation for removing file from preview
+        }
+
+        // Handle upload form
+        document.getElementById('uploadForm')?.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const files = document.getElementById('fileInput').files;
+            const title = document.getElementById('mediaTitle').value;
+            const titleEn = document.getElementById('mediaTitleEn')?.value || title;
+            const category = document.getElementById('mediaCategory').value;
+            const description = document.getElementById('mediaDesc').value;
+            
+            if (files.length === 0) {
+                alert('Please select files to upload');
+                return;
+            }
+            
+            // Process each file
+            Array.from(files).forEach((file, index) => {
+                const reader = new FileReader();
+                
+                reader.onload = function(e) {
+                    const newItem = {
+                        id: galleryItems.length + 1,
+                        type: file.type.startsWith('image/') ? 'image' : 'video',
+                        src: e.target.result,
+                        title: title || `Media ${galleryItems.length + 1}`,
+                        titleEn: titleEn || `Media ${galleryItems.length + 1}`,
+                        category: category,
+                        description: description
+                    };
+                    
+                    galleryItems.push(newItem);
+                    localStorage.setItem('galleryItems', JSON.stringify(galleryItems));
+                };
+                
+                reader.readAsDataURL(file);
+            });
+            
+            alert('Media imepakiwa successfully!');
+            document.getElementById('uploadPanel').style.display = 'none';
+            location.reload(); // Refresh to show new items
+        });
+
+        // Theme toggle (from main.js)
+        document.getElementById('themeToggle')?.addEventListener('click', function() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            const icon = this.querySelector('i');
+            icon.className = newTheme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        });
+
+        // Language toggle (from main.js)
+        document.getElementById('langToggle')?.addEventListener('click', function() {
+            const html = document.documentElement;
+            const currentLang = html.getAttribute('data-lang');
+            const newLang = currentLang === 'sw' ? 'en' : 'sw';
+            
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+            
+            // Refresh gallery to update language
+            displayGallery(filteredItems.length ? filteredItems : galleryItems);
+        });
+
+        // Mobile menu
+        document.getElementById('mobileMenu')?.addEventListener('click', function() {
+            const navMenu = document.querySelector('.nav-menu');
+            navMenu.classList.toggle('show');
+            const icon = this.querySelector('i');
+            icon.className = navMenu.classList.contains('show') ? 'fas fa-times' : 'fas fa-bars';
+        });
+
+        // Close lightbox with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeLightbox();
+            }
+        });
+    </script>
+</body>
+</html>

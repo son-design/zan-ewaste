@@ -1,0 +1,1348 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agent Dashboard - ZanEwaste Hub</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light Theme */
+            --primary: #0b3b2f;
+            --secondary: #1e6f5c;
+            --accent: #e67e22;
+            --bg: #f4fbf8;
+            --card: #ffffff;
+            --text: #0f2a23;
+            --text-muted: #4a5f58;
+            --border: #d5e6df;
+            --shadow: 0 20px 30px -10px rgba(0,40,20,0.1);
+            --shadow-hover: 0 30px 40px -15px rgba(230,126,34,0.3);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --transition: all 0.3s ease;
+            
+            /* Dark Theme */
+            --primary-dark: #2a9d8f;
+            --secondary-dark: #34a889;
+            --accent-dark: #f4a261;
+            --bg-dark: #1a2c28;
+            --card-dark: #2a4039;
+            --text-dark: #e9f5f0;
+            --text-muted-dark: #b0cfc2;
+            --border-dark: #3a5f53;
+            --shadow-dark: 0 20px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* ===== LANGUAGE TOGGLE ===== */
+        .sw { display: inline; }
+        .en { display: none; }
+        
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        /* ===== CUSTOM SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { background: var(--accent); }
+            50% { background: var(--primary); }
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px var(--accent); }
+            50% { box-shadow: 0 0 30px var(--accent); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== AGENT CONTAINER ===== */
+        .agent-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            background: var(--bg);
+        }
+
+        .agent-container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(230,126,34,0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(11,59,47,0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .agent-sidebar {
+            width: 300px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: var(--transition);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            z-index: 100;
+            animation: slideInLeft 0.8s ease;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+            position: relative;
+        }
+
+        .sidebar-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--accent);
+            animation: glow 2s infinite;
+        }
+
+        .sidebar-header i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            animation: rotate 10s linear infinite;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sidebar-header span {
+            color: var(--accent);
+        }
+
+        .agent-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: float 5s infinite ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-profile::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--accent);
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            animation: pulse 2s infinite;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-role {
+            font-size: 1rem;
+            color: var(--accent);
+            position: relative;
+            z-index: 2;
+        }
+
+        .agent-nav {
+            list-style: none;
+        }
+
+        .agent-nav li {
+            margin-bottom: 0.5rem;
+            animation: slideInRight 0.5s ease;
+            animation-fill-mode: both;
+        }
+
+        .agent-nav li:nth-child(1) { animation-delay: 0.1s; }
+        .agent-nav li:nth-child(2) { animation-delay: 0.2s; }
+        .agent-nav li:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .agent-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .agent-nav a:hover::before {
+            left: 100%;
+        }
+
+        .agent-nav a:hover,
+        .agent-nav a.active {
+            background: var(--accent);
+            transform: translateX(5px);
+            box-shadow: 0 10px 20px rgba(230,126,34,0.3);
+        }
+
+        .agent-nav i {
+            width: 25px;
+            font-size: 1.2rem;
+            z-index: 1;
+            transition: var(--transition);
+        }
+
+        .agent-nav a:hover i {
+            transform: scale(1.2);
+        }
+
+        .agent-nav span {
+            z-index: 1;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .agent-main {
+            flex: 1;
+            margin-left: 300px;
+            padding: 2rem;
+            background: var(--bg);
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== HEADER ===== */
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            animation: slideInDown 0.8s ease;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .agent-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--primary), var(--accent));
+            animation: gradientShift 3s linear infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .welcome-section {
+            flex: 1;
+        }
+
+        .welcome-section h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 0.3rem;
+            animation: bounce 2s infinite;
+        }
+
+        .welcome-section p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-actions button {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-actions button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(230,126,34,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .header-actions button:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .header-actions button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 1.8rem;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease;
+            animation-fill-mode: both;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        .stat-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: white;
+            position: relative;
+            z-index: 2;
+            transition: var(--transition);
+            animation: glow 3s infinite;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .stat-info h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+            animation: countUp 2s ease;
+        }
+
+        .stat-info p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* ===== PROGRESS CHART ===== */
+        .chart-section {
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .chart-container {
+            background: var(--card);
+            border-radius: 40px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            height: 300px;
+            position: relative;
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-header h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .chart-header select {
+            padding: 0.5rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            background: var(--card);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        /* ===== TASKS SECTION ===== */
+        .tasks-section {
+            animation: fadeInUp 0.8s ease 0.6s both;
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-header h2 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            position: relative;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .view-all {
+            color: var(--accent);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: var(--transition);
+        }
+
+        .view-all:hover {
+            transform: translateX(5px);
+        }
+
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .task-card {
+            background: var(--card);
+            border-radius: 30px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInRow 0.5s ease;
+            animation-fill-mode: both;
+        }
+
+        .task-card:nth-child(1) { animation-delay: 0.1s; }
+        .task-card:nth-child(2) { animation-delay: 0.2s; }
+
+        @keyframes fadeInRow {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .task-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 5px;
+            height: 100%;
+            background: var(--accent);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .task-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .task-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .task-header h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .task-badge {
+            padding: 0.3rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            color: white;
+        }
+
+        .task-badge.high {
+            background: linear-gradient(135deg, var(--danger), #c82333);
+        }
+
+        .task-badge.medium {
+            background: linear-gradient(135deg, var(--warning), #ffc107);
+        }
+
+        .task-badge.low {
+            background: linear-gradient(135deg, var(--success), #34ce57);
+        }
+
+        .task-badge.urgent {
+            background: linear-gradient(135deg, #dc3545, #bd2130);
+            animation: pulse 1s infinite;
+        }
+
+        .task-location {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        .task-location i {
+            color: var(--accent);
+        }
+
+        .task-progress {
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            border-radius: 4px;
+            transition: width 1s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .progress-text {
+            margin-top: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .task-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .task-time {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .task-time i {
+            color: var(--accent);
+        }
+
+        .task-time.urgent {
+            color: var(--danger);
+            animation: pulse 1s infinite;
+        }
+
+        .btn-start {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: white;
+            border: none;
+            padding: 0.8rem 2rem;
+            border-radius: 40px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-start::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .btn-start:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .btn-start:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(230,126,34,0.3);
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--success), #34ce57);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            box-shadow: 0 15px 30px rgba(40,167,69,0.3);
+            z-index: 1200;
+            animation: slideInRightNotif 0.5s ease, pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid white;
+        }
+
+        @keyframes slideInRightNotif {
+            from {
+                opacity: 0;
+                transform: translateX(100px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        .notification i {
+            font-size: 1.5rem;
+            animation: bounce 1s infinite;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .agent-sidebar {
+                width: 250px;
+            }
+            
+            .agent-main {
+                margin-left: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .agent-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .agent-sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .agent-main {
+                margin-left: 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tasks-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .agent-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="agent-container">
+        <!-- Sidebar -->
+        <div class="agent-sidebar" id="agentSidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-recycle"></i>
+                <h2>Zan<span>Ewaste</span></h2>
+            </div>
+            
+            <div class="agent-profile">
+                <div class="profile-avatar">
+                    <img src="https://ui-avatars.com/api/?name=John+Agent&size=100&background=e67e22&color=fff" alt="Agent">
+                </div>
+                <div class="profile-name">John Agent</div>
+                <div class="profile-role">
+                    <span class="sw">Wakala</span>
+                    <span class="en">Agent</span>
+                </div>
+            </div>
+            
+            <ul class="agent-nav">
+                <li><a href="dashboard.html" class="active">
+                    <i class="fas fa-dashboard"></i>
+                    <span class="sw">Dashibodi</span>
+                    <span class="en">Dashboard</span>
+                </a></li>
+                <li><a href="tasks.html">
+                    <i class="fas fa-tasks"></i>
+                    <span class="sw">Kazi Zangu</span>
+                    <span class="en">My Tasks</span>
+                </a></li>
+                <li><a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="sw">Toka</span>
+                    <span class="en">Logout</span>
+                </a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="agent-main">
+            <!-- Header -->
+            <div class="agent-header">
+                <div class="welcome-section">
+                    <h1>
+                        <span class="sw">Karibu, John!</span>
+                        <span class="en">Welcome, John!</span>
+                    </h1>
+                    <p class="sw">Haya ndiyo maelezo yako ya leo</p>
+                    <p class="en">Here's your overview for today</p>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    <button class="lang-toggle" id="langToggle">
+                        <span class="lang-sw">SW</span>
+                        <span class="lang-separator">|</span>
+                        <span class="lang-en">EN</span>
+                    </button>
+                    
+                    <button class="mobile-menu" id="mobileMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info">
+                        <h3>5</h3>
+                        <p class="sw">Kazi Zinazosubiri</p>
+                        <p class="en">Pending Tasks</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <h3>12</h3>
+                        <p class="sw">Zilizokamilika</p>
+                        <p class="en">Completed</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon"><i class="fas fa-weight"></i></div>
+                    <div class="stat-info">
+                        <h3>245kg</h3>
+                        <p class="sw">Zilizokusanywa</p>
+                        <p class="en">Collected</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Chart -->
+            <div class="chart-section">
+                <div class="chart-container">
+                    <div class="chart-header">
+                        <h3>
+                            <span class="sw">Maendeleo ya Kazi</span>
+                            <span class="en">Task Progress</span>
+                        </h3>
+                        <select id="chartPeriod">
+                            <option value="week" class="sw">Wiki hii</option>
+                            <option value="week" class="en">This Week</option>
+                            <option value="month" class="sw">Mwezi huu</option>
+                            <option value="month" class="en">This Month</option>
+                            <option value="year" class="sw">Mwaka huu</option>
+                            <option value="year" class="en">This Year</option>
+                        </select>
+                    </div>
+                    <canvas id="progressChart"></canvas>
+                </div>
+            </div>
+            
+            <!-- Today's Tasks -->
+            <div class="tasks-section">
+                <div class="section-header">
+                    <h2>
+                        <span class="sw">Kazi za Leo</span>
+                        <span class="en">Today's Tasks</span>
+                    </h2>
+                    <a href="tasks.html" class="view-all">
+                        <span class="sw">Angalia Zote</span>
+                        <span class="en">View All</span>
+                        <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+                
+                <div class="tasks-grid">
+                    <div class="task-card">
+                        <div class="task-header">
+                            <h3>Stone Town Collection</h3>
+                            <span class="task-badge high">
+                                <span class="sw">Kipaumbele cha Juu</span>
+                                <span class="en">High Priority</span>
+                            </span>
+                        </div>
+                        
+                        <div class="task-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Stone Town, Zanzibar</span>
+                        </div>
+                        
+                        <div class="task-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 30%"></div>
+                            </div>
+                            <div class="progress-text">30%</div>
+                        </div>
+                        
+                        <div class="task-footer">
+                            <div class="task-time">
+                                <i class="fas fa-hourglass-half"></i>
+                                <span class="sw">Inaendelea</span>
+                                <span class="en">In Progress</span>
+                            </div>
+                            <button class="btn-start">
+                                <i class="fas fa-play"></i>
+                                <span class="sw">Anza</span>
+                                <span class="en">Start</span>
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="task-card">
+                        <div class="task-header">
+                            <h3>Nungwi Beach Hotels</h3>
+                            <span class="task-badge urgent">
+                                <span class="sw">Haraka</span>
+                                <span class="en">Urgent</span>
+                            </span>
+                        </div>
+                        
+                        <div class="task-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Nungwi, Unguja North</span>
+                        </div>
+                        
+                        <div class="task-progress">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 0%"></div>
+                            </div>
+                            <div class="progress-text">0%</div>
+                        </div>
+                        
+                        <div class="task-footer">
+                            <div class="task-time urgent">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span class="sw">Imechelewa</span>
+                                <span class="en">Overdue</span>
+                            </div>
+                            <button class="btn-start">
+                                <i class="fas fa-play"></i>
+                                <span class="sw">Anza</span>
+                                <span class="en">Start</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100,
+            easing: 'ease-in-out'
+        });
+
+        // ===== THEME TOGGLE =====
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        
+        // ===== LANGUAGE TOGGLE =====
+        const langToggle = document.getElementById('langToggle');
+        
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        updateLangButtons(savedLang);
+        
+        langToggle.addEventListener('click', function() {
+            const currentLang = html.getAttribute('data-lang');
+            const newLang = currentLang === 'sw' ? 'en' : 'sw';
+            
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+            updateLangButtons(newLang);
+        });
+        
+        function updateLangButtons(lang) {
+            const langSw = document.querySelector('.lang-sw');
+            const langEn = document.querySelector('.lang-en');
+            
+            if (lang === 'sw') {
+                langSw.style.color = 'var(--accent)';
+                langSw.style.fontWeight = '700';
+                langEn.style.color = '';
+                langEn.style.fontWeight = '';
+            } else {
+                langEn.style.color = 'var(--accent)';
+                langEn.style.fontWeight = '700';
+                langSw.style.color = '';
+                langSw.style.fontWeight = '';
+            }
+        }
+        
+        // ===== MOBILE MENU =====
+        const mobileMenu = document.getElementById('mobileMenu');
+        const sidebar = document.getElementById('agentSidebar');
+        
+        mobileMenu.addEventListener('click', function() {
+            sidebar.classList.toggle('show');
+        });
+
+        // ===== PROGRESS CHART =====
+        const ctx = document.getElementById('progressChart').getContext('2d');
+        let progressChart;
+
+        function initChart() {
+            progressChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: html.getAttribute('data-lang') === 'sw' ? 'Kazi' : 'Tasks',
+                        data: [2, 3, 4, 3, 5, 2, 1],
+                        borderColor: '#e67e22',
+                        backgroundColor: 'rgba(230, 126, 34, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#e67e22',
+                        pointBorderColor: 'white',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0,0,0,0.05)'
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        document.getElementById('chartPeriod').addEventListener('change', function() {
+            const period = this.value;
+            // Update chart data based on period
+            if (progressChart) {
+                progressChart.destroy();
+            }
+            initChart();
+        });
+
+        initChart();
+
+        // ===== LOGOUT =====
+        function logout() {
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            window.location.href = '../admin/login.html';
+        }
+
+        // ===== NOTIFICATION (DEMO) =====
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Show welcome notification after 2 seconds
+        setTimeout(() => {
+            const msg = html.getAttribute('data-lang') === 'sw' 
+                ? 'Una kazi 5 mpya za leo!' 
+                : 'You have 5 new tasks today!';
+            showNotification(msg);
+        }, 2000);
+
+        // ===== START TASK BUTTONS =====
+        document.querySelectorAll('.btn-start').forEach(btn => {
+            btn.addEventListener('click', function() {
+                const msg = html.getAttribute('data-lang') === 'sw' 
+                    ? 'Kazi imeanza!' 
+                    : 'Task started!';
+                showNotification(msg);
+            });
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                const isClickInside = sidebar.contains(event.target) || mobileMenu.contains(event.target);
+                if (!isClickInside) {
+                    sidebar.classList.remove('show');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

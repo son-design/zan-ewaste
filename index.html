@@ -1,0 +1,1218 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZanEwaste Hub - Home | Nyumbani</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation Library -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0b3b2f;
+            --secondary: #1e6f5c;
+            --accent: #e67e22;
+            --bg: #f4fbf8;
+            --card: #ffffff;
+            --text: #0f2a23;
+            --text-muted: #4a5f58;
+            --border: #d5e6df;
+            --shadow: 0 20px 30px -10px rgba(0,40,20,0.1);
+            --shadow-hover: 0 30px 40px -15px rgba(230,126,34,0.3);
+            --navbar-bg: rgba(255,255,255,0.95);
+            --footer-bg: #0f2a23;
+            --footer-text: #ffffff;
+            --transition: all 0.3s ease;
+            
+            --primary-dark: #2a9d8f;
+            --secondary-dark: #34a889;
+            --accent-dark: #f4a261;
+            --bg-dark: #1a2c28;
+            --card-dark: #2a4039;
+            --text-dark: #e9f5f0;
+            --text-muted-dark: #b0cfc2;
+            --border-dark: #3a5f53;
+            --shadow-dark: 0 20px 30px -10px rgba(0,0,0,0.3);
+            --navbar-dark: rgba(26,44,40,0.95);
+            --footer-dark: #0a1f1a;
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+            --navbar-bg: var(--navbar-dark);
+            --footer-bg: var(--footer-dark);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        .sw { display: inline; }
+        .en { display: none; }
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 5px; }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 3px solid var(--accent);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            color: var(--accent);
+            font-size: 2rem;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo span span { color: var(--accent); }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after { width: 100%; }
+
+        .nav-menu a:hover,
+        .nav-menu a.active { color: var(--accent); }
+
+        .portal-btn {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 500;
+            margin-left: 0.5rem;
+        }
+
+        .portal-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(230,126,34,0.3);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle, .lang-toggle {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .theme-toggle:hover, .lang-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text); cursor: pointer; }
+
+        /* Portal Modal */
+        .portal-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .portal-modal.show { display: flex; animation: fadeInModal 0.3s ease; }
+        @keyframes fadeInModal {
+            from { opacity: 0; backdrop-filter: blur(0); }
+            to { opacity: 1; backdrop-filter: blur(10px); }
+        }
+
+        .modal-content {
+            background: var(--card);
+            border-radius: 50px;
+            max-width: 450px;
+            width: 90%;
+            padding: 2.5rem;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            animation: slideInUpModal 0.5s ease;
+            border: 2px solid var(--accent);
+        }
+
+        @keyframes slideInUpModal {
+            from { opacity: 0; transform: translateY(50px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .modal-header h3 { color: var(--primary); font-size: 1.8rem; }
+
+        .close-modal {
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+            background: rgba(230,126,34,0.1);
+        }
+
+        .role-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .role-btn {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            background: var(--card);
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-align: center;
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .role-btn i {
+            font-size: 1.5rem;
+            display: block;
+            margin-bottom: 0.3rem;
+            color: var(--accent);
+        }
+
+        .role-btn:hover, .role-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .role-btn:hover i, .role-btn.active i { color: white; }
+
+        .login-form, .register-form { display: none; }
+        .login-form.active, .register-form.active { display: block; animation: fadeIn 0.3s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .form-group { margin-bottom: 1.2rem; }
+        .form-group label { display: block; margin-bottom: 0.3rem; color: var(--primary); font-weight: 500; }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            background: var(--card);
+            color: var(--text);
+            transition: var(--transition);
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 1rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 1rem;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .switch-form {
+            text-align: center;
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .switch-form a {
+            color: var(--accent);
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+            padding-top: 80px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            background-size: 300% 300%;
+            animation: gradientBG 15s ease infinite;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .floating-elements {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .float-item {
+            position: absolute;
+            font-size: 4rem;
+            color: rgba(255,255,255,0.1);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(10deg); }
+        }
+
+        .float-item:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .float-item:nth-child(2) { top: 60%; right: 15%; animation-delay: 2s; font-size: 5rem; }
+        .float-item:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 1s; }
+        .float-item:nth-child(4) { top: 30%; right: 25%; animation-delay: 3s; }
+        .float-item:nth-child(5) { top: 70%; left: 40%; animation-delay: 1.5s; }
+        .float-item:nth-child(6) { bottom: 30%; right: 35%; animation-delay: 2.5s; }
+
+        .hero-content {
+            max-width: 800px;
+            margin: 0 5%;
+            padding: 3rem;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(15px);
+            border-radius: 60px;
+            box-shadow: 0 30px 50px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: slideInLeft 1s ease-out;
+            position: relative;
+            z-index: 10;
+        }
+
+        [data-theme="dark"] .hero-content {
+            background: rgba(0,0,0,0.3);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-60px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .hero-content h1 {
+            font-size: 3.5rem;
+            line-height: 1.2;
+            color: white;
+            margin-bottom: 1.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .hero-content h1 .highlight {
+            color: var(--accent);
+            display: block;
+            font-size: 3rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 2rem;
+        }
+
+        .stats-container {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+        }
+
+        .stat-card {
+            flex: 1;
+            text-align: center;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(5px);
+            border-radius: 40px;
+            border: 1px solid rgba(255,255,255,0.2);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.25);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.8);
+        }
+
+        .hero-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2.5rem;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid transparent;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: white;
+            border-color: white;
+            transform: translateY(-3px);
+        }
+
+        .btn-outline {
+            background: transparent;
+            border-color: white;
+            color: white;
+        }
+
+        .btn-outline:hover {
+            background: white;
+            color: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 5rem 5%;
+            background: var(--bg);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .feature-card {
+            background: var(--card);
+            padding: 2.5rem 2rem;
+            border-radius: 40px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .feature-card:hover::before { opacity: 0.1; }
+        .feature-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .feature-card h3 { color: var(--primary); margin-bottom: 1rem; font-size: 1.3rem; }
+        .feature-card p { color: var(--text-muted); }
+
+        /* Quick Stats */
+        .quick-stats {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 4rem 5%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quick-stats::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        .stats-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            color: white;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 40px;
+            backdrop-filter: blur(5px);
+            transition: var(--transition);
+        }
+
+        .stat-item:hover {
+            transform: translateY(-5px);
+            background: rgba(255,255,255,0.2);
+        }
+
+        .stat-item i { font-size: 2.5rem; color: var(--accent); }
+        .stat-info h3 { font-size: 2rem; font-weight: 700; }
+        .stat-info p { opacity: 0.9; font-size: 0.9rem; }
+
+        /* Call to Action */
+        .cta-section {
+            padding: 5rem 5%;
+            background: var(--card);
+            text-align: center;
+        }
+
+        .cta-content { max-width: 800px; margin: 0 auto; }
+        .cta-content h2 { font-size: 2.5rem; color: var(--primary); margin-bottom: 1rem; }
+        .cta-content p { color: var(--text-muted); margin-bottom: 2rem; font-size: 1.1rem; }
+        .cta-buttons { display: flex; gap: 1rem; justify-content: center; }
+
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 4rem 5% 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-logo i { color: var(--accent); }
+        .footer-section h4 { color: var(--accent); margin-bottom: 1.5rem; font-size: 1.2rem; }
+        .footer-section ul { list-style: none; }
+        .footer-section ul li { margin-bottom: 0.8rem; }
+        .footer-section ul li a {
+            color: var(--footer-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+        .footer-section ul li a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+        .footer-section p {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .footer-section i { color: var(--accent); width: 20px; }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--footer-text);
+            font-size: 1.8rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+            transform: translateY(-5px) scale(1.1);
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border);
+            text-align: center;
+        }
+
+        .footer-bottom strong { color: var(--accent); }
+
+        /* Dark Theme */
+        [data-theme="dark"] .feature-card { background: var(--card-dark); border-color: var(--border-dark); }
+        [data-theme="dark"] .cta-section { background: var(--card-dark); }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--navbar-bg);
+                padding: 2rem;
+                flex-direction: column;
+                align-items: center;
+                border-bottom: 3px solid var(--accent);
+            }
+            .nav-menu.show { display: flex; }
+            .mobile-menu { display: block; }
+            .role-buttons { flex-direction: column; }
+        }
+
+        @media (max-width: 768px) {
+            .hero-content { padding: 2rem; }
+            .hero-content h1 { font-size: 2.2rem; }
+            .hero-content h1 .highlight { font-size: 2rem; }
+            .stats-container { flex-direction: column; gap: 1rem; }
+            .hero-buttons { flex-direction: column; }
+            .btn { text-align: center; justify-content: center; }
+            .cta-buttons { flex-direction: column; }
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            .footer-section p { justify-content: center; }
+            .social-links { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-recycle"></i>
+                <span>Zan<span>Ewaste</span></span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="active sw">Nyumbani</a>
+                <a href="index.html" class="active en">Home</a>
+                <a href="about.html" class="sw">Kuhusu</a><a href="about.html" class="en">About</a>
+                <a href="projects.html" class="sw">Miradi</a><a href="projects.html" class="en">Projects</a>
+                <a href="gallery.html" class="sw">Matunzio</a><a href="gallery.html" class="en">Gallery</a>
+                <a href="report.html" class="sw">Ripoti Taka</a><a href="report.html" class="en">Report</a>
+                <a href="contact.html" class="sw">Mawasiliano</a><a href="contact.html" class="en">Contact</a>
+                <a href="founder.html" class="sw">Founder</a><a href="founder.html" class="en">Founder</a>
+                <a href="partners.html" class="sw">Washirika</a><a href="partners.html" class="en">Partners</a>
+            </div>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <button class="lang-toggle" id="langToggle"><span class="lang-sw">SW</span><span class="lang-separator">|</span><span class="lang-en">EN</span></button>
+                <button class="portal-btn" id="portalBtn"><i class="fas fa-sign-in-alt"></i><span class="sw">Ingia</span><span class="en">Login</span></button>
+                <button class="mobile-menu" id="mobileMenu"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Portal Modal -->
+    <div class="portal-modal" id="portalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="sw">Portal ya Watumiaji</h3>
+                <h3 id="modalTitleEn" class="en">User Portal</h3>
+                <span class="close-modal" id="closeModalBtn">&times;</span>
+            </div>
+            
+            <div class="role-buttons">
+                <div class="role-btn" data-role="admin">
+                    <i class="fas fa-crown"></i>
+                    <span class="sw">Admin</span><span class="en">Admin</span>
+                </div>
+                <div class="role-btn" data-role="agent">
+                    <i class="fas fa-user-tie"></i>
+                    <span class="sw">Agent</span><span class="en">Agent</span>
+                </div>
+                <div class="role-btn" data-role="technician">
+                    <i class="fas fa-tools"></i>
+                    <span class="sw">Technician</span><span class="en">Technician</span>
+                </div>
+            </div>
+            
+            <!-- Login Form -->
+            <div class="login-form active" id="loginForm">
+                <form id="portalLoginForm">
+                    <div class="form-group">
+                        <label class="sw">Barua Pepe</label><label class="en">Email</label>
+                        <input type="email" id="loginEmail" placeholder="admin@zanewaste.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="sw">Nywila</label><label class="en">Password</label>
+                        <input type="password" id="loginPassword" placeholder="••••••••" required>
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        <span class="sw">Ingia</span><span class="en">Login</span>
+                    </button>
+                </form>
+                <div class="switch-form">
+                    <span class="sw">Huna akaunti?</span><span class="en">Don't have an account?</span>
+                    <a id="switchToRegister" class="sw">Jisajili hapa</a><a id="switchToRegisterEn" class="en">Register here</a>
+                </div>
+            </div>
+            
+            <!-- Register Form -->
+            <div class="register-form" id="registerForm">
+                <form id="portalRegisterForm">
+                    <div class="form-group">
+                        <label class="sw">Jina la Kwanza</label><label class="en">First Name</label>
+                        <input type="text" id="regFirstName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="sw">Jina la Mwisho</label><label class="en">Last Name</label>
+                        <input type="text" id="regLastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="sw">Barua Pepe</label><label class="en">Email</label>
+                        <input type="email" id="regEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="sw">Simu</label><label class="en">Phone</label>
+                        <input type="tel" id="regPhone">
+                    </div>
+                    <div class="form-group">
+                        <label class="sw">Nywila</label><label class="en">Password</label>
+                        <input type="password" id="regPassword" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="sw">Thibitisha Nywila</label><label class="en">Confirm Password</label>
+                        <input type="password" id="regConfirmPassword" required>
+                    </div>
+                    <div class="form-group" id="technicianFields" style="display: none;">
+                        <label class="sw">Eneo la Utaalam</label><label class="en">Specialization</label>
+                        <select id="regSpecialization">
+                            <option value="Laptop Repair">Laptop Repair</option>
+                            <option value="Mobile Phone Repair">Mobile Phone Repair</option>
+                            <option value="Printer Repair">Printer Repair</option>
+                            <option value="TV/Monitor Repair">TV/Monitor Repair</option>
+                            <option value="Battery Recycling">Battery Recycling</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn-submit">
+                        <span class="sw">Jisajili</span><span class="en">Register</span>
+                    </button>
+                </form>
+                <div class="switch-form">
+                    <span class="sw">Tayari una akaunti?</span><span class="en">Already have an account?</span>
+                    <a id="switchToLogin" class="sw">Ingia hapa</a><a id="switchToLoginEn" class="en">Login here</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="floating-elements">
+            <i class="fas fa-mobile-alt float-item"></i>
+            <i class="fas fa-laptop float-item"></i>
+            <i class="fas fa-tv float-item"></i>
+            <i class="fas fa-print float-item"></i>
+            <i class="fas fa-battery-full float-item"></i>
+            <i class="fas fa-recycle float-item"></i>
+        </div>
+        <div class="hero-content">
+            <h1>
+                <span class="sw">Usimamizi wa Taka za Kielektroniki</span>
+                <span class="en">Electronic Waste Management</span>
+                <span class="highlight">Zanzibar</span>
+            </h1>
+            <p class="sw">Kusanya, Rekebisha, na Chakata taka za kielektroniki kwa uchumi wa mzunguko. Jiunge nasi kwa Zanzibar safi na endelevu.</p>
+            <p class="en">Collect, Repair, and Recycle electronic waste through circular economy. Join us for a clean and sustainable Zanzibar.</p>
+            <div class="stats-container">
+                <div class="stat-card"><div class="stat-number" data-target="2450">0</div><div class="stat-label sw">Zimekusanywa (kg)</div><div class="stat-label en">Collected (kg)</div></div>
+                <div class="stat-card"><div class="stat-number" data-target="850">0</div><div class="stat-label sw">Vifaa Vimekatibiwa</div><div class="stat-label en">Devices Processed</div></div>
+                <div class="stat-card"><div class="stat-number" data-target="65">0</div><div class="stat-label sw">Vimechakatwa (%)</div><div class="stat-label en">Recycled (%)</div></div>
+            </div>
+            <div class="hero-buttons">
+                <a href="report.html" class="btn btn-primary"><i class="fas fa-edit"></i><span class="sw">Ripoti Sasa</span><span class="en">Report Now</span></a>
+                <a href="about.html" class="btn btn-outline"><i class="fas fa-play"></i><span class="sw">Jifunze Zaidi</span><span class="en">Learn More</span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2 class="section-title"><span class="sw">Kwa Nini Tuchague?</span><span class="en">Why Choose Us?</span></h2>
+        <div class="features-grid">
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
+                <i class="fas fa-leaf"></i>
+                <h3><span class="sw">Rafiki wa Mazingira</span><span class="en">Eco-Friendly</span></h3>
+                <p class="sw">Tunachakata taka kwa njia rafiki kwa mazingira na kuzuia uchafuzi wa mazingira.</p>
+                <p class="en">We recycle waste in an environmentally friendly way and prevent pollution.</p>
+            </div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-clock"></i>
+                <h3><span class="sw">Huduma ya Haraka</span><span class="en">Fast Service</span></h3>
+                <p class="sw">Tunachukua taka ndani ya siku 2-3 baada ya kuripoti kwa wakati unaofaa.</p>
+                <p class="en">We collect waste within 2-3 days after reporting at your convenient time.</p>
+            </div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
+                <i class="fas fa-money-bill-wave"></i>
+                <h3><span class="sw">Bei ya Haki</span><span class="en">Fair Prices</span></h3>
+                <p class="sw">Tunatoa bei nzuri kwa vifaa vinavyoweza kutumika tena na vipuri.</p>
+                <p class="en">We offer good prices for reusable devices and spare parts.</p>
+            </div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
+                <i class="fas fa-map-marker-alt"></i>
+                <h3><span class="sw">Maeneo Yote Zanzibar</span><span class="en">All Zanzibar Areas</span></h3>
+                <p class="sw">Tunafanya kazi Unguja na Pemba, wilaya zote na shehia 50+.</p>
+                <p class="en">We operate in Unguja and Pemba, all districts and 50+ wards.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Stats -->
+    <section class="quick-stats">
+        <div class="stats-grid">
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
+                <i class="fas fa-recycle"></i>
+                <div class="stat-info"><h3 data-target="5000">0</h3><p class="sw">CO2 Kuokolewa (kg)</p><p class="en">CO2 Saved (kg)</p></div>
+            </div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="200">
+                <i class="fas fa-tree"></i>
+                <div class="stat-info"><h3 data-target="150">0</h3><p class="sw">Miti Kuokolewa</p><p class="en">Trees Saved</p></div>
+            </div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="300">
+                <i class="fas fa-users"></i>
+                <div class="stat-info"><h3 data-target="1200">0</h3><p class="sw">Wateja</p><p class="en">Customers</p></div>
+            </div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="400">
+                <i class="fas fa-battery-full"></i>
+                <div class="stat-info"><h3 data-target="3000">0</h3><p class="sw">Betri Zilizochakatwa</p><p class="en">Batteries Recycled</p></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+        <div class="cta-content">
+            <h2><span class="sw">Jiunge Nasi Sasa!</span><span class="en">Join Us Now!</span></h2>
+            <p class="sw">Tusaidie kuhifadhi mazingira ya Zanzibar kwa kuchakata taka za kielektroniki.</p>
+            <p class="en">Help us protect Zanzibar's environment by recycling e-waste.</p>
+            <div class="cta-buttons">
+                <a href="report.html" class="btn btn-primary"><i class="fas fa-edit"></i><span class="sw">Ripoti Taka Sasa</span><span class="en">Report Waste Now</span></a>
+                <a href="contact.html" class="btn btn-outline"><i class="fas fa-envelope"></i><span class="sw">Wasiliana Nasi</span><span class="en">Contact Us</span></a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo"><i class="fas fa-recycle"></i><span>Zan<span>Ewaste</span></span></div>
+                <p class="sw">Mfumo wa kwanza wa kidijitali wa usimamizi wa taka za kielektroniki Zanzibar.</p>
+                <p class="en">First digital e-waste management system in Zanzibar.</p>
+            </div>
+            <div class="footer-section">
+                <h4 class="sw">Viungo vya Haraka</h4><h4 class="en">Quick Links</h4>
+                <ul>
+                    <li><a href="index.html" class="sw">Nyumbani</a><a href="index.html" class="en">Home</a></li>
+                    <li><a href="about.html" class="sw">Kuhusu</a><a href="about.html" class="en">About</a></li>
+                    <li><a href="projects.html" class="sw">Miradi</a><a href="projects.html" class="en">Projects</a></li>
+                    <li><a href="contact.html" class="sw">Mawasiliano</a><a href="contact.html" class="en">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4 class="sw">Taarifa za Mawasiliano</h4><h4 class="en">Contact Info</h4>
+                <p><i class="fas fa-envelope"></i> sonibrahimdigtech@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +255 775 05 780</p>
+                <p><i class="fab fa-instagram"></i> zan.ewaste</p>
+            </div>
+            <div class="footer-section">
+                <h4 class="sw">Tufuate</h4><h4 class="en">Follow Us</h4>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/zan.ewaste?igsh=dmtqNmE0eWhhazE1" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://web.facebook.com/zanewaste" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://twitter.com/zanewaste" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://wa.me/255775057780" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.linkedin.com/company/zanewaste" target="_blank"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 <strong>SonDigital</strong> | <span class="sw">Haki zote zimehifadhiwa</span><span class="en">All rights reserved</span></p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true, offset: 100 });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        });
+
+        // Language Toggle
+        const langToggle = document.getElementById('langToggle');
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        
+        langToggle.addEventListener('click', () => {
+            const newLang = html.getAttribute('data-lang') === 'sw' ? 'en' : 'sw';
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+        });
+
+        // Mobile Menu
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navMenu = document.querySelector('.nav-menu');
+        mobileMenu.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+            const icon = mobileMenu.querySelector('i');
+            icon.className = navMenu.classList.contains('show') ? 'fas fa-times' : 'fas fa-bars';
+        });
+
+        // Portal Modal
+        const portalBtn = document.getElementById('portalBtn');
+        const portalModal = document.getElementById('portalModal');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        
+        portalBtn.addEventListener('click', () => {
+            portalModal.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        });
+        
+        function closeModal() {
+            portalModal.classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        
+        closeModalBtn.addEventListener('click', closeModal);
+        portalModal.addEventListener('click', (e) => { if (e.target === portalModal) closeModal(); });
+
+        // Role selection
+        let selectedRole = 'admin';
+        document.querySelectorAll('.role-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                selectedRole = this.dataset.role;
+                const techFields = document.getElementById('technicianFields');
+                techFields.style.display = selectedRole === 'technician' ? 'block' : 'none';
+            });
+        });
+
+        // Switch between login and register
+        const loginForm = document.getElementById('loginForm');
+        const registerForm = document.getElementById('registerForm');
+        
+        document.getElementById('switchToRegister').addEventListener('click', () => {
+            loginForm.classList.remove('active');
+            registerForm.classList.add('active');
+        });
+        document.getElementById('switchToRegisterEn').addEventListener('click', () => {
+            loginForm.classList.remove('active');
+            registerForm.classList.add('active');
+        });
+        document.getElementById('switchToLogin').addEventListener('click', () => {
+            registerForm.classList.remove('active');
+            loginForm.classList.add('active');
+        });
+        document.getElementById('switchToLoginEn').addEventListener('click', () => {
+            registerForm.classList.remove('active');
+            loginForm.classList.add('active');
+        });
+
+        // LOGIN FUNCTION (DEMO - NO DATABASE REQUIRED)
+        document.getElementById('portalLoginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            // DEMO LOGIN CREDENTIALS (Hardcoded for testing)
+            const users = [
+                { email: 'admin@zanewaste.com', password: 'admin123', role: 'admin', redirect: 'admin/index.html' },
+                { email: 'agent@zanewaste.com', password: 'agent123', role: 'agent', redirect: 'agent/dashboard.html' },
+                { email: 'tech@example.com', password: 'tech123', role: 'technician', redirect: 'technician/dashboard.html' }
+            ];
+            
+            const user = users.find(u => u.email === email && u.password === password);
+            
+            if (user) {
+                // Save user info to localStorage
+                localStorage.setItem('userRole', user.role);
+                localStorage.setItem('userEmail', user.email);
+                localStorage.setItem('user', JSON.stringify({ email: user.email, role: user.role, first_name: user.role === 'admin' ? 'Admin' : user.role === 'agent' ? 'Agent' : 'Technician' }));
+                
+                alert(`Welcome ${user.role}! Redirecting to dashboard...`);
+                window.location.href = user.redirect;
+            } else {
+                alert('Invalid email or password!\n\nDemo credentials:\nAdmin: admin@zanewaste.com / admin123\nAgent: agent@zanewaste.com / agent123\nTechnician: tech@example.com / tech123');
+            }
+        });
+
+        // REGISTER FUNCTION (Saves to localStorage for demo)
+        document.getElementById('portalRegisterForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const password = document.getElementById('regPassword').value;
+            const confirm = document.getElementById('regConfirmPassword').value;
+            
+            if (password !== confirm) {
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            const newUser = {
+                email: document.getElementById('regEmail').value,
+                password: password,
+                first_name: document.getElementById('regFirstName').value,
+                last_name: document.getElementById('regLastName').value,
+                phone: document.getElementById('regPhone').value,
+                role: selectedRole,
+                specialization: selectedRole === 'technician' ? document.getElementById('regSpecialization').value : null
+            };
+            
+            // Save to localStorage (demo only)
+            let users = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
+            users.push(newUser);
+            localStorage.setItem('registeredUsers', JSON.stringify(users));
+            
+            alert(`Registration successful! You can now login as ${selectedRole}.`);
+            registerForm.classList.remove('active');
+            loginForm.classList.add('active');
+        });
+
+        // Stats Counter
+        const statNumbers = document.querySelectorAll('.stat-number');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const element = entry.target;
+                    const target = parseInt(element.getAttribute('data-target'));
+                    animateNumber(element, 0, target, 2000);
+                    observer.unobserve(element);
+                }
+            });
+        }, { threshold: 0.5 });
+        
+        statNumbers.forEach(stat => observer.observe(stat));
+        
+        function animateNumber(element, start, end, duration) {
+            let current = start;
+            const increment = end > start ? 1 : -1;
+            const stepTime = Math.abs(Math.floor(duration / (end - start)));
+            const timer = setInterval(() => {
+                current += increment;
+                element.textContent = current;
+                if (current === end) clearInterval(timer);
+            }, stepTime);
+        }
+
+        // Smooth scroll
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            });
+        });
+    </script>
+</body>
+</html>

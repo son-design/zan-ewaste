@@ -1,0 +1,1100 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Technician Dashboard - ZanEwaste Hub</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0b3b2f;
+            --secondary: #1e6f5c;
+            --accent: #e67e22;
+            --bg: #f4fbf8;
+            --card: #ffffff;
+            --text: #0f2a23;
+            --text-muted: #4a5f58;
+            --border: #d5e6df;
+            --shadow: 0 20px 30px -10px rgba(0,40,20,0.1);
+            --shadow-hover: 0 30px 40px -15px rgba(230,126,34,0.3);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --transition: all 0.3s ease;
+            
+            --primary-dark: #2a9d8f;
+            --secondary-dark: #34a889;
+            --accent-dark: #f4a261;
+            --bg-dark: #1a2c28;
+            --card-dark: #2a4039;
+            --text-dark: #e9f5f0;
+            --text-muted-dark: #b0cfc2;
+            --border-dark: #3a5f53;
+            --shadow-dark: 0 20px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        .sw { display: inline; }
+        .en { display: none; }
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        /* Animations */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        @keyframes glow { 0%, 100% { box-shadow: 0 0 10px var(--accent); } 50% { box-shadow: 0 0 30px var(--accent); } }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        /* Technician Container */
+        .tech-container { display: flex; min-height: 100vh; background: var(--bg); }
+        .tech-container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(230,126,34,0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(11,59,47,0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Sidebar */
+        .tech-sidebar {
+            width: 300px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: var(--transition);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            z-index: 100;
+            animation: slideInLeft 0.8s ease;
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+            position: relative;
+        }
+        .sidebar-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--accent);
+            animation: glow 2s infinite;
+        }
+        .sidebar-header i { font-size: 2.5rem; color: var(--accent); animation: rotate 10s linear infinite; }
+        .sidebar-header h2 { font-size: 1.5rem; font-weight: 600; }
+        .sidebar-header span { color: var(--accent); }
+
+        .tech-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: float 5s infinite ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+        .tech-profile::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--accent);
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            animation: pulse 2s infinite;
+        }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-name { font-size: 1.3rem; font-weight: 600; margin-bottom: 0.3rem; position: relative; z-index: 2; }
+        .profile-role { font-size: 1rem; color: var(--accent); position: relative; z-index: 2; }
+        .availability-badge {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+            position: relative;
+            z-index: 2;
+        }
+        .availability-badge.available { background: var(--success); color: white; }
+        .availability-badge.busy { background: var(--danger); color: white; }
+        .availability-badge.offline { background: var(--text-muted); color: white; }
+
+        .tech-nav { list-style: none; }
+        .tech-nav li { margin-bottom: 0.5rem; animation: slideInRight 0.5s ease; animation-fill-mode: both; }
+        .tech-nav li:nth-child(1) { animation-delay: 0.1s; }
+        .tech-nav li:nth-child(2) { animation-delay: 0.2s; }
+        .tech-nav li:nth-child(3) { animation-delay: 0.3s; }
+        .tech-nav li:nth-child(4) { animation-delay: 0.4s; }
+        .tech-nav li:nth-child(5) { animation-delay: 0.5s; }
+        .tech-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+        .tech-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+        .tech-nav a:hover::before { left: 100%; }
+        .tech-nav a:hover, .tech-nav a.active {
+            background: var(--accent);
+            transform: translateX(5px);
+            box-shadow: 0 10px 20px rgba(230,126,34,0.3);
+        }
+        .tech-nav i { width: 25px; font-size: 1.2rem; transition: var(--transition); }
+        .tech-nav a:hover i { transform: scale(1.2); }
+
+        /* Main Content */
+        .tech-main {
+            flex: 1;
+            margin-left: 300px;
+            padding: 2rem;
+            background: var(--bg);
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 1s ease;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .tech-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            animation: slideInDown 0.8s ease;
+        }
+        @keyframes slideInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        .tech-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--primary), var(--accent));
+            animation: gradientShift 3s linear infinite;
+        }
+        @keyframes gradientShift { 0% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } 100% { background-position: 0% 50%; } }
+        .page-title h1 { color: var(--primary); font-size: 2rem; margin-bottom: 0.3rem; }
+        .page-title p { color: var(--text-muted); font-size: 0.9rem; }
+
+        .header-actions { display: flex; gap: 1rem; }
+        .header-actions button {
+            background: none; border: 2px solid var(--border); border-radius: 40px;
+            padding: 0.6rem 1rem; cursor: pointer; color: var(--text); transition: var(--transition);
+            display: flex; align-items: center; gap: 0.3rem;
+        }
+        .header-actions button:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-2px); }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease;
+            animation-fill-mode: both;
+        }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+        .stat-card:hover::before { opacity: 0.1; }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+        .stat-icon {
+            width: 60px; height: 60px; background: linear-gradient(135deg, var(--accent), var(--primary));
+            border-radius: 20px; display: flex; align-items: center; justify-content: center;
+            font-size: 2rem; color: white; transition: var(--transition);
+        }
+        .stat-card:hover .stat-icon { transform: rotate(10deg) scale(1.1); }
+        .stat-info h3 { font-size: 2rem; font-weight: 700; color: var(--primary); margin-bottom: 0.2rem; }
+        .stat-info p { color: var(--text-muted); font-size: 0.9rem; }
+
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .chart-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+        }
+        .chart-card h3 { color: var(--primary); margin-bottom: 1rem; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .chart-card h3 i { color: var(--accent); }
+        .chart-container { height: 250px; position: relative; }
+
+        /* Collaborators Section */
+        .collaborators-section { margin-bottom: 2rem; }
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        .section-header h2 { color: var(--primary); font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem; }
+        .section-header h2 i { color: var(--accent); }
+        .agents-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+        .agent-card {
+            background: var(--card);
+            border-radius: 20px;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .agent-card:hover {
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+        .agent-avatar {
+            width: 50px; height: 50px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 1.2rem; font-weight: 600;
+        }
+        .agent-info h4 { color: var(--primary); font-size: 1rem; }
+        .agent-info p { color: var(--text-muted); font-size: 0.8rem; }
+        .contact-agent {
+            padding: 0.4rem 1rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+        .contact-agent:hover { background: var(--primary); transform: scale(1.05); }
+
+        /* Tasks Section */
+        .tasks-section { margin-bottom: 2rem; }
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+        .task-card {
+            background: var(--card);
+            border-radius: 30px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+        }
+        .task-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .task-header h3 { color: var(--primary); font-size: 1.1rem; }
+        .task-priority {
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .priority-high { background: var(--danger); color: white; }
+        .priority-medium { background: var(--warning); color: var(--text); }
+        .priority-low { background: var(--success); color: white; }
+        .task-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0rem;
+            margin-bottom: 1rem;
+        }
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+        .meta-item i { color: var(--accent); width: 20px; }
+        .task-progress { margin: 1rem 0; }
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent), var(--primary));
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .btn-accept, .btn-start, .btn-complete, .btn-report {
+            flex: 1;
+            padding: 0.6rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            color: white;
+        }
+        .btn-accept { background: var(--success); }
+        .btn-start { background: var(--info); }
+        .btn-complete { background: var(--success); }
+        .btn-report { background: var(--accent); }
+        .btn-accept:hover, .btn-start:hover, .btn-complete:hover, .btn-report:hover {
+            transform: translateY(-3px);
+            filter: brightness(0.95);
+        }
+        .btn-report i { margin-right: 0.3rem; }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.show { display: flex; animation: fadeInModal 0.3s ease; }
+        @keyframes fadeInModal { from { opacity: 0; backdrop-filter: blur(0); } to { opacity: 1; backdrop-filter: blur(10px); } }
+        .modal-content {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 40px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            animation: slideInUpModal 0.5s ease;
+            border: 2px solid var(--accent);
+        }
+        @keyframes slideInUpModal { from { opacity: 0; transform: translateY(50px) scale(0.9); } to { opacity: 1; transform: translateY(0) scale(1); } }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .modal-header h3 { color: var(--primary); font-size: 1.5rem; }
+        .close-modal {
+            font-size: 1.8rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .close-modal:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+            background: rgba(230,126,34,0.1);
+        }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.3rem; color: var(--primary); font-weight: 500; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 30px;
+            background: var(--card);
+            color: var(--text);
+            transition: var(--transition);
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+        .form-group textarea { border-radius: 20px; resize: vertical; min-height: 100px; }
+        .photo-upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 30px;
+            padding: 1rem;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+            background: var(--bg);
+        }
+        .photo-upload-area:hover { border-color: var(--accent); background: rgba(230,126,34,0.05); }
+        .photo-upload-area i { font-size: 2rem; color: var(--accent); margin-bottom: 0.5rem; }
+        .photo-upload-area input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .photo-previews {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+        }
+        .preview-item img { width: 100%; height: 100%; object-fit: cover; }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+        .btn-submit, .btn-cancel {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .btn-submit { background: var(--accent); color: white; }
+        .btn-submit:hover { background: var(--primary); transform: translateY(-3px); }
+        .btn-cancel { background: var(--border); color: var(--text); }
+        .btn-cancel:hover { background: var(--text-muted); color: white; }
+
+        .notification {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1200;
+            animation: slideInRightNotif 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        @keyframes slideInRightNotif { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+
+        @media (max-width: 1024px) {
+            .tech-sidebar { width: 250px; }
+            .tech-main { margin-left: 250px; }
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .tech-sidebar { transform: translateX(-100%); position: fixed; }
+            .tech-sidebar.show { transform: translateX(0); }
+            .tech-main { margin-left: 0; }
+            .stats-grid { grid-template-columns: 1fr; }
+            .agents-grid { grid-template-columns: 1fr; }
+            .tasks-grid { grid-template-columns: 1fr; }
+            .tech-header { flex-direction: column; gap: 1rem; text-align: center; }
+        }
+    </style>
+</head>
+<body>
+    <div class="tech-container">
+        <!-- Sidebar -->
+        <div class="tech-sidebar" id="techSidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-recycle"></i>
+                <h2>Zan<span>Ewaste</span></h2>
+            </div>
+            <div class="tech-profile">
+                <div class="profile-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Tech+User&size=100&background=e67e22&color=fff" alt="Technician">
+                </div>
+                <div class="profile-name" id="profileName">Tech User</div>
+                <div class="profile-role">
+                    <span class="sw">Mtaalamu</span>
+                    <span class="en">Technician</span>
+                </div>
+                <span class="availability-badge available" id="availabilityBadge">Available</span>
+            </div>
+            <ul class="tech-nav">
+                <li><a href="dashboard.html" class="active"><i class="fas fa-dashboard"></i> <span class="sw">Dashibodi</span><span class="en">Dashboard</span></a></li>
+                <li><a href="#" onclick="showTasksSection()"><i class="fas fa-tasks"></i> <span class="sw">Kazi Zangu</span><span class="en">My Tasks</span></a></li>
+                <li><a href="#" onclick="showReportModal()"><i class="fas fa-file-alt"></i> <span class="sw">Ripoti</span><span class="en">Report</span></a></li>
+                <li><a href="#" onclick="showCollaborators()"><i class="fas fa-users"></i> <span class="sw">Washirika</span><span class="en">Collaborators</span></a></li>
+                <li><a href="profile.html"><i class="fas fa-user-cog"></i> <span class="sw">Wasifu</span><span class="en">Profile</span></a></li>
+                <li style="margin-top:2rem;"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span class="sw">Toka</span><span class="en">Logout</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="tech-main" id="techMain">
+            <!-- Header -->
+            <div class="tech-header">
+                <div class="page-title">
+                    <h1><span class="sw">Dashibodi ya Mtaalamu</span><span class="en">Technician Dashboard</span></h1>
+                    <p class="sw">Karibu tena! Hapa ndio muhtasari wa kazi zako</p>
+                    <p class="en">Welcome back! Here's your task overview</p>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                    <button class="lang-toggle" id="langToggle"><span class="lang-sw">SW</span> | <span class="lang-en">EN</span></button>
+                    <button class="mobile-menu" id="mobileMenu"><i class="fas fa-bars"></i></button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalTasks">0</h3>
+                        <p class="sw">Jumla ya Kazi</p>
+                        <p class="en">Total Tasks</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-spinner"></i></div>
+                    <div class="stat-info">
+                        <h3 id="pendingTasks">0</h3>
+                        <p class="sw">Zinazoendelea</p>
+                        <p class="en">In Progress</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <h3 id="completedTasks">0</h3>
+                        <p class="sw">Zimekamilika</p>
+                        <p class="en">Completed</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-star"></i></div>
+                    <div class="stat-info">
+                        <h3 id="rating">4.8</h3>
+                        <p class="sw">Ukadiriaji</p>
+                        <p class="en">Rating</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-line"></i> <span class="sw">Maendeleo ya Kazi</span><span class="en">Task Progress</span></h3>
+                    <div class="chart-container">
+                        <canvas id="progressChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-pie"></i> <span class="sw">Aina za Kazi</span><span class="en">Task Types</span></h3>
+                    <div class="chart-container">
+                        <canvas id="taskTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Collaborators Section -->
+            <div class="collaborators-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-users"></i> <span class="sw">Washirika (Agents)</span><span class="en">Collaborators (Agents)</span></h2>
+                    <button class="btn-report" style="padding:0.4rem 1rem; font-size:0.8rem;" onclick="showCollaborators()"><i class="fas fa-envelope"></i> <span class="sw">Wasiliana</span><span class="en">Contact</span></button>
+                </div>
+                <div class="agents-grid" id="agentsGrid">
+                    <!-- Agents will be loaded here -->
+                </div>
+            </div>
+
+            <!-- Tasks Section -->
+            <div class="tasks-section">
+                <div class="section-header">
+                    <h2><i class="fas fa-tasks"></i> <span class="sw">Kazi Zangu</span><span class="en">My Tasks</span></h2>
+                    <button class="btn-report" style="padding:0.4rem 1rem; font-size:0.8rem;" onclick="showAllTasks()"><span class="sw">Angalia Zote</span><span class="en">View All</span></button>
+                </div>
+                <div class="tasks-grid" id="tasksGrid">
+                    <!-- Tasks will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Report Modal -->
+    <div class="modal" id="reportModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-file-alt"></i> <span class="sw">Wasilisha Ripoti</span><span class="en">Submit Report</span></h3>
+                <span class="close-modal" onclick="closeReportModal()">&times;</span>
+            </div>
+            <form id="reportForm">
+                <input type="hidden" id="reportTaskId">
+                <div class="form-group">
+                    <label class="sw">Kazi</label><label class="en">Task</label>
+                    <select id="reportTaskSelect" required onchange="updateTaskDetails()">
+                        <option value="">-- Chagua kazi --</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="sw">Maelezo ya Kazi</label><label class="en">Task Description</label>
+                    <textarea id="taskDescription" rows="2" readonly style="background: var(--bg);"></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="sw">Uzito wa Taka (kg)</label><label class="en">Waste Weight (kg)</label>
+                    <input type="number" id="reportWeight" step="0.1" required>
+                </div>
+                <div class="form-group">
+                    <label class="sw">Idadi ya Vifaa</label><label class="en">Items Count</label>
+                    <input type="number" id="reportItems" min="1" required>
+                </div>
+                <div class="form-group">
+                    <label class="sw">Aina za Vifaa</label><label class="en">Device Types</label>
+                    <select id="reportDeviceTypes" multiple size="3">
+                        <option value="phones">Simu</option>
+                        <option value="laptops">Laptops</option>
+                        <option value="tvs">TV/Monitors</option>
+                        <option value="printers">Printers</option>
+                        <option value="batteries">Batteries</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="sw">Picha za Ushahidi</label><label class="en">Evidence Photos</label>
+                    <div class="photo-upload-area" id="photoUploadArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p class="sw">Bonyeza kupakia picha</p>
+                        <p class="en">Click to upload photos</p>
+                        <input type="file" id="reportPhotos" multiple accept="image/*">
+                    </div>
+                    <div class="photo-previews" id="photoPreviews"></div>
+                </div>
+                <div class="form-group">
+                    <label class="sw">Maelezo ya Ziada</label><label class="en">Additional Notes</label>
+                    <textarea id="reportNotes" rows="3"></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> <span class="sw">Wasilisha</span><span class="en">Submit</span></button>
+                    <button type="button" class="btn-cancel" onclick="closeReportModal()"><span class="sw">Ghairi</span><span class="en">Cancel</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contact Agent Modal -->
+    <div class="modal" id="contactModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-envelope"></i> <span class="sw">Wasiliana na Agent</span><span class="en">Contact Agent</span></h3>
+                <span class="close-modal" onclick="closeContactModal()">&times;</span>
+            </div>
+            <form id="contactForm">
+                <input type="hidden" id="contactAgentId">
+                <div class="form-group">
+                    <label class="sw">Jina la Agent</label><label class="en">Agent Name</label>
+                    <input type="text" id="contactAgentName" readonly style="background: var(--bg);">
+                </div>
+                <div class="form-group">
+                    <label class="sw">Ujumbe</label><label class="en">Message</label>
+                    <textarea id="contactMessage" rows="5" required placeholder="Andika ujumbe wako hapa..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn-submit"><i class="fas fa-paper-plane"></i> <span class="sw">Tuma</span><span class="en">Send</span></button>
+                    <button type="button" class="btn-cancel" onclick="closeContactModal()"><span class="sw">Ghairi</span><span class="en">Cancel</span></button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true, offset: 100, easing: 'ease-in-out' });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        });
+
+        // Language Toggle
+        const langToggle = document.getElementById('langToggle');
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        langToggle.addEventListener('click', () => {
+            const newLang = html.getAttribute('data-lang') === 'sw' ? 'en' : 'sw';
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+        });
+
+        // Mobile Menu
+        const mobileMenu = document.getElementById('mobileMenu');
+        const sidebar = document.getElementById('techSidebar');
+        mobileMenu.addEventListener('click', () => sidebar.classList.toggle('show'));
+
+        // ===== DEMO DATA =====
+        let tasks = [
+            { id: 1, title: 'Karabati Laptop - Stone Town', location: 'Stone Town', dueDate: '2026-04-20', priority: 'high', status: 'pending', progress: 0, description: 'Karabati laptop iliyoharibika' },
+            { id: 2, title: 'Ukusanyaji Betri - Nungwi', location: 'Nungwi', dueDate: '2026-04-18', priority: 'urgent', status: 'progress', progress: 45, description: 'Kukusanya betri zilizotumika' },
+            { id: 3, title: 'Uchakataji TV - Pemba', location: 'Pemba', dueDate: '2026-04-25', priority: 'medium', status: 'accepted', progress: 0, description: 'Uchakataji wa televisheni zilizoharibika' }
+        ];
+
+        let agents = [
+            { id: 1, name: 'John Agent', email: 'john@agent.com', region: 'Unguja North', phone: '+255 712 345 678' },
+            { id: 2, name: 'Maryam Said', email: 'maryam@agent.com', region: 'Pemba South', phone: '+255 712 345 679' },
+            { id: 3, name: 'Ali Hassan', email: 'ali@agent.com', region: 'Urban West', phone: '+255 712 345 680' }
+        ];
+
+        let completedCount = 0;
+        let progressCount = 0;
+
+        function loadDashboard() {
+            const total = tasks.length;
+            progressCount = tasks.filter(t => t.status === 'progress').length;
+            completedCount = tasks.filter(t => t.status === 'completed').length;
+            document.getElementById('totalTasks').textContent = total;
+            document.getElementById('pendingTasks').textContent = progressCount;
+            document.getElementById('completedTasks').textContent = completedCount;
+            document.getElementById('rating').textContent = (4.2 + (completedCount * 0.05)).toFixed(1);
+            loadTasks();
+            loadAgents();
+            initCharts();
+        }
+
+        function loadTasks() {
+            const grid = document.getElementById('tasksGrid');
+            let pendingTasks = tasks.filter(t => t.status !== 'completed');
+            if (pendingTasks.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:2rem;">Hakuna kazi</div>';
+                return;
+            }
+            grid.innerHTML = pendingTasks.map(task => `
+                <div class="task-card">
+                    <div class="task-header">
+                        <h3>${task.title}</h3>
+                        <span class="task-priority priority-${task.priority === 'urgent' ? 'high' : task.priority}">${task.priority}</span>
+                    </div>
+                    <div class="task-meta">
+                        <div class="meta-item"><i class="fas fa-map-marker-alt"></i> ${task.location}</div>
+                        <div class="meta-item"><i class="fas fa-calendar"></i> Tarehe: ${task.dueDate}</div>
+                    </div>
+                    <div class="task-progress">
+                        <div class="progress-bar"><div class="progress-fill" style="width:${task.progress}%"></div></div>
+                    </div>
+                    <div class="task-actions">
+                        ${task.status === 'pending' ? `<button class="btn-accept" onclick="acceptTask(${task.id})"><i class="fas fa-check"></i> <span class="sw">Kubali</span><span class="en">Accept</span></button>` : ''}
+                        ${task.status === 'accepted' ? `<button class="btn-start" onclick="startTask(${task.id})"><i class="fas fa-play"></i> <span class="sw">Anza</span><span class="en">Start</span></button>` : ''}
+                        ${task.status === 'progress' ? `<button class="btn-complete" onclick="completeTask(${task.id})"><i class="fas fa-check-double"></i> <span class="sw">Kamilisha</span><span class="en">Complete</span></button>` : ''}
+                        <button class="btn-report" onclick="openReportModalForTask(${task.id})"><i class="fas fa-file-alt"></i> <span class="sw">Ripoti</span><span class="en">Report</span></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function loadAgents() {
+            const grid = document.getElementById('agentsGrid');
+            grid.innerHTML = agents.map(agent => `
+                <div class="agent-card">
+                    <div class="agent-avatar">${agent.name.charAt(0)}</div>
+                    <div class="agent-info">
+                        <h4>${agent.name}</h4>
+                        <p><i class="fas fa-map-marker-alt"></i> ${agent.region}</p>
+                        <p><i class="fas fa-phone"></i> ${agent.phone}</p>
+                    </div>
+                    <button class="contact-agent" onclick="openContactModal(${agent.id}, '${agent.name}')"><i class="fas fa-envelope"></i></button>
+                </div>
+            `).join('');
+        }
+
+        function acceptTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) { task.status = 'accepted'; loadDashboard(); showNotification('Task accepted!'); }
+        }
+
+        function startTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) { task.status = 'progress'; task.progress = 25; loadDashboard(); showNotification('Task started!'); }
+        }
+
+        function completeTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) { task.status = 'completed'; task.progress = 100; loadDashboard(); showNotification('Task completed!'); }
+        }
+
+        function openReportModalForTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                const select = document.getElementById('reportTaskSelect');
+                select.innerHTML = `<option value="${task.id}">${task.title}</option>`;
+                document.getElementById('taskDescription').value = task.description;
+                document.getElementById('reportModal').classList.add('show');
+            }
+        }
+
+        function showReportModal() {
+            const select = document.getElementById('reportTaskSelect');
+            select.innerHTML = '<option value="">-- Chagua kazi --</option>' + 
+                tasks.filter(t => t.status !== 'completed').map(t => `<option value="${t.id}">${t.title}</option>`).join('');
+            document.getElementById('taskDescription').value = '';
+            document.getElementById('reportModal').classList.add('show');
+        }
+
+        function updateTaskDetails() {
+            const taskId = document.getElementById('reportTaskSelect').value;
+            const task = tasks.find(t => t.id == taskId);
+            if (task) document.getElementById('taskDescription').value = task.description;
+            else document.getElementById('taskDescription').value = '';
+        }
+
+        function closeReportModal() { document.getElementById('reportModal').classList.remove('show'); }
+        function closeContactModal() { document.getElementById('contactModal').classList.remove('show'); }
+        function showCollaborators() { document.getElementById('collaborators-section').scrollIntoView({ behavior: 'smooth' }); }
+        function showTasksSection() { document.querySelector('.tasks-section').scrollIntoView({ behavior: 'smooth' }); }
+        function showAllTasks() { loadTasks(); document.querySelector('.tasks-section').scrollIntoView({ behavior: 'smooth' }); }
+
+        function openContactModal(id, name) {
+            document.getElementById('contactAgentId').value = id;
+            document.getElementById('contactAgentName').value = name;
+            document.getElementById('contactModal').classList.add('show');
+        }
+
+        // Charts
+        let progressChart, taskTypeChart;
+        function initCharts() {
+            const ctx = document.getElementById('progressChart').getContext('2d');
+            if (progressChart) progressChart.destroy();
+            progressChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun'],
+                    datasets: [{
+                        label: html.getAttribute('data-lang') === 'sw' ? 'Kazi' : 'Tasks',
+                        data: [5, 8, 12, 15, 18, completedCount],
+                        borderColor: '#e67e22',
+                        backgroundColor: 'rgba(230, 126, 34, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#e67e22'
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+            const ctx2 = document.getElementById('taskTypeChart').getContext('2d');
+            if (taskTypeChart) taskTypeChart.destroy();
+            taskTypeChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Karabati', 'Ukusanyaji', 'Uchakataji'],
+                    datasets: [{ data: [3, 2, 1], backgroundColor: ['#e67e22', '#2a9d8f', '#264653'], borderWidth: 0 }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
+            });
+        }
+
+        // Photo preview
+        document.getElementById('reportPhotos').addEventListener('change', function(e) {
+            const preview = document.getElementById('photoPreviews');
+            preview.innerHTML = '';
+            Array.from(this.files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div'); div.className = 'preview-item';
+                    div.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('Report submitted successfully!');
+            closeReportModal();
+        });
+
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            showNotification('Message sent to agent!');
+            closeContactModal();
+        });
+
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.className = 'notification';
+            notif.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        function logout() { localStorage.clear(); window.location.href = 'login.html'; }
+
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth <= 768 && !sidebar.contains(e.target) && !mobileMenu.contains(e.target))
+                sidebar.classList.remove('show');
+        });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeReportModal(); closeContactModal(); } });
+
+        loadDashboard();
+    </script>
+</body>
+</html>

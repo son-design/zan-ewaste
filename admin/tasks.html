@@ -1,0 +1,1835 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Tasks - ZanEwaste Hub | Kazi</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light Theme */
+            --primary: #0b3b2f;
+            --secondary: #1e6f5c;
+            --accent: #e67e22;
+            --bg: #f4fbf8;
+            --card: #ffffff;
+            --text: #0f2a23;
+            --text-muted: #4a5f58;
+            --border: #d5e6df;
+            --shadow: 0 20px 30px -10px rgba(0,40,20,0.1);
+            --shadow-hover: 0 30px 40px -15px rgba(230,126,34,0.3);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --transition: all 0.3s ease;
+            
+            /* Dark Theme */
+            --primary-dark: #2a9d8f;
+            --secondary-dark: #34a889;
+            --accent-dark: #f4a261;
+            --bg-dark: #1a2c28;
+            --card-dark: #2a4039;
+            --text-dark: #e9f5f0;
+            --text-muted-dark: #b0cfc2;
+            --border-dark: #3a5f53;
+            --shadow-dark: 0 20px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* ===== LANGUAGE TOGGLE ===== */
+        .sw { display: inline; }
+        .en { display: none; }
+        
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        /* ===== CUSTOM SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* ===== ADMIN CONTAINER ===== */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .admin-sidebar {
+            width: 300px;
+            background: var(--primary);
+            color: white;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: var(--transition);
+            box-shadow: 5px 0 20px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        [data-theme="dark"] .admin-sidebar {
+            background: var(--primary-dark);
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .sidebar-header i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sidebar-header span {
+            color: var(--accent);
+        }
+
+        .admin-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--accent);
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-role {
+            font-size: 0.9rem;
+            color: var(--accent);
+            opacity: 0.9;
+        }
+
+        .admin-nav {
+            list-style: none;
+        }
+
+        .admin-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transition: left 0.3s;
+        }
+
+        .admin-nav a:hover::before,
+        .admin-nav a.active::before {
+            left: 0;
+        }
+
+        .admin-nav a:hover,
+        .admin-nav a.active {
+            background: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .admin-nav i {
+            width: 25px;
+            font-size: 1.2rem;
+            z-index: 1;
+        }
+
+        .admin-nav span {
+            z-index: 1;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .admin-main {
+            flex: 1;
+            margin-left: 300px;
+            padding: 2rem;
+            background: var(--bg);
+            transition: var(--transition);
+        }
+
+        /* ===== HEADER ===== */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--card);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .page-title h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .page-title p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-actions button {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .header-actions button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-icon {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .stat-info h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .stat-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        /* ===== FILTER TABS ===== */
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 0.8rem 2rem;
+            border: 2px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-tab:hover,
+        .filter-tab.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* ===== TASKS GRID ===== */
+        .tasks-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .task-card {
+            background: var(--card);
+            border-radius: 30px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .task-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .task-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .task-header h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .task-priority {
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .priority-high {
+            background: var(--danger);
+            color: white;
+        }
+
+        .priority-medium {
+            background: var(--warning);
+            color: var(--text);
+        }
+
+        .priority-low {
+            background: var(--success);
+            color: white;
+        }
+
+        .task-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .meta-item i {
+            color: var(--accent);
+            width: 20px;
+        }
+
+        .task-status {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: var(--warning);
+            color: var(--text);
+        }
+
+        .status-progress {
+            background: var(--info);
+            color: white;
+        }
+
+        .status-completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .status-overdue {
+            background: var(--danger);
+            color: white;
+        }
+
+        .task-progress {
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .progress-text {
+            margin-top: 0.3rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .task-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+        }
+
+        .action-btn.view {
+            background: var(--info);
+            color: white;
+        }
+
+        .action-btn.edit {
+            background: var(--primary);
+            color: white;
+        }
+
+        .action-btn.delete {
+            background: var(--danger);
+            color: white;
+        }
+
+        .action-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* ===== ADD TASK BUTTON ===== */
+        .add-task-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border: 2px solid var(--accent);
+        }
+
+        .add-task-btn:hover {
+            background: transparent;
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .add-task-btn i {
+            transition: transform 0.3s;
+        }
+
+        .add-task-btn:hover i {
+            transform: rotate(90deg);
+        }
+
+        /* ===== EXPORT BUTTONS ===== */
+        .export-buttons {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .export-btn {
+            padding: 0.8rem 1.5rem;
+            border: 2px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .export-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .export-btn.pdf {
+            background: var(--danger);
+            color: white;
+            border-color: var(--danger);
+        }
+
+        .export-btn.excel {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        /* ===== TASK MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 50px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            animation: slideInUp 0.5s ease;
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+        }
+
+        .close-modal {
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            font-size: 1rem;
+            background: var(--card);
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(230,126,34,0.2);
+        }
+
+        .form-group textarea {
+            border-radius: 30px;
+            resize: vertical;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .modal-footer button {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-save {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+        }
+
+        .btn-cancel {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .btn-cancel:hover {
+            background: var(--text-muted);
+            color: white;
+        }
+
+        /* ===== CONFIRMATION DIALOG ===== */
+        .confirm-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            z-index: 1100;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            border: 2px solid var(--accent);
+        }
+
+        .confirm-dialog.show {
+            display: block;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .confirm-dialog i {
+            font-size: 4rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+        }
+
+        .confirm-dialog h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .confirm-dialog p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .confirm-actions button {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .confirm-yes {
+            background: var(--danger);
+            color: white;
+        }
+
+        .confirm-yes:hover {
+            background: #c82333;
+            transform: translateY(-3px);
+        }
+
+        .confirm-no {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .confirm-no:hover {
+            background: var(--text-muted);
+            color: white;
+        }
+
+        /* ===== VIEW TASK MODAL ===== */
+        .view-modal .modal-content {
+            max-width: 500px;
+        }
+
+        .task-detail {
+            margin-bottom: 1rem;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .task-detail label {
+            font-weight: 600;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 0.3rem;
+        }
+
+        .task-detail p {
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1200;
+            animation: slideInRight 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .admin-sidebar {
+                width: 250px;
+            }
+            
+            .admin-main {
+                margin-left: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-tabs {
+                overflow-x: auto;
+                padding-bottom: 1rem;
+            }
+            
+            .tasks-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-recycle"></i>
+                <h2>Zan<span>Ewaste</span></h2>
+            </div>
+            
+            <div class="admin-profile">
+                <div class="profile-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&size=80&background=e67e22&color=fff" alt="Admin">
+                </div>
+                <div class="profile-name">Admin User</div>
+                <div class="profile-role">
+                    <span class="sw">Msimamizi Mkuu</span>
+                    <span class="en">Super Admin</span>
+                </div>
+            </div>
+            
+            <ul class="admin-nav">
+                <li><a href="index.html">
+                    <i class="fas fa-dashboard"></i>
+                    <span class="sw">Dashibodi</span>
+                    <span class="en">Dashboard</span>
+                </a></li>
+                <li><a href="agents.html">
+                    <i class="fas fa-users"></i>
+                    <span class="sw">Wakala</span>
+                    <span class="en">Agents</span>
+                </a></li>
+                <li><a href="tasks.html" class="active">
+                    <i class="fas fa-tasks"></i>
+                    <span class="sw">Kazi</span>
+                    <span class="en">Tasks</span>
+                </a></li>
+                <li><a href="projects.html">
+                    <i class="fas fa-project-diagram"></i>
+                    <span class="sw">Miradi</span>
+                    <span class="en">Projects</span>
+                </a></li>
+                <li><a href="reports.html">
+                    <i class="fas fa-chart-bar"></i>
+                    <span class="sw">Ripoti</span>
+                    <span class="en">Reports</span>
+                </a></li>
+                <li style="margin-top: 2rem;"><a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="sw">Toka</span>
+                    <span class="en">Logout</span>
+                </a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Header -->
+            <div class="admin-header">
+                <div class="page-title">
+                    <h1>
+                        <span class="sw">Kazi</span>
+                        <span class="en">Tasks</span>
+                    </h1>
+                    <p class="sw">Simamia kazi zote za wakala</p>
+                    <p class="en">Manage all agent tasks</p>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    <button class="lang-toggle" id="langToggle">
+                        <span class="lang-sw">SW</span>
+                        <span class="lang-separator">|</span>
+                        <span class="lang-en">EN</span>
+                    </button>
+                    
+                    <button class="mobile-menu" id="mobileMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="stats-grid" data-aos="fade-up">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="stat-info">
+                        <h3>24</h3>
+                        <p class="sw">Jumla ya Kazi</p>
+                        <p class="en">Total Tasks</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info">
+                        <h3>8</h3>
+                        <p class="sw">Zinazoendelea</p>
+                        <p class="en">In Progress</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <h3>12</h3>
+                        <p class="sw">Zilizokamilika</p>
+                        <p class="en">Completed</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="stat-info">
+                        <h3>4</h3>
+                        <p class="sw">Zimechelewa</p>
+                        <p class="en">Overdue</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Filter Tabs -->
+            <div class="filter-tabs" data-aos="fade-up" data-aos-delay="100">
+                <button class="filter-tab active" data-filter="all">
+                    <i class="fas fa-th-large"></i>
+                    <span class="sw">Zote</span>
+                    <span class="en">All</span>
+                </button>
+                <button class="filter-tab" data-filter="pending">
+                    <i class="fas fa-clock"></i>
+                    <span class="sw">Zinazosubiri</span>
+                    <span class="en">Pending</span>
+                </button>
+                <button class="filter-tab" data-filter="progress">
+                    <i class="fas fa-spinner"></i>
+                    <span class="sw">Zinazoendelea</span>
+                    <span class="en">In Progress</span>
+                </button>
+                <button class="filter-tab" data-filter="completed">
+                    <i class="fas fa-check-circle"></i>
+                    <span class="sw">Zilizokamilika</span>
+                    <span class="en">Completed</span>
+                </button>
+                <button class="filter-tab" data-filter="overdue">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span class="sw">Zimechelewa</span>
+                    <span class="en">Overdue</span>
+                </button>
+            </div>
+            
+            <!-- Add Task Button -->
+            <button class="add-task-btn" onclick="showAddTaskModal()" data-aos="fade-up" data-aos-delay="200">
+                <i class="fas fa-plus-circle"></i>
+                <span class="sw">Ongeza Kazi Mpya</span>
+                <span class="en">Add New Task</span>
+            </button>
+            
+            <!-- Export Buttons -->
+            <div class="export-buttons" data-aos="fade-up" data-aos-delay="300">
+                <button class="export-btn pdf" onclick="exportToPDF()">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="sw">Pakua PDF</span>
+                    <span class="en">Download PDF</span>
+                </button>
+                <button class="export-btn excel" onclick="exportToExcel()">
+                    <i class="fas fa-file-excel"></i>
+                    <span class="sw">Pakua Excel</span>
+                    <span class="en">Download Excel</span>
+                </button>
+            </div>
+            
+            <!-- Tasks Grid -->
+            <div class="tasks-grid" id="tasksGrid" data-aos="fade-up" data-aos-delay="400"></div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Task Modal -->
+    <div class="modal" id="taskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="sw">Ongeza Kazi Mpya</h3>
+                <h3 id="modalTitleEn" class="en">Add New Task</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            
+            <form id="taskForm">
+                <input type="hidden" id="taskId">
+                
+                <div class="form-group">
+                    <label class="sw">Wakala</label>
+                    <label class="en">Agent</label>
+                    <select id="agentId" required>
+                        <option value="1" class="sw">John Agent - Unguja Kaskazini</option>
+                        <option value="1" class="en">John Agent - Unguja North</option>
+                        <option value="2" class="sw">Maryam Said - Pemba Kusini</option>
+                        <option value="2" class="en">Maryam Said - Pemba South</option>
+                        <option value="3" class="sw">Ali Hassan - Mjini Magharibi</option>
+                        <option value="3" class="en">Ali Hassan - Urban West</option>
+                        <option value="4" class="sw">Fatma Khamis - Pemba Kaskazini</option>
+                        <option value="4" class="en">Fatma Khamis - Pemba North</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label class="sw">Jina la Kazi</label>
+                    <label class="en">Task Title</label>
+                    <input type="text" id="taskTitle" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="sw">Kipaumbele</label>
+                        <label class="en">Priority</label>
+                        <select id="priority" required>
+                            <option value="low" class="sw">Chini</option>
+                            <option value="low" class="en">Low</option>
+                            <option value="medium" class="sw">Kati</option>
+                            <option value="medium" class="en">Medium</option>
+                            <option value="high" class="sw">Juu</option>
+                            <option value="high" class="en">High</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="sw">Hali</label>
+                        <label class="en">Status</label>
+                        <select id="status" required>
+                            <option value="pending" class="sw">Inasubiri</option>
+                            <option value="pending" class="en">Pending</option>
+                            <option value="progress" class="sw">Inaendelea</option>
+                            <option value="progress" class="en">In Progress</option>
+                            <option value="completed" class="sw">Imekamilika</option>
+                            <option value="completed" class="en">Completed</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="sw">Tarehe ya Kuanza</label>
+                        <label class="en">Start Date</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="sw">Tarehe ya Kukamilisha</label>
+                        <label class="en">Due Date</label>
+                        <input type="date" id="dueDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="sw">Mahali</label>
+                    <label class="en">Location</label>
+                    <input type="text" id="location" placeholder="e.g., Stone Town, Zanzibar" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="sw">Maelezo</label>
+                    <label class="en">Description</label>
+                    <textarea id="description" rows="4" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="sw">Asilimia ya Uendelezaji</label>
+                    <label class="en">Progress Percentage</label>
+                    <input type="number" id="progress" min="0" max="100" value="0" required>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn-save">
+                        <span class="sw">Hifadhi</span>
+                        <span class="en">Save</span>
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">
+                        <span class="sw">Ghairi</span>
+                        <span class="en">Cancel</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- View Task Modal -->
+    <div class="modal view-modal" id="viewTaskModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="sw">Maelezo ya Kazi</h3>
+                <h3 class="en">Task Details</h3>
+                <span class="close-modal" onclick="closeViewModal()">&times;</span>
+            </div>
+            
+            <div id="taskDetails"></div>
+        </div>
+    </div>
+    
+    <!-- Confirmation Dialog -->
+    <div class="confirm-dialog" id="confirmDialog">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3 class="sw">Una uhakika?</h3>
+        <h3 class="en">Are you sure?</h3>
+        <p class="sw">Unakaribia kufuta kazi hii. Hatua hii haiwezi kutenduliwa.</p>
+        <p class="en">You are about to delete this task. This action cannot be undone.</p>
+        <div class="confirm-actions">
+            <button class="confirm-yes" onclick="confirmDelete()">
+                <span class="sw">Ndio, Futa</span>
+                <span class="en">Yes, Delete</span>
+            </button>
+            <button class="confirm-no" onclick="closeConfirmDialog()">
+                <span class="sw">Hapana</span>
+                <span class="en">Cancel</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // ===== THEME TOGGLE =====
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        
+        // ===== LANGUAGE TOGGLE =====
+        const langToggle = document.getElementById('langToggle');
+        
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        updateLangButtons(savedLang);
+        
+        langToggle.addEventListener('click', function() {
+            const currentLang = html.getAttribute('data-lang');
+            const newLang = currentLang === 'sw' ? 'en' : 'sw';
+            
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+            updateLangButtons(newLang);
+        });
+        
+        function updateLangButtons(lang) {
+            const langSw = document.querySelector('.lang-sw');
+            const langEn = document.querySelector('.lang-en');
+            
+            if (lang === 'sw') {
+                langSw.style.color = 'var(--accent)';
+                langSw.style.fontWeight = '700';
+                langEn.style.color = '';
+                langEn.style.fontWeight = '';
+            } else {
+                langEn.style.color = 'var(--accent)';
+                langEn.style.fontWeight = '700';
+                langSw.style.color = '';
+                langSw.style.fontWeight = '';
+            }
+        }
+        
+        // ===== MOBILE MENU =====
+        const mobileMenu = document.getElementById('mobileMenu');
+        const sidebar = document.getElementById('adminSidebar');
+        
+        mobileMenu.addEventListener('click', function() {
+            sidebar.classList.toggle('show');
+        });
+
+        // ===== TASKS DATA =====
+        let tasks = [
+            {
+                id: 1,
+                agentId: 1,
+                agentName: 'John Agent',
+                agentRegion: 'Unguja North',
+                title: 'Stone Town Collection',
+                priority: 'high',
+                status: 'progress',
+                startDate: '2026-03-01',
+                dueDate: '2026-03-05',
+                location: 'Stone Town, Zanzibar',
+                description: 'Collect e-waste from 5 locations in Stone Town including Forodhani, Mkunazini, and Kiponda.',
+                progress: 60
+            },
+            {
+                id: 2,
+                agentId: 2,
+                agentName: 'Maryam Said',
+                agentRegion: 'Pemba South',
+                title: 'Nungwi Beach Hotels',
+                priority: 'high',
+                status: 'pending',
+                startDate: '2026-03-10',
+                dueDate: '2026-03-15',
+                location: 'Nungwi, Unguja North',
+                description: 'Collect e-waste from 8 hotels in Nungwi area. Estimated 200kg of waste.',
+                progress: 0
+            },
+            {
+                id: 3,
+                agentId: 3,
+                agentName: 'Ali Hassan',
+                agentRegion: 'Urban West',
+                title: 'Paje Electronic Shops',
+                priority: 'medium',
+                status: 'progress',
+                startDate: '2026-03-02',
+                dueDate: '2026-03-08',
+                location: 'Paje, Unguja South',
+                description: 'Collection from 3 electronic shops. Old computers and phones.',
+                progress: 40
+            },
+            {
+                id: 4,
+                agentId: 4,
+                agentName: 'Fatma Khamis',
+                agentRegion: 'Pemba North',
+                title: 'Pemba Recycling Center',
+                priority: 'low',
+                status: 'completed',
+                startDate: '2026-02-20',
+                dueDate: '2026-02-28',
+                location: 'Chake Chake, Pemba',
+                description: 'Deliver recycling equipment to Pemba center.',
+                progress: 100
+            },
+            {
+                id: 5,
+                agentId: 1,
+                agentName: 'John Agent',
+                agentRegion: 'Unguja North',
+                title: 'Jambiani Beach Cleanup',
+                priority: 'medium',
+                status: 'overdue',
+                startDate: '2026-02-15',
+                dueDate: '2026-02-20',
+                location: 'Jambiani, Unguja South',
+                description: 'Beach cleanup and e-waste collection with 150 participants.',
+                progress: 30
+            }
+        ];
+
+        let currentDeleteId = null;
+        let currentFilter = 'all';
+
+        // Load tasks
+        function loadTasks() {
+            const grid = document.getElementById('tasksGrid');
+            grid.innerHTML = '';
+
+            let filteredTasks = tasks;
+            if (currentFilter !== 'all') {
+                filteredTasks = tasks.filter(task => task.status === currentFilter);
+            }
+
+            filteredTasks.forEach(task => {
+                const card = createTaskCard(task);
+                grid.appendChild(card);
+            });
+        }
+
+        function createTaskCard(task) {
+            const card = document.createElement('div');
+            card.className = 'task-card';
+            card.dataset.id = task.id;
+
+            const priorityClass = task.priority === 'high' ? 'priority-high' : 
+                                 task.priority === 'medium' ? 'priority-medium' : 'priority-low';
+            
+            const priorityText = task.priority === 'high' ? 'High' : 
+                                task.priority === 'medium' ? 'Medium' : 'Low';
+            const priorityTextSw = task.priority === 'high' ? 'Juu' : 
+                                  task.priority === 'medium' ? 'Kati' : 'Chini';
+
+            const statusClass = task.status === 'pending' ? 'status-pending' :
+                               task.status === 'progress' ? 'status-progress' :
+                               task.status === 'completed' ? 'status-completed' : 'status-overdue';
+            
+            const statusText = task.status === 'pending' ? 'Pending' :
+                              task.status === 'progress' ? 'In Progress' :
+                              task.status === 'completed' ? 'Completed' : 'Overdue';
+            const statusTextSw = task.status === 'pending' ? 'Inasubiri' :
+                                task.status === 'progress' ? 'Inaendelea' :
+                                task.status === 'completed' ? 'Imekamilika' : 'Imechelewa';
+
+            const dueDate = new Date(task.dueDate);
+            const today = new Date();
+            const isOverdue = dueDate < today && task.status !== 'completed';
+
+            card.innerHTML = `
+                <div class="task-header">
+                    <h3>${task.title}</h3>
+                    <span class="task-priority ${priorityClass}">
+                        <span class="sw">${priorityTextSw}</span>
+                        <span class="en">${priorityText}</span>
+                    </span>
+                </div>
+                
+                <div class="task-meta">
+                    <div class="meta-item">
+                        <i class="fas fa-user"></i>
+                        <span>${task.agentName} (${task.agentRegion})</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>${task.location}</span>
+                    </div>
+                    <div class="meta-item">
+                        <i class="fas fa-calendar"></i>
+                        <span class="sw">Tarehe: ${task.dueDate}</span>
+                        <span class="en">Due: ${task.dueDate}</span>
+                        ${isOverdue ? '<span class="status-overdue" style="margin-left: 0.5rem;">Overdue</span>' : ''}
+                    </div>
+                </div>
+                
+                <div class="task-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${task.progress}%"></div>
+                    </div>
+                    <div class="progress-text">${task.progress}%</div>
+                </div>
+                
+                <div class="task-actions">
+                    <button class="action-btn view" onclick="viewTask(${task.id})">
+                        <i class="fas fa-eye"></i>
+                        <span class="sw">Angalia</span>
+                        <span class="en">View</span>
+                    </button>
+                    <button class="action-btn edit" onclick="editTask(${task.id})">
+                        <i class="fas fa-edit"></i>
+                        <span class="sw">Hariri</span>
+                        <span class="en">Edit</span>
+                    </button>
+                    <button class="action-btn delete" onclick="showDeleteConfirm(${task.id})">
+                        <i class="fas fa-trash"></i>
+                        <span class="sw">Futa</span>
+                        <span class="en">Delete</span>
+                    </button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                currentFilter = this.dataset.filter;
+                loadTasks();
+            });
+        });
+
+        // Modal functions
+        function showAddTaskModal() {
+            document.getElementById('taskId').value = '';
+            document.getElementById('taskTitle').value = '';
+            document.getElementById('priority').value = 'medium';
+            document.getElementById('status').value = 'pending';
+            document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('dueDate').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('description').value = '';
+            document.getElementById('progress').value = '0';
+            
+            document.getElementById('modalTitle').style.display = 'inline';
+            document.getElementById('modalTitleEn').style.display = 'none';
+            if (html.getAttribute('data-lang') === 'en') {
+                document.getElementById('modalTitle').style.display = 'none';
+                document.getElementById('modalTitleEn').style.display = 'inline';
+            }
+            
+            document.getElementById('taskModal').classList.add('show');
+        }
+
+        function editTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                document.getElementById('taskId').value = task.id;
+                document.getElementById('agentId').value = task.agentId;
+                document.getElementById('taskTitle').value = task.title;
+                document.getElementById('priority').value = task.priority;
+                document.getElementById('status').value = task.status;
+                document.getElementById('startDate').value = task.startDate;
+                document.getElementById('dueDate').value = task.dueDate;
+                document.getElementById('location').value = task.location;
+                document.getElementById('description').value = task.description;
+                document.getElementById('progress').value = task.progress;
+                
+                document.getElementById('modalTitle').innerHTML = 'Hariri Kazi';
+                document.getElementById('modalTitleEn').innerHTML = 'Edit Task';
+                
+                document.getElementById('taskModal').classList.add('show');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('taskModal').classList.remove('show');
+        }
+
+        // View task
+        function viewTask(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                const details = document.getElementById('taskDetails');
+                
+                const statusText = task.status === 'pending' ? 'Pending' :
+                                  task.status === 'progress' ? 'In Progress' :
+                                  task.status === 'completed' ? 'Completed' : 'Overdue';
+                const statusTextSw = task.status === 'pending' ? 'Inasubiri' :
+                                    task.status === 'progress' ? 'Inaendelea' :
+                                    task.status === 'completed' ? 'Imekamilika' : 'Imechelewa';
+                
+                const priorityText = task.priority === 'high' ? 'High' :
+                                    task.priority === 'medium' ? 'Medium' : 'Low';
+                const priorityTextSw = task.priority === 'high' ? 'Juu' :
+                                      task.priority === 'medium' ? 'Kati' : 'Chini';
+
+                details.innerHTML = `
+                    <div class="task-detail">
+                        <label class="sw">Jina la Kazi</label>
+                        <label class="en">Task Title</label>
+                        <p>${task.title}</p>
+                    </div>
+                    <div class="task-detail">
+                        <label class="sw">Wakala</label>
+                        <label class="en">Agent</label>
+                        <p>${task.agentName} (${task.agentRegion})</p>
+                    </div>
+                    <div class="task-detail">
+                        <label class="sw">Kipaumbele</label>
+                        <label class="en">Priority</label>
+                        <p><span class="sw">${priorityTextSw}</span><span class="en">${priorityText}</span></p>
+                    </div>
+                    <div class="task-detail">
+                        <label class="sw">Hali</label>
+                        <label class="en">Status</label>
+                        <p><span class="sw">${statusTextSw}</span><span class="en">${statusText}</span></p>
+                    </div>
+                    <div class="task-detail">
+                        <label class="sw">Mahali</label>
+                        <label class="en">Location</label>
+                        <p>${task.location}</p>
+                    </div>
+                    <div class="task-detail">
+                        <label class="sw">Tarehe ya Kuanza</label>
+                        <label class="en">Start Date</label>
+                        <p>${task.startDate}</p>
+                    </div>
+                    <div class="task-detail">
+                        <label class="sw">Tarehe ya Kukamilisha</label>
+                        <label class="en">Due Date</label>
+                        <p>${task.dueDate}</p>
+                    </div>
+                    <div class="task-detail">
+                        <label class="sw">Maelezo</label>
+                        <label class="en">Description</label>
+                        <p>${task.description}</p>
+                    </div>
+                    <div class="task-detail">
+                        <label class="sw">Uendelezaji</label>
+                        <label class="en">Progress</label>
+                        <p>${task.progress}%</p>
+                    </div>
+                `;
+                
+                document.getElementById('viewTaskModal').classList.add('show');
+            }
+        }
+
+        function closeViewModal() {
+            document.getElementById('viewTaskModal').classList.remove('show');
+        }
+
+        // Form submit
+        document.getElementById('taskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const taskId = document.getElementById('taskId').value;
+            const taskData = {
+                id: taskId ? parseInt(taskId) : Date.now(),
+                agentId: parseInt(document.getElementById('agentId').value),
+                agentName: document.getElementById('agentId').options[document.getElementById('agentId').selectedIndex].text.split(' - ')[0],
+                agentRegion: document.getElementById('agentId').options[document.getElementById('agentId').selectedIndex].text.split(' - ')[1],
+                title: document.getElementById('taskTitle').value,
+                priority: document.getElementById('priority').value,
+                status: document.getElementById('status').value,
+                startDate: document.getElementById('startDate').value,
+                dueDate: document.getElementById('dueDate').value,
+                location: document.getElementById('location').value,
+                description: document.getElementById('description').value,
+                progress: parseInt(document.getElementById('progress').value)
+            };
+
+            if (taskId) {
+                // Update existing task
+                const index = tasks.findIndex(t => t.id === parseInt(taskId));
+                tasks[index] = taskData;
+                showNotification(html.getAttribute('data-lang') === 'sw' ? 'Kazi imehifadhiwa!' : 'Task updated!');
+            } else {
+                // Add new task
+                tasks.push(taskData);
+                showNotification(html.getAttribute('data-lang') === 'sw' ? 'Kazi imeongezwa!' : 'Task added!');
+            }
+
+            loadTasks();
+            closeModal();
+        });
+
+        // Delete confirmation
+        function showDeleteConfirm(id) {
+            currentDeleteId = id;
+            document.getElementById('confirmDialog').classList.add('show');
+        }
+
+        function closeConfirmDialog() {
+            document.getElementById('confirmDialog').classList.remove('show');
+            currentDeleteId = null;
+        }
+
+        function confirmDelete() {
+            if (currentDeleteId) {
+                tasks = tasks.filter(t => t.id !== currentDeleteId);
+                loadTasks();
+                showNotification(html.getAttribute('data-lang') === 'sw' ? 'Kazi imefutwa!' : 'Task deleted!');
+                closeConfirmDialog();
+            }
+        }
+
+        // Export functions
+        function exportToPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            
+            doc.setFontSize(18);
+            doc.setTextColor(11, 59, 47);
+            doc.text('Tasks Report - ZanEwaste Hub', 14, 22);
+            
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            doc.text(`Generated: ${new Date().toLocaleDateString()}`, 14, 32);
+            
+            const tableColumn = html.getAttribute('data-lang') === 'sw' 
+                ? ['Jina', 'Wakala', 'Kipaumbele', 'Hali', 'Tarehe']
+                : ['Title', 'Agent', 'Priority', 'Status', 'Due Date'];
+            
+            const tableRows = [];
+            
+            tasks.forEach(task => {
+                const taskData = [
+                    task.title,
+                    task.agentName,
+                    task.priority,
+                    task.status,
+                    task.dueDate
+                ];
+                tableRows.push(taskData);
+            });
+            
+            doc.autoTable({
+                head: [tableColumn],
+                body: tableRows,
+                startY: 40,
+                theme: 'grid',
+                headStyles: {
+                    fillColor: [230, 126, 34],
+                    textColor: [255, 255, 255],
+                    fontStyle: 'bold'
+                },
+                styles: {
+                    fontSize: 10,
+                    cellPadding: 5
+                }
+            });
+            
+            doc.save('tasks-report.pdf');
+            showNotification(html.getAttribute('data-lang') === 'sw' ? 'PDF imepakuliwa!' : 'PDF downloaded!');
+        }
+
+        function exportToExcel() {
+            const wb = XLSX.utils.book_new();
+            
+            const data = tasks.map(task => ({
+                Title: task.title,
+                Agent: task.agentName,
+                Location: task.location,
+                Priority: task.priority,
+                Status: task.status,
+                'Start Date': task.startDate,
+                'Due Date': task.dueDate,
+                Progress: task.progress + '%',
+                Description: task.description
+            }));
+            
+            const ws = XLSX.utils.json_to_sheet(data);
+            XLSX.utils.book_append_sheet(wb, ws, 'Tasks');
+            XLSX.writeFile(wb, 'tasks-report.xlsx');
+            
+            showNotification(html.getAttribute('data-lang') === 'sw' ? 'Excel imepakuliwa!' : 'Excel downloaded!');
+        }
+
+        // Notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        }
+
+        // Load tasks on page load
+        document.addEventListener('DOMContentLoaded', loadTasks);
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('taskModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+            
+            const viewModal = document.getElementById('viewTaskModal');
+            if (event.target === viewModal) {
+                closeViewModal();
+            }
+            
+            const confirm = document.getElementById('confirmDialog');
+            if (event.target === confirm) {
+                closeConfirmDialog();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeViewModal();
+                closeConfirmDialog();
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - ZanEwaste Hub</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light Theme */
+            --primary: #0b3b2f;
+            --secondary: #1e6f5c;
+            --accent: #e67e22;
+            --bg: #f4fbf8;
+            --card: #ffffff;
+            --text: #0f2a23;
+            --text-muted: #4a5f58;
+            --border: #d5e6df;
+            --shadow: 0 20px 30px -10px rgba(0,40,20,0.1);
+            --shadow-hover: 0 30px 40px -15px rgba(230,126,34,0.3);
+            --sidebar-bg: #0b3b2f;
+            --sidebar-text: #ffffff;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --transition: all 0.3s ease;
+            
+            /* Dark Theme */
+            --primary-dark: #2a9d8f;
+            --secondary-dark: #34a889;
+            --accent-dark: #f4a261;
+            --bg-dark: #1a2c28;
+            --card-dark: #2a4039;
+            --text-dark: #e9f5f0;
+            --text-muted-dark: #b0cfc2;
+            --border-dark: #3a5f53;
+            --shadow-dark: 0 20px 30px -10px rgba(0,0,0,0.3);
+            --sidebar-bg-dark: #1a2c28;
+            --success-dark: #34ce57;
+            --warning-dark: #ffc107;
+            --danger-dark: #ff4444;
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+            --sidebar-bg: var(--sidebar-bg-dark);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* ===== LANGUAGE TOGGLE ===== */
+        .sw { display: inline; }
+        .en { display: none; }
+        
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        /* ===== CUSTOM SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* ===== ADMIN CONTAINER ===== */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .admin-sidebar {
+            width: 300px;
+            background: var(--sidebar-bg);
+            color: var(--sidebar-text);
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: var(--transition);
+            box-shadow: 5px 0 20px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .sidebar-header i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sidebar-header span {
+            color: var(--accent);
+        }
+
+        .admin-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(5px);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--accent);
+            overflow: hidden;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+        }
+
+        .profile-role {
+            font-size: 0.9rem;
+            color: var(--accent);
+            opacity: 0.9;
+        }
+
+        .admin-nav {
+            list-style: none;
+        }
+
+        .admin-nav li {
+            margin-bottom: 0.5rem;
+        }
+
+        .admin-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.1);
+            transition: left 0.3s;
+        }
+
+        .admin-nav a:hover::before,
+        .admin-nav a.active::before {
+            left: 0;
+        }
+
+        .admin-nav a:hover,
+        .admin-nav a.active {
+            background: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .admin-nav i {
+            width: 25px;
+            font-size: 1.2rem;
+            z-index: 1;
+        }
+
+        .admin-nav span {
+            z-index: 1;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .admin-main {
+            flex: 1;
+            margin-left: 300px;
+            padding: 2rem;
+            background: var(--bg);
+            transition: var(--transition);
+        }
+
+        /* ===== HEADER ===== */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1rem;
+            background: var(--card);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .header-search {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            max-width: 400px;
+        }
+
+        .header-search input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            font-size: 0.9rem;
+            background: var(--bg);
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .header-search input:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .header-search button {
+            width: 45px;
+            height: 45px;
+            background: var(--accent);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .header-search button:hover {
+            background: var(--primary);
+            transform: scale(1.1);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-actions button {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .header-actions button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .notification-icon {
+            position: relative;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            animation: pulse 2s infinite;
+        }
+
+        /* ===== WELCOME BANNER ===== */
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 2rem;
+            border-radius: 40px;
+            margin-bottom: 2rem;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .welcome-banner::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        .welcome-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .welcome-content h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .welcome-content p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+        }
+
+        .date-display {
+            position: absolute;
+            top: 2rem;
+            right: 2rem;
+            background: rgba(255,255,255,0.2);
+            padding: 0.5rem 1.5rem;
+            border-radius: 40px;
+            backdrop-filter: blur(5px);
+        }
+
+        /* ===== STATS GRID ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .stat-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            background: var(--accent);
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+            position: relative;
+            z-index: 2;
+            transition: var(--transition);
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .stat-info {
+            flex: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .stat-info h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-info p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .stat-trend {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            margin-top: 0.3rem;
+            font-size: 0.8rem;
+        }
+
+        .trend-up {
+            color: var(--success);
+        }
+
+        .trend-down {
+            color: var(--danger);
+        }
+
+        /* ===== CHARTS GRID ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .chart-header h3 {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .chart-header select {
+            padding: 0.3rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            background: var(--card);
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .chart-container {
+            height: 250px;
+            position: relative;
+        }
+
+        /* ===== TABLES SECTION ===== */
+        .tables-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .table-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+        }
+
+        .table-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .table-header h3 {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .view-all {
+            color: var(--accent);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: var(--transition);
+        }
+
+        .view-all:hover {
+            text-decoration: underline;
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .activity-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
+
+        .activity-details {
+            flex: 1;
+        }
+
+        .activity-details p {
+            font-weight: 500;
+            color: var(--text);
+        }
+
+        .activity-details small {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .activity-time {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+
+        .task-progress {
+            width: 100px;
+            height: 6px;
+            background: var(--border);
+            border-radius: 3px;
+            overflow: hidden;
+            margin-top: 0.3rem;
+        }
+
+        .task-progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 3px;
+        }
+
+        /* ===== TASK LIST ===== */
+        .task-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .task-priority {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+        }
+
+        .priority-high {
+            background: var(--danger);
+        }
+
+        .priority-medium {
+            background: var(--warning);
+        }
+
+        .priority-low {
+            background: var(--success);
+        }
+
+        .task-info {
+            flex: 1;
+        }
+
+        .task-info h4 {
+            color: var(--primary);
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .task-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .task-meta i {
+            color: var(--accent);
+            margin-right: 0.3rem;
+        }
+
+        .task-status {
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-pending {
+            background: var(--warning);
+            color: var(--text);
+        }
+
+        .status-progress {
+            background: var(--info);
+            color: white;
+        }
+
+        .status-completed {
+            background: var(--success);
+            color: white;
+        }
+
+        /* ===== QUICK ACTIONS ===== */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .action-btn {
+            background: var(--card);
+            border: 2px solid var(--border);
+            border-radius: 30px;
+            padding: 1rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.5rem;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text);
+        }
+
+        .action-btn:hover {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        .action-btn i {
+            font-size: 1.5rem;
+            color: var(--accent);
+            transition: var(--transition);
+        }
+
+        .action-btn:hover i {
+            color: white;
+        }
+
+        /* ===== DARK THEME SPECIFIC ===== */
+        [data-theme="dark"] .stat-card {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        [data-theme="dark"] .chart-card {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        [data-theme="dark"] .table-card {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        [data-theme="dark"] .admin-header {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .admin-sidebar {
+                width: 250px;
+            }
+            
+            .admin-main {
+                margin-left: 250px;
+            }
+            
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .tables-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+                z-index: 1000;
+            }
+            
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-banner h1 {
+                font-size: 1.5rem;
+            }
+            
+            .date-display {
+                position: static;
+                margin-top: 1rem;
+                display: inline-block;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-recycle"></i>
+                <h2>Zan<span>Ewaste</span></h2>
+            </div>
+            
+            <div class="admin-profile">
+                <div class="profile-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&size=80&background=e67e22&color=fff" alt="Admin">
+                </div>
+                <div class="profile-name">Admin User</div>
+                <div class="profile-role">
+                    <span class="sw">Msimamizi Mkuu</span>
+                    <span class="en">Super Admin</span>
+                </div>
+            </div>
+            
+            <ul class="admin-nav">
+                <li><a href="index.html" class="active">
+                    <i class="fas fa-dashboard"></i>
+                    <span class="sw">Dashibodi</span>
+                    <span class="en">Dashboard</span>
+                </a></li>
+                <li><a href="agents.html">
+                    <i class="fas fa-users"></i>
+                    <span class="sw">Wakala</span>
+                    <span class="en">Agents</span>
+                </a></li>
+                <li><a href="tasks.html">
+                    <i class="fas fa-tasks"></i>
+                    <span class="sw">Kazi</span>
+                    <span class="en">Tasks</span>
+                </a></li>
+                <li><a href="projects.html">
+                    <i class="fas fa-project-diagram"></i>
+                    <span class="sw">Miradi</span>
+                    <span class="en">Projects</span>
+                </a></li>
+                <li><a href="reports.html">
+                    <i class="fas fa-chart-bar"></i>
+                    <span class="sw">Ripoti</span>
+                    <span class="en">Reports</span>
+                </a></li>
+                <li><a href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    <span class="sw">Mipangilio</span>
+                    <span class="en">Settings</span>
+                </a></li>
+                <li style="margin-top: 2rem;"><a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="sw">Toka</span>
+                    <span class="en">Logout</span>
+                </a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Header -->
+            <div class="admin-header">
+                <div class="header-search">
+                    <input type="text" id="searchInput" placeholder="Tafuta..." class="sw">
+                    <input type="text" id="searchInputEn" placeholder="Search..." class="en">
+                    <button id="searchBtn"><i class="fas fa-search"></i></button>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    <button class="lang-toggle" id="langToggle">
+                        <span class="lang-sw">SW</span>
+                        <span class="lang-separator">|</span>
+                        <span class="lang-en">EN</span>
+                    </button>
+                    
+                    <button class="notification-icon">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-badge">3</span>
+                    </button>
+                    
+                    <button class="mobile-menu" id="mobileMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Welcome Banner -->
+            <div class="welcome-banner" data-aos="fade-up">
+                <div class="welcome-content">
+                    <h1>
+                        <span class="sw">Karibu tena, Admin!</span>
+                        <span class="en">Welcome back, Admin!</span>
+                    </h1>
+                    <p class="sw">Haya ndiyo maelezo muhimu ya leo.</p>
+                    <p class="en">Here's what's happening today.</p>
+                </div>
+                <div class="date-display" id="currentDate"></div>
+            </div>
+            
+            <!-- Stats Grid -->
+            <div class="stats-grid">
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3>24</h3>
+                        <p class="sw">Jumla ya Wakala</p>
+                        <p class="en">Total Agents</p>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span class="trend-up">+12%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="stat-info">
+                        <h3>156</h3>
+                        <p class="sw">Kazi Zinazoendelea</p>
+                        <p class="en">Active Tasks</p>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span class="trend-up">+8%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon"><i class="fas fa-weight"></i></div>
+                    <div class="stat-info">
+                        <h3>2,450</h3>
+                        <p class="sw">Kg Zilizokusanywa</p>
+                        <p class="en">kg Collected</p>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span class="trend-up">+15%</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stat-icon"><i class="fas fa-recycle"></i></div>
+                    <div class="stat-info">
+                        <h3>1,850</h3>
+                        <p class="sw">Kg Zilizochakatwa</p>
+                        <p class="en">kg Recycled</p>
+                        <div class="stat-trend">
+                            <i class="fas fa-arrow-up trend-up"></i>
+                            <span class="trend-up">+10%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Charts Grid -->
+            <div class="charts-grid">
+                <div class="chart-card" data-aos="fade-right">
+                    <div class="chart-header">
+                        <h3 class="sw">Ukusanyaji kwa Mkoa</h3>
+                        <h3 class="en">Collection by Region</h3>
+                        <select id="regionChartType">
+                            <option value="bar" class="sw">Baa</option>
+                            <option value="bar" class="en">Bar</option>
+                            <option value="line" class="sw">Mstari</option>
+                            <option value="line" class="en">Line</option>
+                        </select>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="regionChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="chart-card" data-aos="fade-left">
+                    <div class="chart-header">
+                        <h3 class="sw">Aina za Taka</h3>
+                        <h3 class="en">Waste Types</h3>
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="wasteChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Tables Grid -->
+            <div class="tables-grid">
+                <!-- Recent Activities -->
+                <div class="table-card" data-aos="fade-up">
+                    <div class="table-header">
+                        <h3 class="sw">Shughuli za Karibuni</h3>
+                        <h3 class="en">Recent Activities</h3>
+                        <a href="#" class="view-all sw">Tazama zote</a>
+                        <a href="#" class="view-all en">View all</a>
+                    </div>
+                    
+                    <ul class="activity-list">
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="activity-details">
+                                <p>Agent John completed task #1234</p>
+                                <small>Stone Town Collection</small>
+                            </div>
+                            <div class="activity-time">5 min ago</div>
+                        </li>
+                        
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-user-plus"></i>
+                            </div>
+                            <div class="activity-details">
+                                <p>New agent registered: Maryam S.</p>
+                                <small>Pemba Region</small>
+                            </div>
+                            <div class="activity-time">1 hour ago</div>
+                        </li>
+                        
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-exclamation-triangle"></i>
+                            </div>
+                            <div class="activity-details">
+                                <p>Task overdue: Nungwi Collection</p>
+                                <small>Assigned to Ali H.</small>
+                            </div>
+                            <div class="activity-time">3 hours ago</div>
+                        </li>
+                        
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-truck"></i>
+                            </div>
+                            <div class="activity-details">
+                                <p>Collection completed: 150kg waste</p>
+                                <small>Jambiani Area</small>
+                            </div>
+                            <div class="activity-time">5 hours ago</div>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!-- Pending Tasks -->
+                <div class="table-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="table-header">
+                        <h3 class="sw">Kazi Zinazosubiri</h3>
+                        <h3 class="en">Pending Tasks</h3>
+                        <a href="#" class="view-all sw">Tazama zote</a>
+                        <a href="#" class="view-all en">View all</a>
+                    </div>
+                    
+                    <div class="task-list">
+                        <div class="task-item">
+                            <span class="task-priority priority-high"></span>
+                            <div class="task-info">
+                                <h4>Stone Town Collection</h4>
+                                <div class="task-meta">
+                                    <span><i class="fas fa-user"></i> John A.</span>
+                                    <span><i class="fas fa-calendar"></i> Due today</span>
+                                </div>
+                            </div>
+                            <span class="task-status status-progress">
+                                <span class="sw">Inaendelea</span>
+                                <span class="en">In Progress</span>
+                            </span>
+                        </div>
+                        
+                        <div class="task-item">
+                            <span class="task-priority priority-medium"></span>
+                            <div class="task-info">
+                                <h4>Nungwi Beach Hotels</h4>
+                                <div class="task-meta">
+                                    <span><i class="fas fa-user"></i> Maryam S.</span>
+                                    <span><i class="fas fa-calendar"></i> Due tomorrow</span>
+                                </div>
+                            </div>
+                            <span class="task-status status-pending">
+                                <span class="sw">Inasubiri</span>
+                                <span class="en">Pending</span>
+                            </span>
+                        </div>
+                        
+                        <div class="task-item">
+                            <span class="task-priority priority-low"></span>
+                            <div class="task-info">
+                                <h4>Paje Electronic Shops</h4>
+                                <div class="task-meta">
+                                    <span><i class="fas fa-user"></i> Ali H.</span>
+                                    <span><i class="fas fa-calendar"></i> Due in 3 days</span>
+                                </div>
+                            </div>
+                            <div class="task-progress">
+                                <div class="task-progress-fill" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        
+                        <div class="task-item">
+                            <span class="task-priority priority-high"></span>
+                            <div class="task-info">
+                                <h4>Pemba Recycling Center</h4>
+                                <div class="task-meta">
+                                    <span><i class="fas fa-user"></i> Fatma K.</span>
+                                    <span><i class="fas fa-calendar"></i> Overdue</span>
+                                </div>
+                            </div>
+                            <span class="task-status status-pending">
+                                <span class="sw">Imechelewa</span>
+                                <span class="en">Overdue</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button class="action-btn" onclick="window.location.href='agents.html'">
+                    <i class="fas fa-user-plus"></i>
+                    <span class="sw">Ongeza Wakala</span>
+                    <span class="en">Add Agent</span>
+                </button>
+                
+                <button class="action-btn" onclick="window.location.href='tasks.html'">
+                    <i class="fas fa-plus-circle"></i>
+                    <span class="sw">Kazi Mpya</span>
+                    <span class="en">New Task</span>
+                </button>
+                
+                <button class="action-btn" onclick="window.location.href='reports.html'">
+                    <i class="fas fa-file-pdf"></i>
+                    <span class="sw">Ripoti</span>
+                    <span class="en">Reports</span>
+                </button>
+                
+                <button class="action-btn" onclick="window.location.href='../gallery.html'">
+                    <i class="fas fa-images"></i>
+                    <span class="sw">Matunzio</span>
+                    <span class="en">Gallery</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // ===== THEME TOGGLE =====
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        
+        // ===== LANGUAGE TOGGLE =====
+        const langToggle = document.getElementById('langToggle');
+        
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        updateLangButtons(savedLang);
+        
+        langToggle.addEventListener('click', function() {
+            const currentLang = html.getAttribute('data-lang');
+            const newLang = currentLang === 'sw' ? 'en' : 'sw';
+            
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+            updateLangButtons(newLang);
+        });
+        
+        function updateLangButtons(lang) {
+            const langSw = document.querySelector('.lang-sw');
+            const langEn = document.querySelector('.lang-en');
+            
+            if (lang === 'sw') {
+                langSw.style.color = 'var(--accent)';
+                langSw.style.fontWeight = '700';
+                langEn.style.color = '';
+                langEn.style.fontWeight = '';
+            } else {
+                langEn.style.color = 'var(--accent)';
+                langEn.style.fontWeight = '700';
+                langSw.style.color = '';
+                langSw.style.fontWeight = '';
+            }
+        }
+        
+        // ===== MOBILE MENU =====
+        const mobileMenu = document.getElementById('mobileMenu');
+        const sidebar = document.getElementById('adminSidebar');
+        
+        mobileMenu.addEventListener('click', function() {
+            sidebar.classList.toggle('show');
+        });
+
+        // ===== LOGOUT =====
+        function logout() {
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        }
+
+        // ===== CURRENT DATE =====
+        function updateDate() {
+            const dateElement = document.getElementById('currentDate');
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            dateElement.textContent = now.toLocaleDateString(
+                html.getAttribute('data-lang') === 'sw' ? 'sw-TZ' : 'en-US', 
+                options
+            );
+        }
+        
+        updateDate();
+        setInterval(updateDate, 60000);
+
+        // ===== CHARTS =====
+        // Region Chart
+        const regionCtx = document.getElementById('regionChart').getContext('2d');
+        let regionChart = new Chart(regionCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Unguja North', 'Unguja South', 'Urban West', 'Pemba North', 'Pemba South'],
+                datasets: [{
+                    label: html.getAttribute('data-lang') === 'sw' ? 'Taka (kg)' : 'Waste (kg)',
+                    data: [850, 620, 1200, 430, 350],
+                    backgroundColor: [
+                        'rgba(230, 126, 34, 0.8)',
+                        'rgba(230, 126, 34, 0.6)',
+                        'rgba(230, 126, 34, 0.4)',
+                        'rgba(230, 126, 34, 0.3)',
+                        'rgba(230, 126, 34, 0.2)'
+                    ],
+                    borderColor: 'rgba(230, 126, 34, 1)',
+                    borderWidth: 2,
+                    borderRadius: 10
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        grid: {
+                            color: 'rgba(0,0,0,0.1)'
+                        }
+                    },
+                    x: {
+                        grid: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Waste Type Chart
+        const wasteCtx = document.getElementById('wasteChart').getContext('2d');
+        let wasteChart = new Chart(wasteCtx, {
+            type: 'doughnut',
+            data: {
+                labels: [
+                    html.getAttribute('data-lang') === 'sw' ? 'Simu' : 'Phones',
+                    html.getAttribute('data-lang') === 'sw' ? 'Laptop' : 'Laptops',
+                    html.getAttribute('data-lang') === 'sw' ? 'TV' : 'TVs',
+                    html.getAttribute('data-lang') === 'sw' ? 'Betri' : 'Batteries',
+                    html.getAttribute('data-lang') === 'sw' ? 'Nyingine' : 'Others'
+                ],
+                datasets: [{
+                    data: [35, 25, 20, 15, 5],
+                    backgroundColor: [
+                        '#e67e22',
+                        '#2a9d8f',
+                        '#264653',
+                        '#e9c46a',
+                        '#f4a261'
+                    ],
+                    borderColor: 'transparent',
+                    borderWidth: 0
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                },
+                cutout: '70%'
+            }
+        });
+
+        // Chart type change
+        document.getElementById('regionChartType').addEventListener('change', function() {
+            const type = this.value;
+            regionChart.destroy();
+            regionChart = new Chart(regionCtx, {
+                type: type,
+                data: {
+                    labels: ['Unguja North', 'Unguja South', 'Urban West', 'Pemba North', 'Pemba South'],
+                    datasets: [{
+                        label: html.getAttribute('data-lang') === 'sw' ? 'Taka (kg)' : 'Waste (kg)',
+                        data: [850, 620, 1200, 430, 350],
+                        backgroundColor: 'rgba(230, 126, 34, 0.8)',
+                        borderColor: 'rgba(230, 126, 34, 1)',
+                        borderWidth: 2,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        });
+
+        // ===== SEARCH FUNCTION =====
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const searchTerm = html.getAttribute('data-lang') === 'sw' 
+                ? document.getElementById('searchInput').value 
+                : document.getElementById('searchInputEn').value;
+            
+            if (searchTerm) {
+                alert(html.getAttribute('data-lang') === 'sw' 
+                    ? `Kutafuta: ${searchTerm}` 
+                    : `Searching: ${searchTerm}`);
+            }
+        });
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            const isClickInside = sidebar.contains(event.target) || mobileMenu.contains(event.target);
+            if (!isClickInside && window.innerWidth <= 768) {
+                sidebar.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1082 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Projects - ZanEwaste Hub | Miradi</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0b3b2f;
+            --secondary: #1e6f5c;
+            --accent: #e67e22;
+            --bg: #f4fbf8;
+            --card: #ffffff;
+            --text: #0f2a23;
+            --text-muted: #4a5f58;
+            --border: #d5e6df;
+            --shadow: 0 20px 30px -10px rgba(0,40,20,0.1);
+            --shadow-hover: 0 30px 40px -15px rgba(230,126,34,0.3);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --transition: all 0.3s ease;
+            
+            --primary-dark: #2a9d8f;
+            --secondary-dark: #34a889;
+            --accent-dark: #f4a261;
+            --bg-dark: #1a2c28;
+            --card-dark: #2a4039;
+            --text-dark: #e9f5f0;
+            --text-muted-dark: #b0cfc2;
+            --border-dark: #3a5f53;
+            --shadow-dark: 0 20px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        .sw { display: inline; }
+        .en { display: none; }
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            background: var(--bg);
+        }
+
+        .admin-sidebar {
+            width: 300px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: var(--transition);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .sidebar-header i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .sidebar-header h2 { font-size: 1.5rem; font-weight: 600; }
+        .sidebar-header span { color: var(--accent); }
+
+        .admin-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--accent);
+            overflow: hidden;
+        }
+
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-name { font-size: 1.3rem; font-weight: 600; }
+        .profile-role { font-size: 1rem; color: var(--accent); }
+
+        .admin-nav { list-style: none; }
+        .admin-nav li { margin-bottom: 0.5rem; }
+
+        .admin-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            transition: var(--transition);
+        }
+
+        .admin-nav a:hover, .admin-nav a.active {
+            background: var(--accent);
+            transform: translateX(5px);
+        }
+
+        .admin-nav i { width: 25px; }
+
+        .admin-main {
+            flex: 1;
+            margin-left: 300px;
+            padding: 2rem;
+            background: var(--bg);
+            transition: var(--transition);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+        }
+
+        .page-title h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .page-title p { color: var(--text-muted); }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-actions button {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .header-actions button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .add-project-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+            transition: var(--transition);
+        }
+
+        .add-project-btn:hover {
+            background: var(--primary);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .project-card {
+            background: var(--card);
+            border-radius: 30px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .project-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .project-header h3 {
+            color: var(--primary);
+            font-size: 1.2rem;
+        }
+
+        .project-status {
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-ongoing { background: var(--info); color: white; }
+        .status-completed { background: var(--success); color: white; }
+        .status-on-hold { background: var(--warning); color: var(--text); }
+
+        .project-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .meta-item i { color: var(--accent); width: 20px; }
+
+        .project-progress { margin: 1rem 0; }
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+        .progress-text {
+            margin-top: 0.3rem;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            text-align: right;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 0.5rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.3rem;
+            font-size: 0.9rem;
+            color: white;
+        }
+
+        .action-btn.edit { background: var(--info); }
+        .action-btn.delete { background: var(--danger); }
+        .action-btn:hover { transform: translateY(-3px) scale(1.05); }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show { display: flex; animation: fadeInModal 0.3s ease; }
+
+        @keyframes fadeInModal {
+            from { opacity: 0; backdrop-filter: blur(0); }
+            to { opacity: 1; backdrop-filter: blur(10px); }
+        }
+
+        .modal-content {
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 50px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            animation: slideInUpModal 0.5s ease;
+            border: 2px solid var(--accent);
+        }
+
+        @keyframes slideInUpModal {
+            from { opacity: 0; transform: translateY(50px) scale(0.9); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .modal-header h3 { color: var(--primary); font-size: 1.8rem; }
+        .close-modal {
+            font-size: 2rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+        .close-modal:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        .form-group { margin-bottom: 1.5rem; }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            font-size: 1rem;
+            background: var(--card);
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+        .modal-footer {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .modal-footer button {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 40px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .btn-save { background: var(--accent); color: white; }
+        .btn-save:hover { background: var(--primary); transform: translateY(-3px); }
+        .btn-cancel { background: var(--border); color: var(--text); }
+        .btn-cancel:hover { background: var(--text-muted); color: white; }
+
+        .confirm-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 50px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            z-index: 1100;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            border: 3px solid var(--danger);
+        }
+
+        .confirm-dialog.show { display: block; }
+        .confirm-dialog i { font-size: 5rem; color: var(--danger); margin-bottom: 1rem; }
+        .confirm-dialog h3 { color: var(--primary); margin-bottom: 1rem; font-size: 2rem; }
+        .confirm-dialog p { color: var(--text-muted); margin-bottom: 2rem; }
+
+        .confirm-actions { display: flex; gap: 1rem; }
+        .confirm-actions button {
+            flex: 1;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+        .confirm-yes { background: var(--danger); color: white; }
+        .confirm-no { background: var(--border); color: var(--text); }
+
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: var(--success);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.2);
+            z-index: 1200;
+            animation: slideInRight 0.5s ease;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(100px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @media (max-width: 1024px) {
+            .admin-sidebar { width: 250px; }
+            .admin-main { margin-left: 250px; }
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            .admin-sidebar.show { transform: translateX(0); }
+            .admin-main { margin-left: 0; }
+            .form-row { grid-template-columns: 1fr; }
+            .projects-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-recycle"></i>
+                <h2>Zan<span>Ewaste</span></h2>
+            </div>
+            
+            <div class="admin-profile">
+                <div class="profile-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&size=100&background=e67e22&color=fff" alt="Admin">
+                </div>
+                <div class="profile-name">Admin User</div>
+                <div class="profile-role">
+                    <span class="sw">Msimamizi Mkuu</span>
+                    <span class="en">Super Admin</span>
+                </div>
+            </div>
+            
+            <ul class="admin-nav">
+                <li><a href="index.html">
+                    <i class="fas fa-dashboard"></i>
+                    <span class="sw">Dashibodi</span>
+                    <span class="en">Dashboard</span>
+                </a></li>
+                <li><a href="agents.html">
+                    <i class="fas fa-users"></i>
+                    <span class="sw">Wakala</span>
+                    <span class="en">Agents</span>
+                </a></li>
+                <li><a href="tasks.html">
+                    <i class="fas fa-tasks"></i>
+                    <span class="sw">Kazi</span>
+                    <span class="en">Tasks</span>
+                </a></li>
+                <li><a href="projects.html" class="active">
+                    <i class="fas fa-project-diagram"></i>
+                    <span class="sw">Miradi</span>
+                    <span class="en">Projects</span>
+                </a></li>
+                <li><a href="reports.html">
+                    <i class="fas fa-chart-bar"></i>
+                    <span class="sw">Ripoti</span>
+                    <span class="en">Reports</span>
+                </a></li>
+                <li><a href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    <span class="sw">Mipangilio</span>
+                    <span class="en">Settings</span>
+                </a></li>
+                <li style="margin-top: 2rem;"><a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="sw">Toka</span>
+                    <span class="en">Logout</span>
+                </a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Header -->
+            <div class="admin-header">
+                <div class="page-title">
+                    <h1>
+                        <span class="sw">Miradi</span>
+                        <span class="en">Projects</span>
+                    </h1>
+                    <p class="sw">Simamia miradi yote ya e-waste</p>
+                    <p class="en">Manage all e-waste projects</p>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    <button class="lang-toggle" id="langToggle">
+                        <span class="lang-sw">SW</span>
+                        <span class="lang-separator">|</span>
+                        <span class="lang-en">EN</span>
+                    </button>
+                    
+                    <button class="mobile-menu" id="mobileMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Add Project Button -->
+            <button class="add-project-btn" onclick="showAddProjectModal()">
+                <i class="fas fa-plus-circle"></i>
+                <span class="sw">Ongeza Mradi Mpya</span>
+                <span class="en">Add New Project</span>
+            </button>
+            
+            <!-- Projects Grid -->
+            <div class="projects-grid" id="projectsGrid">
+                <div style="grid-column: 1/-1; text-align: center; padding: 3rem;">
+                    <i class="fas fa-spinner fa-spin fa-3x" style="color: var(--accent);"></i>
+                    <p>Loading projects...</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Project Modal -->
+    <div class="modal" id="projectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="sw">Ongeza Mradi Mpya</h3>
+                <h3 id="modalTitleEn" class="en">Add New Project</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            
+            <form id="projectForm">
+                <input type="hidden" id="projectId">
+                
+                <div class="form-group">
+                    <label class="sw">Jina la Mradi (Kiswahili)</label>
+                    <label class="en">Project Name (Swahili)</label>
+                    <input type="text" id="titleSw" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="sw">Jina la Mradi (Kiingereza)</label>
+                    <label class="en">Project Name (English)</label>
+                    <input type="text" id="titleEn" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="sw">Hali</label>
+                        <label class="en">Status</label>
+                        <select id="status">
+                            <option value="ongoing" class="sw">Inaendelea</option>
+                            <option value="ongoing" class="en">Ongoing</option>
+                            <option value="completed" class="sw">Imekamilika</option>
+                            <option value="completed" class="en">Completed</option>
+                            <option value="on-hold" class="sw">Imenunulwa</option>
+                            <option value="on-hold" class="en">On Hold</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="sw">Kipaumbele</label>
+                        <label class="en">Priority</label>
+                        <select id="priority">
+                            <option value="low" class="sw">Chini</option>
+                            <option value="low" class="en">Low</option>
+                            <option value="medium" class="sw">Kati</option>
+                            <option value="medium" class="en">Medium</option>
+                            <option value="high" class="sw">Juu</option>
+                            <option value="high" class="en">High</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="sw">Tarehe ya Kuanza</label>
+                        <label class="en">Start Date</label>
+                        <input type="date" id="startDate" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="sw">Tarehe ya Kumalizia</label>
+                        <label class="en">End Date</label>
+                        <input type="date" id="endDate" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="sw">Mahali</label>
+                    <label class="en">Location</label>
+                    <input type="text" id="location" required>
+                </div>
+                
+                <div class="form-group">
+                    <label class="sw">Maelezo (Kiswahili)</label>
+                    <label class="en">Description (Swahili)</label>
+                    <textarea id="descriptionSw" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="sw">Maelezo (Kiingereza)</label>
+                    <label class="en">Description (English)</label>
+                    <textarea id="descriptionEn" rows="3" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label class="sw">Asilimia ya Uendelezaji</label>
+                    <label class="en">Progress Percentage</label>
+                    <input type="number" id="progress" min="0" max="100" value="0" required>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i>
+                        <span class="sw">Hifadhi</span>
+                        <span class="en">Save</span>
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                        <span class="sw">Ghairi</span>
+                        <span class="en">Cancel</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Confirmation Dialog -->
+    <div class="confirm-dialog" id="confirmDialog">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3 class="sw">Una uhakika?</h3>
+        <h3 class="en">Are you sure?</h3>
+        <p class="sw">Unakaribia kufuta mradi huu. Hatua hii haiwezi kutenduliwa.</p>
+        <p class="en">You are about to delete this project. This action cannot be undone.</p>
+        <div class="confirm-actions">
+            <button class="confirm-yes" onclick="confirmDelete()">
+                <span class="sw">Ndio, Futa</span>
+                <span class="en">Yes, Delete</span>
+            </button>
+            <button class="confirm-no" onclick="closeConfirmDialog()">
+                <span class="sw">Hapana</span>
+                <span class="en">Cancel</span>
+            </button>
+        </div>
+    </div>
+    
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true, offset: 100 });
+
+        const themeToggle = document.getElementById('themeToggle');
+        const langToggle = document.getElementById('langToggle');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const sidebar = document.getElementById('adminSidebar');
+        const html = document.documentElement;
+
+        // Theme
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        });
+
+        // Language
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+
+        langToggle.addEventListener('click', () => {
+            const newLang = html.getAttribute('data-lang') === 'sw' ? 'en' : 'sw';
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+        });
+
+        // Mobile menu
+        mobileMenu.addEventListener('click', () => sidebar.classList.toggle('show'));
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        // ===== PROJECTS CODE =====
+        let projects = [];
+        let currentDeleteId = null;
+        const token = localStorage.getItem('token');
+
+        // Load projects
+        function loadProjects() {
+            const grid = document.getElementById('projectsGrid');
+            
+            fetch('http://localhost/ewaste-website/api/projects/get.php', {
+                headers: { 'Authorization': 'Bearer ' + token }
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    projects = data.data;
+                    displayProjects(projects);
+                } else {
+                    grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:3rem;">Hakuna miradi</div>';
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:3rem;">Imeshindwa kuleta data</div>';
+            });
+        }
+
+        function displayProjects(projectsToShow) {
+            const grid = document.getElementById('projectsGrid');
+            grid.innerHTML = '';
+
+            if(projectsToShow.length === 0) {
+                grid.innerHTML = '<div style="grid-column:1/-1; text-align:center; padding:3rem;">Hakuna miradi</div>';
+                return;
+            }
+
+            projectsToShow.forEach(project => {
+                const card = document.createElement('div');
+                card.className = 'project-card';
+
+                const statusClass = project.status === 'ongoing' ? 'status-ongoing' :
+                                   project.status === 'completed' ? 'status-completed' : 'status-on-hold';
+                const statusText = project.status === 'ongoing' ? 'Inaendelea' :
+                                  project.status === 'completed' ? 'Imekamilika' : 'Imenunulwa';
+                const statusTextEn = project.status === 'ongoing' ? 'Ongoing' :
+                                    project.status === 'completed' ? 'Completed' : 'On Hold';
+
+                card.innerHTML = `
+                    <div class="project-header">
+                        <h3>${html.getAttribute('data-lang') === 'sw' ? project.title_sw || project.title : project.title}</h3>
+                        <span class="project-status ${statusClass}">
+                            <span class="sw">${statusText}</span>
+                            <span class="en">${statusTextEn}</span>
+                        </span>
+                    </div>
+                    
+                    <div class="project-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>${project.location}</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span>${project.start_date} - ${project.end_date}</span>
+                        </div>
+                    </div>
+                    
+                    <p style="color: var(--text-muted); font-size:0.9rem; margin-bottom:1rem;">
+                        ${html.getAttribute('data-lang') === 'sw' ? project.description_sw || project.description : project.description}
+                    </p>
+                    
+                    <div class="project-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${project.progress}%"></div>
+                        </div>
+                        <div class="progress-text">${project.progress}%</div>
+                    </div>
+                    
+                    <div class="project-actions">
+                        <button class="action-btn edit" onclick="editProject(${project.id})">
+                            <i class="fas fa-edit"></i>
+                            <span class="sw">Hariri</span>
+                            <span class="en">Edit</span>
+                        </button>
+                        <button class="action-btn delete" onclick="showDeleteConfirm(${project.id})">
+                            <i class="fas fa-trash"></i>
+                            <span class="sw">Futa</span>
+                            <span class="en">Delete</span>
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Modal functions
+        function showAddProjectModal() {
+            document.getElementById('projectId').value = '';
+            document.getElementById('titleSw').value = '';
+            document.getElementById('titleEn').value = '';
+            document.getElementById('status').value = 'ongoing';
+            document.getElementById('priority').value = 'medium';
+            document.getElementById('startDate').value = new Date().toISOString().split('T')[0];
+            document.getElementById('endDate').value = '';
+            document.getElementById('location').value = '';
+            document.getElementById('descriptionSw').value = '';
+            document.getElementById('descriptionEn').value = '';
+            document.getElementById('progress').value = '0';
+            
+            document.getElementById('modalTitle').style.display = 'inline';
+            document.getElementById('modalTitleEn').style.display = 'none';
+            if (html.getAttribute('data-lang') === 'en') {
+                document.getElementById('modalTitle').style.display = 'none';
+                document.getElementById('modalTitleEn').style.display = 'inline';
+            }
+            
+            document.getElementById('projectModal').classList.add('show');
+        }
+
+        window.showAddProjectModal = showAddProjectModal;
+
+        function editProject(id) {
+            const project = projects.find(p => p.id === id);
+            if(project) {
+                document.getElementById('projectId').value = project.id;
+                document.getElementById('titleSw').value = project.title_sw || project.title;
+                document.getElementById('titleEn').value = project.title;
+                document.getElementById('status').value = project.status;
+                document.getElementById('priority').value = project.priority || 'medium';
+                document.getElementById('startDate').value = project.start_date;
+                document.getElementById('endDate').value = project.end_date;
+                document.getElementById('location').value = project.location;
+                document.getElementById('descriptionSw').value = project.description_sw || project.description;
+                document.getElementById('descriptionEn').value = project.description;
+                document.getElementById('progress').value = project.progress;
+                
+                document.getElementById('modalTitle').innerHTML = 'Hariri Mradi';
+                document.getElementById('modalTitleEn').innerHTML = 'Edit Project';
+                
+                document.getElementById('projectModal').classList.add('show');
+            }
+        }
+
+        window.editProject = editProject;
+
+        function closeModal() {
+            document.getElementById('projectModal').classList.remove('show');
+        }
+
+        window.closeModal = closeModal;
+
+        // Save project
+        document.getElementById('projectForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const id = document.getElementById('projectId').value;
+            const projectData = {
+                title: document.getElementById('titleEn').value,
+                title_sw: document.getElementById('titleSw').value,
+                status: document.getElementById('status').value,
+                priority: document.getElementById('priority').value,
+                start_date: document.getElementById('startDate').value,
+                end_date: document.getElementById('endDate').value,
+                location: document.getElementById('location').value,
+                description: document.getElementById('descriptionEn').value,
+                description_sw: document.getElementById('descriptionSw').value,
+                progress: parseInt(document.getElementById('progress').value)
+            };
+
+            let url = 'http://localhost/ewaste-website/api/projects/add.php';
+            
+            if(id) {
+                projectData.id = id;
+                url = 'http://localhost/ewaste-website/api/projects/update.php';
+            }
+
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                body: JSON.stringify(projectData)
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.success) {
+                    loadProjects();
+                    closeModal();
+                    showNotification(data.message);
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert('Kuna tatizo la muunganisho');
+            });
+        });
+
+        // Delete confirmation
+        function showDeleteConfirm(id) {
+            currentDeleteId = id;
+            document.getElementById('confirmDialog').classList.add('show');
+        }
+
+        window.showDeleteConfirm = showDeleteConfirm;
+
+        function closeConfirmDialog() {
+            document.getElementById('confirmDialog').classList.remove('show');
+            currentDeleteId = null;
+        }
+
+        window.closeConfirmDialog = closeConfirmDialog;
+
+        function confirmDelete() {
+            if(currentDeleteId) {
+                fetch('http://localhost/ewaste-website/api/projects/delete.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Bearer ' + token
+                    },
+                    body: JSON.stringify({id: currentDeleteId})
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if(data.success) {
+                        loadProjects();
+                        closeConfirmDialog();
+                        showNotification(data.message);
+                    } else {
+                        alert(data.message);
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('Kuna tatizo la muunganisho');
+                });
+            }
+        }
+
+        window.confirmDelete = confirmDelete;
+
+        function showNotification(message) {
+            const notif = document.createElement('div');
+            notif.className = 'notification';
+            notif.innerHTML = `<i class="fas fa-check-circle"></i> ${message}`;
+            document.body.appendChild(notif);
+            setTimeout(() => notif.remove(), 3000);
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                const isClickInside = sidebar.contains(event.target) || mobileMenu.contains(event.target);
+                if (!isClickInside) sidebar.classList.remove('show');
+            }
+            
+            const modal = document.getElementById('projectModal');
+            if (event.target === modal) closeModal();
+            
+            const confirm = document.getElementById('confirmDialog');
+            if (event.target === confirm) closeConfirmDialog();
+        });
+
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeConfirmDialog();
+            }
+        });
+
+        // Load projects on page load
+        loadProjects();
+    </script>
+</body>
+</html>

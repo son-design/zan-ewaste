@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us - ZanEwaste Hub | Mawasiliano</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* ===== CONTACT PAGE SPECIFIC STYLES ===== */
+        
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 120px 5% 60px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .header-content h1 i {
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        .breadcrumb i {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        /* Floating elements */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .float-item {
+            position: absolute;
+            font-size: 3rem;
+            color: rgba(255,255,255,0.1);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .float-item:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .float-item:nth-child(2) { top: 60%; right: 15%; animation-delay: 2s; }
+        .float-item:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 1s; }
+        .float-item:nth-child(4) { top: 30%; right: 25%; animation-delay: 3s; }
+
+        /* Contact Info Cards */
+        .contact-info-section {
+            padding: 5rem 5%;
+            background: var(--bg);
+        }
+
+        .contact-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .contact-card {
+            background: var(--card);
+            padding: 2.5rem 2rem;
+            border-radius: 40px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .contact-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+        }
+
+        .card-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            transition: var(--transition);
+        }
+
+        .contact-card:hover .card-icon {
+            transform: rotateY(360deg);
+        }
+
+        .card-icon i {
+            font-size: 2rem;
+            color: white;
+        }
+
+        .contact-card h3 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .contact-card p {
+            color: var(--text);
+            margin: 0.3rem 0;
+        }
+
+        /* Contact Form & Map Section */
+        .contact-form-section {
+            padding: 0 5% 5rem;
+        }
+
+        .contact-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+        }
+
+        .contact-form-wrapper {
+            background: var(--card);
+            border-radius: 50px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            animation: fadeInLeft 1s ease;
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .contact-form-wrapper h3 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+
+        .contact-form-wrapper h3 i {
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            font-size: 1rem;
+            background: var(--card);
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(230,126,34,0.2);
+        }
+
+        .form-group textarea {
+            border-radius: 30px;
+            resize: vertical;
+            min-height: 150px;
+        }
+
+        .form-group i {
+            position: absolute;
+            right: 1.5rem;
+            top: 1rem;
+            color: var(--text-muted);
+        }
+
+        .form-group label {
+            position: absolute;
+            left: 1.2rem;
+            top: 1rem;
+            color: var(--text-muted);
+            transition: var(--transition);
+            pointer-events: none;
+            background: var(--card);
+            padding: 0 0.3rem;
+        }
+
+        .form-group input:focus ~ label,
+        .form-group input:not(:placeholder-shown) ~ label,
+        .form-group textarea:focus ~ label,
+        .form-group textarea:not(:placeholder-shown) ~ label,
+        .form-group select:focus ~ label,
+        .form-group select:not([value=""]):valid ~ label {
+            top: -0.5rem;
+            left: 0.8rem;
+            font-size: 0.8rem;
+            color: var(--accent);
+        }
+
+        .map-wrapper {
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            height: 100%;
+            min-height: 450px;
+            animation: fadeInRight 1s ease;
+            border: 2px solid var(--border);
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .map-wrapper iframe {
+            width: 100%;
+            height: 100%;
+            min-height: 450px;
+            border: none;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 5rem 5%;
+            background: var(--bg);
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 3rem auto 0;
+        }
+
+        .faq-item {
+            background: var(--card);
+            border-radius: 30px;
+            margin-bottom: 1rem;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .faq-item:hover {
+            border-color: var(--accent);
+        }
+
+        .faq-question {
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .faq-question:hover {
+            background: var(--bg);
+        }
+
+        .faq-question h3 {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        .faq-question i {
+            color: var(--accent);
+            transition: transform 0.3s;
+        }
+
+        .faq-item.active .faq-question i {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            padding: 0 1.5rem;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .faq-item.active .faq-answer {
+            padding: 0 1.5rem 1.5rem;
+            max-height: 200px;
+        }
+
+        .faq-answer p {
+            color: var(--text);
+        }
+
+        /* Button Styles */
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid var(--accent);
+            width: 100%;
+            justify-content: center;
+        }
+
+        .btn-primary:hover {
+            background: transparent;
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        /* Language toggle classes */
+        .sw { display: inline; }
+        .en { display: none; }
+        
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        /* Dark theme specific styles */
+        [data-theme="dark"] .contact-card {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        [data-theme="dark"] .contact-form-wrapper {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        [data-theme="dark"] .faq-item {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+        }
+
+        [data-theme="dark"] .form-group input,
+        [data-theme="dark"] .form-group select,
+        [data-theme="dark"] .form-group textarea {
+            background: var(--card-dark);
+            border-color: var(--border-dark);
+            color: var(--text-dark);
+        }
+
+        [data-theme="dark"] .form-group label {
+            background: var(--card-dark);
+            color: var(--text-muted-dark);
+        }
+
+        [data-theme="dark"] .map-wrapper {
+            border-color: var(--border-dark);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .map-wrapper {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-recycle"></i>
+                <span>Zan<span>Ewaste</span></span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html" class="sw">Nyumbani</a>
+                <a href="index.html" class="en">Home</a>
+                
+                <a href="about.html" class="sw">Kuhusu</a>
+                <a href="about.html" class="en">About</a>
+                
+                <a href="projects.html" class="sw">Miradi</a>
+                <a href="projects.html" class="en">Projects</a>
+                
+                <a href="gallery.html" class="sw">Matunzio</a>
+                <a href="gallery.html" class="en">Gallery</a>
+                
+                <a href="report.html" class="sw">Ripoti Taka</a>
+                <a href="report.html" class="en">Report</a>
+                
+                <a href="contact.html" class="active sw">Mawasiliano</a>
+                <a href="contact.html" class="active en">Contact</a>
+                
+                <a href="founder.html" class="sw">Founder</a>
+                <a href="founder.html" class="en">Founder</a>
+                
+                <a href="partners.html" class="sw">Washirika</a>
+                <a href="partners.html" class="en">Partners</a>
+            </div>
+            
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                <button class="lang-toggle" id="langToggle">
+                    <span class="lang-sw">SW</span>
+                    <span class="lang-separator">|</span>
+                    <span class="lang-en">EN</span>
+                </button>
+                
+                <button class="mobile-menu" id="mobileMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header with Floating Elements -->
+    <section class="page-header">
+        <div class="floating-elements">
+            <i class="fas fa-envelope float-item"></i>
+            <i class="fas fa-phone float-item"></i>
+            <i class="fas fa-map-marker-alt float-item"></i>
+            <i class="fas fa-clock float-item"></i>
+        </div>
+        
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-headset"></i>
+                <span class="sw">Wasiliana Nasi</span>
+                <span class="en">Contact Us</span>
+            </h1>
+            <div class="breadcrumb">
+                <a href="index.html" class="sw">Nyumbani</a>
+                <a href="index.html" class="en">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span class="sw">Mawasiliano</span>
+                <span class="en">Contact</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Info Cards -->
+    <section class="contact-info-section">
+        <div class="contact-cards">
+            <div class="contact-card">
+                <div class="card-icon">
+                    <i class="fas fa-map-marker-alt"></i>
+                </div>
+                <h3 class="sw">Anuani</h3>
+                <h3 class="en">Address</h3>
+                <p>Stone Town, Zanzibar</p>
+                <p>Mjini Magharibi, Zanzibar</p>
+            </div>
+            
+            <div class="contact-card">
+                <div class="card-icon">
+                    <i class="fas fa-phone-alt"></i>
+                </div>
+                <h3 class="sw">Simu</h3>
+                <h3 class="en">Phone</h3>
+                <p>+255 775 05 780</p>
+                <p>+255 777 000 000</p>
+            </div>
+            
+            <div class="contact-card">
+                <div class="card-icon">
+                    <i class="fas fa-envelope"></i>
+                </div>
+                <h3 class="sw">Barua Pepe</h3>
+                <h3 class="en">Email</h3>
+                <p>sonibrahimdigtech@gmail.com</p>
+                <p>info@zanewastehub.co.tz</p>
+            </div>
+            
+            <div class="contact-card">
+                <div class="card-icon">
+                    <i class="fas fa-clock"></i>
+                </div>
+                <h3 class="sw">Saa za Kazi</h3>
+                <h3 class="en">Working Hours</h3>
+                <p class="sw">Jumatatu - Ijumaa: 8:00 - 17:00</p>
+                <p class="en">Monday - Friday: 8:00 - 17:00</p>
+                <p class="sw">Jumamosi: 9:00 - 13:00</p>
+                <p class="en">Saturday: 9:00 - 13:00</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Form & Map -->
+    <section class="contact-form-section">
+        <div class="contact-container">
+            <div class="contact-form-wrapper">
+                <h3>
+                    <i class="fas fa-paper-plane"></i>
+                    <span class="sw">Tuma Ujumbe</span>
+                    <span class="en">Send Message</span>
+                </h3>
+                
+                <form id="contactForm">
+                    <div class="form-group">
+                        <input type="text" id="contactName" placeholder=" " required>
+                        <label for="contactName" class="sw">Jina lako *</label>
+                        <label for="contactName" class="en">Your name *</label>
+                        <i class="fas fa-user"></i>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="email" id="contactEmail" placeholder=" " required>
+                        <label for="contactEmail" class="sw">Barua pepe *</label>
+                        <label for="contactEmail" class="en">Email *</label>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    
+                    <div class="form-group">
+                        <input type="tel" id="contactPhone" placeholder=" ">
+                        <label for="contactPhone" class="sw">Namba ya simu</label>
+                        <label for="contactPhone" class="en">Phone number</label>
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    
+                    <div class="form-group">
+                        <select id="contactSubject">
+                            <option value="" disabled selected class="sw">-- Chagua somo --</option>
+                            <option value="" disabled selected class="en">-- Select subject --</option>
+                            <option value="general" class="sw">Mawasiliano ya jumla</option>
+                            <option value="general" class="en">General inquiry</option>
+                            <option value="report" class="sw">Ripoti taka</option>
+                            <option value="report" class="en">Report e-waste</option>
+                            <option value="partnership" class="sw">Ushirikiano</option>
+                            <option value="partnership" class="en">Partnership</option>
+                            <option value="complaint" class="sw">Malalamiko</option>
+                            <option value="complaint" class="en">Complaint</option>
+                        </select>
+                        <i class="fas fa-tag"></i>
+                    </div>
+                    
+                    <div class="form-group">
+                        <textarea id="contactMessage" rows="5" placeholder=" " required></textarea>
+                        <label for="contactMessage" class="sw">Ujumbe wako *</label>
+                        <label for="contactMessage" class="en">Your message *</label>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-paper-plane"></i>
+                        <span class="sw">Tuma Ujumbe</span>
+                        <span class="en">Send Message</span>
+                    </button>
+                </form>
+            </div>
+            
+            <div class="map-wrapper">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d126926.5298537736!2d39.14541855!3d-6.16151745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x185cd123456789%3A0x123456789!2sStone%20Town%2C%20Zanzibar!5e0!3m2!1sen!2stz!4v1234567890" allowfullscreen="" loading="lazy"></iframe>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <h2 class="section-title">
+            <span class="sw">Maswali Yanayoulizwa Mara kwa Mara</span>
+            <span class="en">Frequently Asked Questions</span>
+        </h2>
+        
+        <div class="faq-container">
+            <!-- FAQ 1 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3 class="sw">Je, huduma yenu ni ya bure?</h3>
+                    <h3 class="en">Is your service free?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p class="sw">Ndiyo, kukusanya taka za kielektroniki ni bure kwa wakazi wote wa Zanzibar. Hatutozii gharama yoyote ya ukusanyaji.</p>
+                    <p class="en">Yes, e-waste collection is free for all Zanzibar residents. We do not charge any collection fees.</p>
+                </div>
+            </div>
+            
+            <!-- FAQ 2 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3 class="sw">Je, mnachukua taka aina gani?</h3>
+                    <h3 class="en">What types of waste do you collect?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p class="sw">Tunachukua vifaa vyote vya kielektroniki: simu, laptop, TV, printer, betri, na zaidi. Pia tunachukua vipuri na vifaa vya zamani.</p>
+                    <p class="en">We collect all electronic devices: phones, laptops, TVs, printers, batteries, and more. We also take spare parts and old equipment.</p>
+                </div>
+            </div>
+            
+            <!-- FAQ 3 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3 class="sw">Je, mnatoa bei kwa vifaa vinavyofanya kazi?</h3>
+                    <h3 class="en">Do you pay for working devices?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p class="sw">Ndiyo, tunanunua vifaa vinavyofanya kazi na vya vipuri kwa bei nzuri. Tunakagua kifaa na kutoa ofa kabla ya kununua.</p>
+                    <p class="en">Yes, we buy working devices and spare parts at good prices. We inspect the device and make an offer before purchasing.</p>
+                </div>
+            </div>
+            
+            <!-- FAQ 4 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3 class="sw">Je, mnachukua taka kwa siku ngapi baada ya kuripoti?</h3>
+                    <h3 class="en">How many days after reporting do you collect?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p class="sw">Tunachukua taka ndani ya siku 2-3 za kazi baada ya kuripoti. Utapokea simu kuthibitisha siku na muda wa kuchukua.</p>
+                    <p class="en">We collect waste within 2-3 working days after reporting. You will receive a call to confirm the collection day and time.</p>
+                </div>
+            </div>
+            
+            <!-- FAQ 5 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3 class="sw">Je, ninaweza kuwasilisha taka wenyewe?</h3>
+                    <h3 class="en">Can I drop off waste myself?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p class="sw">Ndiyo, unaweza kuleta taka zako kwenye kituo chetu kilichopo Stone Town, Jumatatu hadi Ijumaa, saa 8:00 asubuhi hadi 5:00 mchana.</p>
+                    <p class="en">Yes, you can drop off your waste at our center in Stone Town, Monday to Friday, 8:00 am to 5:00 pm.</p>
+                </div>
+            </div>
+            
+            <!-- FAQ 6 -->
+            <div class="faq-item">
+                <div class="faq-question">
+                    <h3 class="sw">Je, mnatoa cheti cha uchakataji?</h3>
+                    <h3 class="en">Do you provide recycling certificates?</h3>
+                    <i class="fas fa-chevron-down"></i>
+                </div>
+                <div class="faq-answer">
+                    <p class="sw">Ndiyo, tunatoa cheti cha uchakataji kwa biashara na taasisi zinazohitaji uthibitisho wa utupaji wa taka kwa njia sahihi.</p>
+                    <p class="en">Yes, we provide recycling certificates for businesses and institutions that need proof of proper waste disposal.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-recycle"></i>
+                    <span>Zan<span>Ewaste</span></span>
+                </div>
+                <p class="sw">Mfumo wa kwanza wa kidijitali wa usimamizi wa taka za kielektroniki Zanzibar.</p>
+                <p class="en">First digital e-waste management system in Zanzibar.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Viungo vya Haraka</h4>
+                <h4 class="en">Quick Links</h4>
+                <ul>
+                    <li><a href="index.html" class="sw">Nyumbani</a></li>
+                    <li><a href="index.html" class="en">Home</a></li>
+                    <li><a href="about.html" class="sw">Kuhusu</a></li>
+                    <li><a href="about.html" class="en">About</a></li>
+                    <li><a href="projects.html" class="sw">Miradi</a></li>
+                    <li><a href="projects.html" class="en">Projects</a></li>
+                    <li><a href="contact.html" class="sw">Mawasiliano</a></li>
+                    <li><a href="contact.html" class="en">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Taarifa za Mawasiliano</h4>
+                <h4 class="en">Contact Info</h4>
+                <p><i class="fas fa-envelope"></i> sonibrahimdigtech@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +255 775 05 780</p>
+                <p><i class="fab fa-instagram"></i> e_wastezanzibar25</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Tufuate</h4>
+                <h4 class="en">Follow Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 <strong>SonDigital</strong> | 
+                <span class="sw">Haki zote zimehifadhiwa</span>
+                <span class="en">All rights reserved</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // ===== THEME TOGGLE =====
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        
+        // ===== LANGUAGE TOGGLE =====
+        const langToggle = document.getElementById('langToggle');
+        
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        updateLangButtons(savedLang);
+        
+        langToggle.addEventListener('click', function() {
+            const currentLang = html.getAttribute('data-lang');
+            const newLang = currentLang === 'sw' ? 'en' : 'sw';
+            
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+            updateLangButtons(newLang);
+        });
+        
+        function updateLangButtons(lang) {
+            const langSw = document.querySelector('.lang-sw');
+            const langEn = document.querySelector('.lang-en');
+            
+            if (lang === 'sw') {
+                langSw.style.color = 'var(--accent)';
+                langSw.style.fontWeight = '700';
+                langEn.style.color = '';
+                langEn.style.fontWeight = '';
+            } else {
+                langEn.style.color = 'var(--accent)';
+                langEn.style.fontWeight = '700';
+                langSw.style.color = '';
+                langSw.style.fontWeight = '';
+            }
+        }
+        
+        // ===== MOBILE MENU =====
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        mobileMenu.addEventListener('click', function() {
+            navMenu.classList.toggle('show');
+            const icon = this.querySelector('i');
+            icon.className = navMenu.classList.contains('show') ? 'fas fa-times' : 'fas fa-bars';
+        });
+
+        // ===== FAQ ACCORDION =====
+        document.querySelectorAll('.faq-question').forEach(question => {
+            question.addEventListener('click', () => {
+                const faqItem = question.parentElement;
+                faqItem.classList.toggle('active');
+                
+                // Close other open FAQs
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    if (item !== faqItem && item.classList.contains('active')) {
+                        item.classList.remove('active');
+                    }
+                });
+            });
+        });
+
+        // ===== FORM SUBMISSION =====
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert(html.getAttribute('data-lang') === 'sw' 
+                ? 'Ujumbe wako umetumwa! Tutawasiliana nawe hivi karibuni.' 
+                : 'Your message has been sent! We will contact you soon.');
+            this.reset();
+        });
+    </script>
+</body>
+</html>

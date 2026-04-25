@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZanEwaste Hub - Gallery | Matunzio</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0b3b2f;
+            --secondary: #1e6f5c;
+            --accent: #e67e22;
+            --bg: #f4fbf8;
+            --card: #ffffff;
+            --text: #0f2a23;
+            --text-muted: #4a5f58;
+            --border: #d5e6df;
+            --shadow: 0 20px 30px -10px rgba(0,40,20,0.1);
+            --shadow-hover: 0 30px 40px -15px rgba(230,126,34,0.3);
+            --navbar-bg: rgba(255,255,255,0.95);
+            --footer-bg: #0f2a23;
+            --footer-text: #ffffff;
+            --transition: all 0.3s ease;
+            --success: #28a745;
+            --danger: #dc3545;
+            --warning: #ffc107;
+            --info: #17a2b8;
+            
+            --primary-dark: #2a9d8f;
+            --secondary-dark: #34a889;
+            --accent-dark: #f4a261;
+            --bg-dark: #1a2c28;
+            --card-dark: #2a4039;
+            --text-dark: #e9f5f0;
+            --text-muted-dark: #b0cfc2;
+            --border-dark: #3a5f53;
+            --navbar-dark: rgba(26,44,40,0.95);
+            --footer-dark: #0a1f1a;
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+            --navbar-bg: var(--navbar-dark);
+            --footer-bg: var(--footer-dark);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        .sw { display: inline; }
+        .en { display: none; }
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 5px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--primary); }
+
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes float { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-30px) rotate(10deg); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+        @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 3px solid var(--accent);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i { color: var(--accent); font-size: 2rem; animation: rotate 10s linear infinite; }
+        .logo span span { color: var(--accent); }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
+        .nav-menu a:hover, .nav-menu a.active { color: var(--accent); }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle, .lang-toggle {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .theme-toggle:hover, .lang-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu { display: none; background: none; border: none; font-size: 1.5rem; color: var(--text); cursor: pointer; }
+
+        /* Page Header */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 120px 5% 60px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        .header-content { position: relative; z-index: 2; max-width: 800px; margin: 0 auto; }
+        .header-content h1 { font-size: 3rem; margin-bottom: 1rem; animation: fadeInUp 0.8s ease; }
+        .header-content h1 i { color: var(--accent); margin-right: 0.5rem; }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .breadcrumb a { color: white; text-decoration: none; opacity: 0.8; transition: var(--transition); }
+        .breadcrumb a:hover { opacity: 1; color: var(--accent); }
+        .breadcrumb i { font-size: 0.8rem; opacity: 0.6; }
+
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .float-item {
+            position: absolute;
+            font-size: 3rem;
+            color: rgba(255,255,255,0.1);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        .float-item:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .float-item:nth-child(2) { top: 60%; right: 15%; animation-delay: 2s; }
+        .float-item:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 1s; }
+        .float-item:nth-child(4) { top: 30%; right: 25%; animation-delay: 3s; }
+
+        /* Admin Upload Section */
+        .admin-upload-section { padding: 2rem 5%; text-align: center; }
+        .admin-toggle { margin: 1rem 0; }
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid var(--accent);
+        }
+        .btn-primary:hover { background: transparent; color: var(--accent); transform: translateY(-3px); }
+
+        /* Admin Modal */
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .admin-modal.show { display: flex; animation: fadeInModal 0.3s ease; }
+        @keyframes fadeInModal { from { opacity: 0; backdrop-filter: blur(0); } to { opacity: 1; backdrop-filter: blur(10px); } }
+
+        .modal-content {
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 40px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            animation: slideInUpModal 0.5s ease;
+            border: 2px solid var(--accent);
+        }
+        @keyframes slideInUpModal { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
+
+        .close-modal {
+            float: right;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+        }
+        .close-modal:hover { color: var(--accent); transform: rotate(90deg); }
+
+        .demo-credentials {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        /* Upload Panel */
+        .upload-panel {
+            background: var(--card);
+            border-radius: 50px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow);
+            border: 2px dashed var(--accent);
+            animation: slideIn 0.5s ease;
+        }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .upload-panel h3 { color: var(--primary); font-size: 1.5rem; margin-bottom: 1.5rem; }
+        .upload-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+        .upload-preview {
+            border: 3px dashed var(--border);
+            border-radius: 30px;
+            padding: 1.5rem;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            min-height: 180px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            background: var(--bg);
+        }
+        .upload-preview:hover { border-color: var(--accent); background: rgba(230,126,34,0.05); }
+        .upload-preview i { font-size: 2.5rem; color: var(--accent); margin-bottom: 0.5rem; animation: bounce 2s infinite; }
+        .upload-preview input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+
+        .upload-details { display: flex; flex-direction: column; gap: 1rem; }
+        .form-group { margin-bottom: 1rem; }
+        .form-group label { display: block; margin-bottom: 0.3rem; color: var(--primary); font-weight: 500; }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 30px;
+            font-size: 0.9rem;
+            background: var(--card);
+            color: var(--text);
+            transition: var(--transition);
+        }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--accent); outline: none; }
+
+        /* Gallery Filter */
+        .gallery-filter { padding: 2rem 5%; text-align: center; }
+        .filter-buttons { display: flex; flex-wrap: wrap; gap: 1rem; justify-content: center; }
+        .filter-btn {
+            padding: 0.7rem 1.5rem;
+            border: 2px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .filter-btn:hover, .filter-btn.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        /* Search Bar */
+        .search-section { padding: 0 5% 1rem; }
+        .search-container {
+            max-width: 400px;
+            margin: 0 auto;
+            display: flex;
+            gap: 0.5rem;
+        }
+        .search-input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            font-size: 0.9rem;
+            background: var(--card);
+            color: var(--text);
+        }
+        .search-input:focus { border-color: var(--accent); outline: none; }
+        .search-btn {
+            padding: 0.8rem 1.5rem;
+            background: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid-section { padding: 2rem 5% 4rem; }
+        .gallery-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .gallery-item {
+            position: relative;
+            border-radius: 30px;
+            overflow: hidden;
+            cursor: pointer;
+            aspect-ratio: 1;
+            background: var(--card);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 2px solid var(--border);
+        }
+        .gallery-item:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+        .gallery-item img, .gallery-item video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .gallery-item:hover img, .gallery-item:hover video { transform: scale(1.1); }
+
+        .admin-controls {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .gallery-item:hover .admin-controls { opacity: 1; }
+        .admin-control-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            color: white;
+        }
+        .delete-btn { background: var(--danger); }
+        .admin-control-btn:hover { transform: scale(1.1); }
+
+        .gallery-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: var(--accent);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            z-index: 2;
+        }
+        .gallery-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(11,59,47,0.95), transparent);
+            color: white;
+            padding: 1.2rem;
+            transform: translateY(100%);
+            transition: transform 0.3s;
+        }
+        .gallery-item:hover .gallery-overlay { transform: translateY(0); }
+        .gallery-overlay h4 { font-size: 1rem; margin-bottom: 0.2rem; }
+        .gallery-overlay p { font-size: 0.8rem; opacity: 0.9; display: flex; align-items: center; gap: 0.5rem; }
+        .gallery-overlay i { color: var(--accent); }
+
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.95);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        .lightbox.show { display: flex; animation: fadeIn 0.3s ease; }
+        .lightbox-content { position: relative; max-width: 90%; max-height: 90%; }
+        .lightbox-content img, .lightbox-content video {
+            max-width: 100%;
+            max-height: 80vh;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+        }
+        .lightbox-info {
+            position: absolute;
+            bottom: -50px;
+            left: 0;
+            right: 0;
+            color: white;
+            text-align: center;
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            z-index: 2001;
+            transition: var(--transition);
+        }
+        .lightbox-close:hover { color: var(--accent); transform: rotate(90deg); }
+        .lightbox-prev, .lightbox-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 2.5rem;
+            cursor: pointer;
+            padding: 1rem;
+            z-index: 2001;
+            transition: var(--transition);
+        }
+        .lightbox-prev { left: 20px; }
+        .lightbox-next { right: 20px; }
+        .lightbox-prev:hover, .lightbox-next:hover { color: var(--accent); transform: translateY(-50%) scale(1.2); }
+
+        .empty-state {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem;
+            background: var(--card);
+            border-radius: 40px;
+            color: var(--text-muted);
+        }
+        .empty-state i { font-size: 3rem; color: var(--accent); margin-bottom: 1rem; opacity: 0.5; animation: bounce 2s infinite; }
+
+        /* Confirmation Dialog */
+        .confirm-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            z-index: 3000;
+            text-align: center;
+            max-width: 350px;
+            width: 90%;
+            border: 2px solid var(--accent);
+        }
+        .confirm-dialog.show { display: block; }
+        .confirm-dialog i { font-size: 3rem; color: var(--danger); margin-bottom: 0.5rem; }
+        .confirm-dialog h3 { color: var(--primary); margin-bottom: 0.5rem; }
+        .confirm-dialog p { color: var(--text-muted); margin-bottom: 1rem; }
+        .confirm-actions { display: flex; gap: 1rem; }
+        .confirm-actions button { flex: 1; padding: 0.8rem; border: none; border-radius: 30px; cursor: pointer; font-weight: 600; }
+        .confirm-yes { background: var(--danger); color: white; }
+        .confirm-no { background: var(--border); color: var(--text); }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 1200;
+            animation: slideInRight 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        @keyframes slideInRight { from { opacity: 0; transform: translateX(100px); } to { opacity: 1; transform: translateX(0); } }
+
+        /* Footer */
+        footer {
+            background: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 4rem 5% 2rem;
+            margin-top: 2rem;
+        }
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+        .footer-logo { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .footer-logo i { color: var(--accent); }
+        .footer-section h4 { color: var(--accent); margin-bottom: 1.5rem; font-size: 1.2rem; }
+        .footer-section ul { list-style: none; }
+        .footer-section ul li { margin-bottom: 0.8rem; }
+        .footer-section ul li a { color: var(--footer-text); text-decoration: none; transition: var(--transition); }
+        .footer-section ul li a:hover { color: var(--accent); padding-left: 5px; }
+        .footer-section p { margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem; }
+        .footer-section i { color: var(--accent); width: 20px; }
+        .social-links { display: flex; gap: 1rem; margin-top: 1rem; }
+        .social-links a { color: var(--footer-text); font-size: 1.8rem; transition: var(--transition); }
+        .social-links a:hover { color: var(--accent); transform: translateY(-5px) scale(1.1); }
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 3rem auto 0;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border);
+            text-align: center;
+        }
+        .footer-bottom strong { color: var(--accent); }
+
+        /* Responsive */
+        @media (max-width: 968px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--navbar-bg);
+                padding: 2rem;
+                flex-direction: column;
+                align-items: center;
+                border-bottom: 3px solid var(--accent);
+            }
+            .nav-menu.show { display: flex; }
+            .mobile-menu { display: block; }
+        }
+        @media (max-width: 768px) {
+            .header-content h1 { font-size: 2.2rem; }
+            .upload-grid { grid-template-columns: 1fr; }
+            .filter-buttons { gap: 0.5rem; }
+            .filter-btn { padding: 0.5rem 1rem; font-size: 0.8rem; }
+            .gallery-container { gap: 1rem; }
+            .lightbox-prev, .lightbox-next { font-size: 1.5rem; }
+            .footer-content { grid-template-columns: 1fr; text-align: center; }
+            .footer-section p { justify-content: center; }
+            .social-links { justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-recycle"></i>
+                <span>Zan<span>Ewaste</span></span>
+            </div>
+            <div class="nav-menu">
+                <a href="index.html" class="sw">Nyumbani</a><a href="index.html" class="en">Home</a>
+                <a href="about.html" class="sw">Kuhusu</a><a href="about.html" class="en">About</a>
+                <a href="projects.html" class="sw">Miradi</a><a href="projects.html" class="en">Projects</a>
+                <a href="gallery.html" class="active sw">Matunzio</a><a href="gallery.html" class="active en">Gallery</a>
+                <a href="report.html" class="sw">Ripoti Taka</a><a href="report.html" class="en">Report</a>
+                <a href="contact.html" class="sw">Mawasiliano</a><a href="contact.html" class="en">Contact</a>
+                <a href="founder.html" class="sw">Founder</a><a href="founder.html" class="en">Founder</a>
+                <a href="partners.html" class="sw">Washirika</a><a href="partners.html" class="en">Partners</a>
+            </div>
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                <button class="lang-toggle" id="langToggle"><span class="lang-sw">SW</span> | <span class="lang-en">EN</span></button>
+                <button class="mobile-menu" id="mobileMenu"><i class="fas fa-bars"></i></button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="floating-elements">
+            <i class="fas fa-image float-item"></i><i class="fas fa-video float-item"></i>
+            <i class="fas fa-camera float-item"></i><i class="fas fa-film float-item"></i>
+        </div>
+        <div class="header-content">
+            <h1><i class="fas fa-images"></i> <span class="sw">Matunzio Yetu</span><span class="en">Our Gallery</span></h1>
+            <div class="breadcrumb">
+                <a href="index.html" class="sw">Nyumbani</a><a href="index.html" class="en">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span class="sw">Matunzio</span><span class="en">Gallery</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Upload Section -->
+    <section class="admin-upload-section">
+        <div class="admin-toggle">
+            <button class="btn btn-primary" id="showAdminPanel">
+                <i class="fas fa-lock"></i> <span class="sw">Ingia kama Admin</span><span class="en">Admin Login</span>
+            </button>
+        </div>
+
+        <!-- Admin Login Modal -->
+        <div class="admin-modal" id="adminModal">
+            <div class="modal-content">
+                <span class="close-modal" onclick="closeAdminModal()">&times;</span>
+                <h3 class="sw">Ingia kama Admin</h3><h3 class="en">Admin Login</h3>
+                <form id="adminLoginForm">
+                    <div class="form-group"><label>Username</label><input type="text" id="adminUsername" required></div>
+                    <div class="form-group"><label>Password</label><input type="password" id="adminPassword" required></div>
+                    <button type="submit" class="btn btn-primary"><i class="fas fa-sign-in-alt"></i> Login</button>
+                </form>
+                <div class="demo-credentials"><p class="sw">Demo: admin / admin123</p><p class="en">Demo: admin / admin123</p></div>
+            </div>
+        </div>
+
+        <!-- Admin Upload Panel -->
+        <div class="upload-panel" id="uploadPanel" style="display: none;">
+            <h3><i class="fas fa-upload"></i> <span class="sw">Pakia Picha/Video</span><span class="en">Upload Photos/Videos</span></h3>
+            <form id="uploadForm">
+                <div class="upload-grid">
+                    <div class="upload-preview" id="uploadPreview">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p class="sw">Buruta au bonyeza kupakia</p><p class="en">Drag or click to upload</p>
+                        <input type="file" id="fileInput" multiple accept="image/*,video/*">
+                    </div>
+                    <div class="upload-details">
+                        <div class="form-group"><label class="sw">Kichwa</label><label class="en">Title</label><input type="text" id="mediaTitle" required></div>
+                        <div class="form-group"><label class="sw">Aina</label><label class="en">Category</label>
+                            <select id="mediaCategory">
+                                <option value="collection" class="sw">Ukusanyaji</option><option value="collection" class="en">Collection</option>
+                                <option value="recycling" class="sw">Uchakataji</option><option value="recycling" class="en">Recycling</option>
+                                <option value="events" class="sw">Matukio</option><option value="events" class="en">Events</option>
+                            </select>
+                        </div>
+                        <div class="form-group"><label class="sw">Maelezo</label><label class="en">Description</label><textarea id="mediaDescription" rows="3"></textarea></div>
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-upload"></i> <span class="sw">Pakia</span><span class="en">Upload</span></button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Search Section -->
+    <section class="search-section">
+        <div class="search-container">
+            <input type="text" id="searchInput" class="search-input" placeholder="Tafuta picha au video...">
+            <input type="text" id="searchInputEn" class="search-input" placeholder="Search photos or videos..." style="display: none;">
+            <button class="search-btn" id="searchBtn"><i class="fas fa-search"></i></button>
+        </div>
+    </section>
+
+    <!-- Gallery Filter -->
+    <section class="gallery-filter">
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all"><span class="sw">Zote</span><span class="en">All</span></button>
+            <button class="filter-btn" data-filter="image"><i class="fas fa-image"></i> <span class="sw">Picha</span><span class="en">Photos</span></button>
+            <button class="filter-btn" data-filter="video"><i class="fas fa-video"></i> <span class="sw">Video</span><span class="en">Videos</span></button>
+            <button class="filter-btn" data-filter="collection"><i class="fas fa-truck"></i> <span class="sw">Ukusanyaji</span><span class="en">Collection</span></button>
+            <button class="filter-btn" data-filter="recycling"><i class="fas fa-recycle"></i> <span class="sw">Uchakataji</span><span class="en">Recycling</span></button>
+            <button class="filter-btn" data-filter="events"><i class="fas fa-calendar-alt"></i> <span class="sw">Matukio</span><span class="en">Events</span></button>
+        </div>
+    </section>
+
+    <!-- Gallery Grid -->
+    <section class="gallery-grid-section">
+        <div class="gallery-container" id="galleryGrid"></div>
+    </section>
+
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close" onclick="closeLightbox()">&times;</span>
+        <div class="lightbox-content">
+            <img id="lightboxImage" src="" alt="">
+            <video id="lightboxVideo" controls style="display: none;"></video>
+            <div class="lightbox-info"><h3 id="lightboxTitle"></h3><p id="lightboxDesc"></p></div>
+        </div>
+        <a class="lightbox-prev" onclick="changeLightbox(-1)">&#10094;</a>
+        <a class="lightbox-next" onclick="changeLightbox(1)">&#10095;</a>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div class="confirm-dialog" id="confirmDialog">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3 class="sw">Una uhakika?</h3><h3 class="en">Are you sure?</h3>
+        <p class="sw">Unakaribia kufuta media hii. Hatua hii haiwezi kutenduliwa.</p>
+        <p class="en">You are about to delete this media. This action cannot be undone.</p>
+        <div class="confirm-actions">
+            <button class="confirm-yes" onclick="confirmDelete()"><span class="sw">Ndio, Futa</span><span class="en">Yes, Delete</span></button>
+            <button class="confirm-no" onclick="closeConfirmDialog()"><span class="sw">Hapana</span><span class="en">Cancel</span></button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo"><i class="fas fa-recycle"></i><span>Zan<span>Ewaste</span></span></div>
+                <p class="sw">Mfumo wa kwanza wa kidijitali wa usimamizi wa taka za kielektroniki Zanzibar.</p>
+                <p class="en">First digital e-waste management system in Zanzibar.</p>
+            </div>
+            <div class="footer-section">
+                <h4 class="sw">Viungo vya Haraka</h4><h4 class="en">Quick Links</h4>
+                <ul>
+                    <li><a href="index.html" class="sw">Nyumbani</a><a href="index.html" class="en">Home</a></li>
+                    <li><a href="about.html" class="sw">Kuhusu</a><a href="about.html" class="en">About</a></li>
+                    <li><a href="projects.html" class="sw">Miradi</a><a href="projects.html" class="en">Projects</a></li>
+                    <li><a href="contact.html" class="sw">Mawasiliano</a><a href="contact.html" class="en">Contact</a></li>
+                </ul>
+            </div>
+            <div class="footer-section">
+                <h4 class="sw">Taarifa za Mawasiliano</h4><h4 class="en">Contact Info</h4>
+                <p><i class="fas fa-envelope"></i> sonibrahimdigtech@gmail.com</p>
+                <p><i class="fas fa-phone-alt"></i> +255 775 05 780</p>
+                <p><i class="fab fa-whatsapp"></i> +255 775 05 780</p>
+                <p><i class="fab fa-instagram"></i> zan.ewaste</p>
+            </div>
+            <div class="footer-section">
+                <h4 class="sw">Tufuate</h4><h4 class="en">Follow Us</h4>
+                <div class="social-links">
+                    <a href="https://www.instagram.com/zan.ewaste" target="_blank"><i class="fab fa-instagram"></i></a>
+                    <a href="https://web.facebook.com/zanewaste" target="_blank"><i class="fab fa-facebook"></i></a>
+                    <a href="https://twitter.com/zanewaste" target="_blank"><i class="fab fa-twitter"></i></a>
+                    <a href="https://wa.me/255775057780" target="_blank"><i class="fab fa-whatsapp"></i></a>
+                    <a href="https://www.linkedin.com/company/zanewaste" target="_blank"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>© 2026 <strong>SonDigital</strong> | <span class="sw">Haki zote zimehifadhiwa</span><span class="en">All rights reserved</span></p>
+        </div>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 1000, once: true, offset: 100, easing: 'ease-in-out' });
+
+        // Theme Toggle
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        });
+
+        // Language Toggle
+        const langToggle = document.getElementById('langToggle');
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        langToggle.addEventListener('click', () => {
+            const newLang = html.getAttribute('data-lang') === 'sw' ? 'en' : 'sw';
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+        });
+
+        // Mobile Menu
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navMenu = document.querySelector('.nav-menu');
+        mobileMenu.addEventListener('click', () => {
+            navMenu.classList.toggle('show');
+            const icon = mobileMenu.querySelector('i');
+            icon.className = navMenu.classList.contains('show') ? 'fas fa-times' : 'fas fa-bars';
+        });
+
+        // ===== GALLERY DATA =====
+        let galleryItems = [];
+        let currentLightboxIndex = 0;
+        let currentFilter = 'all';
+        let isAdmin = false;
+
+        // Load gallery from localStorage
+        function loadGallery() {
+            const saved = localStorage.getItem('galleryItems');
+            if (saved) {
+                galleryItems = JSON.parse(saved);
+            } else {
+                // Default sample items
+                galleryItems = [
+                    { id: 1, type: 'image', src: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400', title: 'Ukusanyaji Stone Town', titleEn: 'Stone Town Collection', category: 'collection', description: 'Wakusanyaji wakichukua taka' },
+                    { id: 2, type: 'image', src: 'https://images.unsplash.com/photo-1542293787935-c9e299b880cc?w=400', title: 'Uchakataji Pemba', titleEn: 'Recycling Pemba', category: 'recycling', description: 'Kituo cha uchakataji Pemba' },
+                    { id: 3, type: 'image', src: 'https://images.unsplash.com/photo-1574180045827-681f8a1a9622?w=400', title: 'Warsha Nungwi', titleEn: 'Nungwi Workshop', category: 'events', description: 'Warsha ya mazingira Nungwi' }
+                ];
+                saveGallery();
+            }
+            displayGallery();
+        }
+
+        function saveGallery() { localStorage.setItem('galleryItems', JSON.stringify(galleryItems)); }
+
+        function displayGallery() {
+            const container = document.getElementById('galleryGrid');
+            if (!container) return;
+            let items = currentFilter === 'all' ? galleryItems : galleryItems.filter(i => i.type === currentFilter || i.category === currentFilter);
+            if (items.length === 0) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-images"></i><p class="sw">Hakuna media bado. Bonyeza "Pakia Media" kuongeza.</p><p class="en">No media yet. Click "Upload Media" to add.</p></div>`;
+                return;
+            }
+            container.innerHTML = items.map((item, idx) => {
+                const title = html.getAttribute('data-lang') === 'sw' ? (item.title || item.titleEn) : (item.titleEn || item.title);
+                return `
+                    <div class="gallery-item" data-id="${item.id}" data-index="${idx}">
+                        <img src="${item.src}" alt="${title}">
+                        <span class="gallery-badge"><i class="fas fa-${item.type === 'image' ? 'image' : 'video'}"></i> ${item.category}</span>
+                        ${isAdmin ? `<div class="admin-controls"><button class="admin-control-btn delete-btn" onclick="event.stopPropagation(); showDeleteConfirm(${item.id})"><i class="fas fa-trash"></i></button></div>` : ''}
+                        <div class="gallery-overlay"><h4>${title}</h4><p><i class="fas fa-calendar"></i> ${new Date().toLocaleDateString()}</p></div>
+                    </div>
+                `;
+            }).join('');
+            // Re-attach click events
+            document.querySelectorAll('.gallery-item').forEach((item, i) => {
+                item.addEventListener('click', () => openLightbox(i));
+            });
+        }
+
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentFilter = this.dataset.filter;
+                displayGallery();
+            });
+        });
+
+        // Search functionality
+        document.getElementById('searchBtn').addEventListener('click', () => {
+            const term = document.getElementById('searchInput').value.toLowerCase();
+            if (!term) { displayGallery(); return; }
+            const filtered = galleryItems.filter(i => {
+                const title = html.getAttribute('data-lang') === 'sw' ? (i.title || i.titleEn) : (i.titleEn || i.title);
+                return title.toLowerCase().includes(term);
+            });
+            const container = document.getElementById('galleryGrid');
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-search"></i><p class="sw">Hakuna matokeo ya "${term}"</p><p class="en">No results for "${term}"</p></div>`;
+                return;
+            }
+            container.innerHTML = filtered.map((item, idx) => {
+                const title = html.getAttribute('data-lang') === 'sw' ? (item.title || item.titleEn) : (item.titleEn || item.title);
+                return `<div class="gallery-item" data-id="${item.id}" data-index="${idx}"><img src="${item.src}" alt="${title}"><span class="gallery-badge"><i class="fas fa-${item.type === 'image' ? 'image' : 'video'}"></i> ${item.category}</span><div class="gallery-overlay"><h4>${title}</h4><p><i class="fas fa-calendar"></i> ${new Date().toLocaleDateString()}</p></div></div>`;
+            }).join('');
+            document.querySelectorAll('.gallery-item').forEach((item, i) => { item.addEventListener('click', () => openLightbox(i)); });
+        });
+
+        // Lightbox
+        let currentDisplayItems = [];
+        function openLightbox(index) {
+            currentDisplayItems = currentFilter === 'all' ? galleryItems : galleryItems.filter(i => i.type === currentFilter || i.category === currentFilter);
+            currentLightboxIndex = index;
+            const item = currentDisplayItems[index];
+            const lightbox = document.getElementById('lightbox');
+            const img = document.getElementById('lightboxImage');
+            const video = document.getElementById('lightboxVideo');
+            const title = html.getAttribute('data-lang') === 'sw' ? (item.title || item.titleEn) : (item.titleEn || item.title);
+            document.getElementById('lightboxTitle').textContent = title;
+            if (item.type === 'image') {
+                img.src = item.src;
+                img.style.display = 'block';
+                video.style.display = 'none';
+            } else {
+                video.src = item.src;
+                video.style.display = 'block';
+                img.style.display = 'none';
+            }
+            lightbox.classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeLightbox() {
+            document.getElementById('lightbox').classList.remove('show');
+            document.body.style.overflow = '';
+            const video = document.getElementById('lightboxVideo');
+            video.pause();
+        }
+        function changeLightbox(direction) {
+            let newIndex = currentLightboxIndex + direction;
+            if (newIndex < 0) newIndex = currentDisplayItems.length - 1;
+            if (newIndex >= currentDisplayItems.length) newIndex = 0;
+            openLightbox(newIndex);
+        }
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'ArrowLeft' && document.getElementById('lightbox').classList.contains('show')) changeLightbox(-1);
+            if (e.key === 'ArrowRight' && document.getElementById('lightbox').classList.contains('show')) changeLightbox(1);
+        });
+
+        // Admin login
+        function closeAdminModal() { document.getElementById('adminModal').classList.remove('show'); }
+        document.getElementById('showAdminPanel').addEventListener('click', () => {
+            document.getElementById('adminModal').classList.add('show');
+        });
+        document.getElementById('adminLoginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            if (username === 'admin' && password === 'admin123') {
+                isAdmin = true;
+                closeAdminModal();
+                document.getElementById('uploadPanel').style.display = 'block';
+                alert('Logged in as admin');
+                displayGallery();
+            } else { alert('Invalid credentials'); }
+        });
+
+        // Upload files
+        document.getElementById('uploadForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const files = document.getElementById('fileInput').files;
+            const title = document.getElementById('mediaTitle').value;
+            const titleEn = title;
+            const category = document.getElementById('mediaCategory').value;
+            const description = document.getElementById('mediaDescription').value;
+            if (files.length === 0) { alert('Please select files'); return; }
+            Array.from(files).forEach(file => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const newItem = {
+                        id: Date.now() + Math.random(),
+                        type: file.type.startsWith('image/') ? 'image' : 'video',
+                        src: event.target.result,
+                        title: title || 'Untitled',
+                        titleEn: titleEn || 'Untitled',
+                        category: category,
+                        description: description
+                    };
+                    galleryItems.unshift(newItem);
+                    saveGallery();
+                    displayGallery();
+                };
+                reader.readAsDataURL(file);
+            });
+            alert('Upload successful');
+            document.getElementById('uploadPanel').style.display = 'none';
+            document.getElementById('uploadForm').reset();
+        });
+
+        // Delete functionality
+        let deleteId = null;
+        function showDeleteConfirm(id) { deleteId = id; document.getElementById('confirmDialog').classList.add('show'); }
+        function closeConfirmDialog() { document.getElementById('confirmDialog').classList.remove('show'); deleteId = null; }
+        function confirmDelete() {
+            if (deleteId) {
+                galleryItems = galleryItems.filter(i => i.id !== deleteId);
+                saveGallery();
+                displayGallery();
+                closeConfirmDialog();
+                alert('Media deleted successfully');
+            }
+        }
+
+        // Initialize
+        loadGallery();
+    </script>
+</body>
+</html>

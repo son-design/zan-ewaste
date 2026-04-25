@@ -1,0 +1,1889 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Agents - ZanEwaste Hub | Wakala</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light Theme */
+            --primary: #0b3b2f;
+            --secondary: #1e6f5c;
+            --accent: #e67e22;
+            --bg: #f4fbf8;
+            --card: #ffffff;
+            --text: #0f2a23;
+            --text-muted: #4a5f58;
+            --border: #d5e6df;
+            --shadow: 0 20px 30px -10px rgba(0,40,20,0.1);
+            --shadow-hover: 0 30px 40px -15px rgba(230,126,34,0.3);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --transition: all 0.3s ease;
+            
+            /* Dark Theme */
+            --primary-dark: #2a9d8f;
+            --secondary-dark: #34a889;
+            --accent-dark: #f4a261;
+            --bg-dark: #1a2c28;
+            --card-dark: #2a4039;
+            --text-dark: #e9f5f0;
+            --text-muted-dark: #b0cfc2;
+            --border-dark: #3a5f53;
+            --shadow-dark: 0 20px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* ===== LANGUAGE TOGGLE ===== */
+        .sw { display: inline; }
+        .en { display: none; }
+        
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        /* ===== CUSTOM SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { background: var(--accent); }
+            50% { background: var(--primary); }
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px var(--accent); }
+            50% { box-shadow: 0 0 30px var(--accent); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== ADMIN CONTAINER ===== */
+        .admin-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            background: var(--bg);
+        }
+
+        .admin-container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(230,126,34,0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(11,59,47,0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .admin-sidebar {
+            width: 300px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: var(--transition);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            z-index: 100;
+            animation: slideInLeft 0.8s ease;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+            position: relative;
+        }
+
+        .sidebar-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--accent);
+            animation: glow 2s infinite;
+        }
+
+        .sidebar-header i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            animation: rotate 10s linear infinite;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sidebar-header span {
+            color: var(--accent);
+        }
+
+        .admin-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: float 5s infinite ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-profile::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--accent);
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            animation: pulse 2s infinite;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-role {
+            font-size: 1rem;
+            color: var(--accent);
+            position: relative;
+            z-index: 2;
+        }
+
+        .admin-nav {
+            list-style: none;
+        }
+
+        .admin-nav li {
+            margin-bottom: 0.5rem;
+            animation: slideInRight 0.5s ease;
+            animation-fill-mode: both;
+        }
+
+        .admin-nav li:nth-child(1) { animation-delay: 0.1s; }
+        .admin-nav li:nth-child(2) { animation-delay: 0.2s; }
+        .admin-nav li:nth-child(3) { animation-delay: 0.3s; }
+        .admin-nav li:nth-child(4) { animation-delay: 0.4s; }
+        .admin-nav li:nth-child(5) { animation-delay: 0.5s; }
+        .admin-nav li:nth-child(6) { animation-delay: 0.6s; }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .admin-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .admin-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .admin-nav a:hover::before {
+            left: 100%;
+        }
+
+        .admin-nav a:hover,
+        .admin-nav a.active {
+            background: var(--accent);
+            transform: translateX(5px);
+            box-shadow: 0 10px 20px rgba(230,126,34,0.3);
+        }
+
+        .admin-nav i {
+            width: 25px;
+            font-size: 1.2rem;
+            z-index: 1;
+            transition: var(--transition);
+        }
+
+        .admin-nav a:hover i {
+            transform: scale(1.2);
+        }
+
+        .admin-nav span {
+            z-index: 1;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .admin-main {
+            flex: 1;
+            margin-left: 300px;
+            padding: 2rem;
+            background: var(--bg);
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== HEADER ===== */
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            animation: slideInDown 0.8s ease;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .admin-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            animation: gradientShift 3s linear infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .page-title h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 0.3rem;
+            animation: bounce 2s infinite;
+        }
+
+        .page-title p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-actions button {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-actions button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(230,126,34,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .header-actions button:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .header-actions button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        /* ===== STATS CARDS ===== */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--card);
+            padding: 1.8rem;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 0.8s ease;
+            animation-fill-mode: both;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.1s; }
+        .stat-card:nth-child(2) { animation-delay: 0.2s; }
+        .stat-card:nth-child(3) { animation-delay: 0.3s; }
+        .stat-card:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
+
+        .stat-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .stat-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.2rem;
+            color: white;
+            position: relative;
+            z-index: 2;
+            transition: var(--transition);
+            animation: glow 3s infinite;
+        }
+
+        .stat-card:hover .stat-icon {
+            transform: rotate(10deg) scale(1.1);
+        }
+
+        .stat-info h3 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.2rem;
+            animation: countUp 2s ease;
+        }
+
+        .stat-info p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        /* ===== SEARCH SECTION ===== */
+        .search-section {
+            margin-bottom: 2rem;
+            animation: fadeInUp 0.8s ease 0.5s both;
+        }
+
+        .search-container {
+            display: flex;
+            gap: 1rem;
+            max-width: 600px;
+            position: relative;
+        }
+
+        .search-input {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            font-size: 1rem;
+            background: var(--card);
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .search-input:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 5px rgba(230,126,34,0.2);
+            transform: scale(1.02);
+        }
+
+        .search-btn {
+            padding: 1rem 2rem;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: white;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .search-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .search-btn:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(230,126,34,0.3);
+        }
+
+        .search-btn i {
+            transition: transform 0.3s;
+        }
+
+        .search-btn:hover i {
+            transform: scale(1.2);
+        }
+
+        /* ===== ADD AGENT BUTTON ===== */
+        .add-agent-btn {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: white;
+            border: none;
+            padding: 1rem 2.5rem;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin-bottom: 2rem;
+            border: 2px solid transparent;
+            position: relative;
+            overflow: hidden;
+            animation: pulse 2s infinite;
+        }
+
+        .add-agent-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .add-agent-btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .add-agent-btn:hover {
+            background: transparent;
+            color: var(--accent);
+            border-color: var(--accent);
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 15px 30px rgba(230,126,34,0.3);
+        }
+
+        .add-agent-btn i {
+            transition: transform 0.3s;
+        }
+
+        .add-agent-btn:hover i {
+            transform: rotate(180deg) scale(1.2);
+        }
+
+        /* ===== AGENT TABLE ===== */
+        .table-container {
+            background: var(--card);
+            border-radius: 40px;
+            padding: 2rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            overflow-x: auto;
+            animation: fadeInUp 0.8s ease 0.7s both;
+            position: relative;
+        }
+
+        .table-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--primary), var(--accent));
+            animation: gradientShift 3s linear infinite;
+        }
+
+        .agent-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .agent-table th {
+            text-align: left;
+            padding: 1rem;
+            color: var(--primary);
+            font-weight: 600;
+            border-bottom: 3px solid var(--accent);
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .agent-table th::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), transparent);
+            animation: slideIn 2s infinite;
+        }
+
+        @keyframes slideIn {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        .agent-table td {
+            padding: 1.2rem 1rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .agent-table tr {
+            transition: var(--transition);
+            animation: fadeInRow 0.5s ease;
+            animation-fill-mode: both;
+        }
+
+        .agent-table tr:nth-child(1) { animation-delay: 0.1s; }
+        .agent-table tr:nth-child(2) { animation-delay: 0.2s; }
+        .agent-table tr:nth-child(3) { animation-delay: 0.3s; }
+        .agent-table tr:nth-child(4) { animation-delay: 0.4s; }
+        .agent-table tr:nth-child(5) { animation-delay: 0.5s; }
+
+        @keyframes fadeInRow {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .agent-table tr:hover {
+            background: linear-gradient(90deg, var(--bg), transparent);
+            transform: scale(1.01);
+        }
+
+        .agent-table tr:hover td {
+            color: var(--primary);
+        }
+
+        .agent-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .agent-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            font-size: 1.2rem;
+            transition: var(--transition);
+            animation: pulse 2s infinite;
+        }
+
+        .agent-table tr:hover .agent-avatar {
+            transform: scale(1.2) rotate(10deg);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.4rem 1.2rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            transition: var(--transition);
+            animation: glow 2s infinite;
+        }
+
+        .badge.active {
+            background: linear-gradient(135deg, var(--success), #34ce57);
+            color: white;
+        }
+
+        .badge.inactive {
+            background: linear-gradient(135deg, var(--danger), #ff4444);
+            color: white;
+        }
+
+        .badge.pending {
+            background: linear-gradient(135deg, var(--warning), #ffc107);
+            color: var(--text);
+        }
+
+        .badge:hover {
+            transform: scale(1.1);
+        }
+
+        .task-count {
+            font-weight: 700;
+            color: var(--accent);
+            font-size: 1.2rem;
+            animation: bounce 2s infinite;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .action-btn:hover::before {
+            width: 60px;
+            height: 60px;
+        }
+
+        .action-btn.assign {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .action-btn.edit {
+            background: linear-gradient(135deg, var(--info), #138496);
+        }
+
+        .action-btn.delete {
+            background: linear-gradient(135deg, var(--danger), #c82333);
+        }
+
+        .action-btn:hover {
+            transform: translateY(-5px) scale(1.2);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .action-btn i {
+            transition: transform 0.3s;
+        }
+
+        .action-btn:hover i {
+            transform: scale(1.2);
+        }
+
+        /* ===== MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeInModal 0.3s ease;
+        }
+
+        @keyframes fadeInModal {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(10px);
+            }
+        }
+
+        .modal-content {
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 50px;
+            max-width: 550px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            animation: slideInUpModal 0.5s ease;
+            border: 2px solid var(--accent);
+            position: relative;
+        }
+
+        @keyframes slideInUpModal {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+
+        .modal-header h3 {
+            color: var(--primary);
+            font-size: 2rem;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .close-modal {
+            font-size: 2.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+            transform: rotate(180deg) scale(1.2);
+            background: rgba(230,126,34,0.1);
+        }
+
+        /* ===== CONFIRMATION DIALOG ===== */
+        .confirm-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 50px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            z-index: 1100;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            border: 3px solid var(--danger);
+            animation: scaleInConfirm 0.3s ease;
+        }
+
+        @keyframes scaleInConfirm {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .confirm-dialog.show {
+            display: block;
+        }
+
+        .confirm-dialog i {
+            font-size: 5rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+            animation: bounce 1s infinite;
+        }
+
+        .confirm-dialog h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 2rem;
+        }
+
+        .confirm-dialog p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .confirm-actions button {
+            flex: 1;
+            padding: 1.2rem;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+            font-size: 1.1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .confirm-actions button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .confirm-actions button:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .confirm-yes {
+            background: linear-gradient(135deg, var(--danger), #c82333);
+            color: white;
+        }
+
+        .confirm-yes:hover {
+            transform: translateY(-5px) scale(1.05);
+            box-shadow: 0 10px 20px rgba(220,53,69,0.3);
+        }
+
+        .confirm-no {
+            background: linear-gradient(135deg, var(--border), var(--text-muted));
+            color: var(--text);
+        }
+
+        .confirm-no:hover {
+            background: var(--text-muted);
+            color: white;
+            transform: translateY(-5px);
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--success), #34ce57);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            box-shadow: 0 15px 30px rgba(40,167,69,0.3);
+            z-index: 1200;
+            animation: slideInRightNotif 0.5s ease, pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid white;
+        }
+
+        @keyframes slideInRightNotif {
+            from {
+                opacity: 0;
+                transform: translateX(100px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        .notification i {
+            font-size: 1.5rem;
+            animation: bounce 1s infinite;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .admin-sidebar {
+                width: 250px;
+            }
+            
+            .admin-main {
+                margin-left: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .admin-sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .admin-main {
+                margin-left: 0;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .agent-table {
+                font-size: 0.9rem;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .search-container {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-recycle"></i>
+                <h2>Zan<span>Ewaste</span></h2>
+            </div>
+            
+            <div class="admin-profile">
+                <div class="profile-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&size=100&background=e67e22&color=fff" alt="Admin">
+                </div>
+                <div class="profile-name">Admin User</div>
+                <div class="profile-role">
+                    <span class="sw">Msimamizi Mkuu</span>
+                    <span class="en">Super Admin</span>
+                </div>
+            </div>
+            
+            <ul class="admin-nav">
+                <li><a href="index.html">
+                    <i class="fas fa-dashboard"></i>
+                    <span class="sw">Dashibodi</span>
+                    <span class="en">Dashboard</span>
+                </a></li>
+                <li><a href="agents.html" class="active">
+                    <i class="fas fa-users"></i>
+                    <span class="sw">Wakala</span>
+                    <span class="en">Agents</span>
+                </a></li>
+                <li><a href="tasks.html">
+                    <i class="fas fa-tasks"></i>
+                    <span class="sw">Kazi</span>
+                    <span class="en">Tasks</span>
+                </a></li>
+                <li><a href="projects.html">
+                    <i class="fas fa-project-diagram"></i>
+                    <span class="sw">Miradi</span>
+                    <span class="en">Projects</span>
+                </a></li>
+                <li><a href="reports.html">
+                    <i class="fas fa-chart-bar"></i>
+                    <span class="sw">Ripoti</span>
+                    <span class="en">Reports</span>
+                </a></li>
+                <li><a href="settings.html">
+                    <i class="fas fa-cog"></i>
+                    <span class="sw">Mipangilio</span>
+                    <span class="en">Settings</span>
+                </a></li>
+                <li style="margin-top: 2rem;"><a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="sw">Toka</span>
+                    <span class="en">Logout</span>
+                </a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Header -->
+            <div class="admin-header">
+                <div class="page-title">
+                    <h1>
+                        <span class="sw">Wakala</span>
+                        <span class="en">Agents</span>
+                    </h1>
+                    <p class="sw">Simamia wakala wote wa ukusanyaji taka</p>
+                    <p class="en">Manage all waste collection agents</p>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    <button class="lang-toggle" id="langToggle">
+                        <span class="lang-sw">SW</span>
+                        <span class="lang-separator">|</span>
+                        <span class="lang-en">EN</span>
+                    </button>
+                    
+                    <button class="mobile-menu" id="mobileMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3>24</h3>
+                        <p class="sw">Jumla ya Wakala</p>
+                        <p class="en">Total Agents</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+                    <div class="stat-info">
+                        <h3>18</h3>
+                        <p class="sw">Wanaofanya Kazi</p>
+                        <p class="en">Active Agents</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="300">
+                    <div class="stat-icon"><i class="fas fa-clock"></i></div>
+                    <div class="stat-info">
+                        <h3>6</h3>
+                        <p class="sw">Wapo Likizo</p>
+                        <p class="en">On Leave</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card" data-aos="fade-up" data-aos-delay="400">
+                    <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="stat-info">
+                        <h3>156</h3>
+                        <p class="sw">Kazi Zote</p>
+                        <p class="en">Total Tasks</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search Section -->
+            <div class="search-section">
+                <div class="search-container">
+                    <input type="text" id="searchInput" class="search-input sw" placeholder="Tafuta kwa jina, barua pepe, au eneo...">
+                    <input type="text" id="searchInputEn" class="search-input en" placeholder="Search by name, email, or location...">
+                    <button class="search-btn" id="searchBtn">
+                        <i class="fas fa-search"></i>
+                        <span class="sw">Tafuta</span>
+                        <span class="en">Search</span>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Add Agent Button -->
+            <button class="add-agent-btn" onclick="showAddAgentModal()">
+                <i class="fas fa-plus-circle"></i>
+                <span class="sw">Ongeza Wakala Mpya</span>
+                <span class="en">Add New Agent</span>
+            </button>
+            
+            <!-- Agents Table -->
+            <div class="table-container">
+                <table class="agent-table" id="agentTable">
+                    <thead>
+                        <tr>
+                            <th><span class="sw">Jina</span><span class="en">Name</span></th>
+                            <th><span class="sw">Barua Pepe</span><span class="en">Email</span></th>
+                            <th><span class="sw">Simu</span><span class="en">Phone</span></th>
+                            <th><span class="sw">Eneo</span><span class="en">Region</span></th>
+                            <th><span class="sw">Hali</span><span class="en">Status</span></th>
+                            <th><span class="sw">Kazi</span><span class="en">Tasks</span></th>
+                            <th><span class="sw">Vitendo</span><span class="en">Actions</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="agentTableBody"></tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Add/Edit Agent Modal -->
+    <div class="modal" id="agentModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle" class="sw">Ongeza Wakala Mpya</h3>
+                <h3 id="modalTitleEn" class="en">Add New Agent</h3>
+                <span class="close-modal" onclick="closeModal()">&times;</span>
+            </div>
+            
+            <form id="agentForm">
+                <input type="hidden" id="agentId">
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="sw">Jina la Kwanza</label>
+                        <label class="en">First Name</label>
+                        <input type="text" id="firstName" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="sw">Jina la Mwisho</label>
+                        <label class="en">Last Name</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label class="sw">Barua Pepe</label>
+                    <label class="en">Email</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="sw">Namba ya Simu</label>
+                        <label class="en">Phone Number</label>
+                        <input type="tel" id="phone" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="sw">Eneo</label>
+                        <label class="en">Region</label>
+                        <select id="region" required>
+                            <option value="Unguja North" class="sw">Unguja Kaskazini</option>
+                            <option value="Unguja North" class="en">Unguja North</option>
+                            <option value="Unguja South" class="sw">Unguja Kusini</option>
+                            <option value="Unguja South" class="en">Unguja South</option>
+                            <option value="Urban West" class="sw">Mjini Magharibi</option>
+                            <option value="Urban West" class="en">Urban West</option>
+                            <option value="Pemba North" class="sw">Pemba Kaskazini</option>
+                            <option value="Pemba North" class="en">Pemba North</option>
+                            <option value="Pemba South" class="sw">Pemba Kusini</option>
+                            <option value="Pemba South" class="en">Pemba South</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="sw">Hali</label>
+                        <label class="en">Status</label>
+                        <select id="status" required>
+                            <option value="active" class="sw">Anafanya Kazi</option>
+                            <option value="active" class="en">Active</option>
+                            <option value="inactive" class="sw">Hafanyi Kazi</option>
+                            <option value="inactive" class="en">Inactive</option>
+                            <option value="leave" class="sw">Likizo</option>
+                            <option value="leave" class="en">On Leave</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="sw">Nywila</label>
+                        <label class="en">Password</label>
+                        <input type="password" id="password" placeholder="Achia tupu kama haubadilishi">
+                    </div>
+                </div>
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn-save">
+                        <i class="fas fa-save"></i>
+                        <span class="sw">Hifadhi</span>
+                        <span class="en">Save</span>
+                    </button>
+                    <button type="button" class="btn-cancel" onclick="closeModal()">
+                        <i class="fas fa-times"></i>
+                        <span class="sw">Ghairi</span>
+                        <span class="en">Cancel</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Confirmation Dialog -->
+    <div class="confirm-dialog" id="confirmDialog">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3 class="sw">Una uhakika?</h3>
+        <h3 class="en">Are you sure?</h3>
+        <p class="sw">Unakaribia kufuta wakala huyu. Hatua hii haiwezi kutenduliwa.</p>
+        <p class="en">You are about to delete this agent. This action cannot be undone.</p>
+        <div class="confirm-actions">
+            <button class="confirm-yes" onclick="confirmDelete()">
+                <i class="fas fa-trash"></i>
+                <span class="sw">Ndio, Futa</span>
+                <span class="en">Yes, Delete</span>
+            </button>
+            <button class="confirm-no" onclick="closeConfirmDialog()">
+                <i class="fas fa-times"></i>
+                <span class="sw">Hapana</span>
+                <span class="en">Cancel</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100,
+            easing: 'ease-in-out'
+        });
+
+        // ===== THEME TOGGLE =====
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        
+        // ===== LANGUAGE TOGGLE =====
+        const langToggle = document.getElementById('langToggle');
+        
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        updateLangButtons(savedLang);
+        
+        langToggle.addEventListener('click', function() {
+            const currentLang = html.getAttribute('data-lang');
+            const newLang = currentLang === 'sw' ? 'en' : 'sw';
+            
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+            updateLangButtons(newLang);
+        });
+        
+        function updateLangButtons(lang) {
+            const langSw = document.querySelector('.lang-sw');
+            const langEn = document.querySelector('.lang-en');
+            
+            if (lang === 'sw') {
+                langSw.style.color = 'var(--accent)';
+                langSw.style.fontWeight = '700';
+                langEn.style.color = '';
+                langEn.style.fontWeight = '';
+            } else {
+                langEn.style.color = 'var(--accent)';
+                langEn.style.fontWeight = '700';
+                langSw.style.color = '';
+                langSw.style.fontWeight = '';
+            }
+        }
+        
+        // ===== MOBILE MENU =====
+        const mobileMenu = document.getElementById('mobileMenu');
+        const sidebar = document.getElementById('adminSidebar');
+        
+        mobileMenu.addEventListener('click', function() {
+            sidebar.classList.toggle('show');
+        });
+
+        // ===== AGENTS DATA =====
+        let agents = [
+            {
+                id: 1,
+                firstName: 'John',
+                lastName: 'Agent',
+                email: 'john@agent.com',
+                phone: '+255 712 345 678',
+                region: 'Unguja North',
+                status: 'active',
+                tasks: 5
+            },
+            {
+                id: 2,
+                firstName: 'Maryam',
+                lastName: 'Said',
+                email: 'maryam@agent.com',
+                phone: '+255 712 345 679',
+                region: 'Pemba South',
+                status: 'active',
+                tasks: 3
+            },
+            {
+                id: 3,
+                firstName: 'Ali',
+                lastName: 'Hassan',
+                email: 'ali@agent.com',
+                phone: '+255 712 345 680',
+                region: 'Urban West',
+                status: 'inactive',
+                tasks: 0
+            },
+            {
+                id: 4,
+                firstName: 'Fatma',
+                lastName: 'Khamis',
+                email: 'fatma@agent.com',
+                phone: '+255 712 345 681',
+                region: 'Pemba North',
+                status: 'active',
+                tasks: 8
+            },
+            {
+                id: 5,
+                firstName: 'Salim',
+                lastName: 'Omar',
+                email: 'salim@agent.com',
+                phone: '+255 712 345 682',
+                region: 'Unguja South',
+                status: 'leave',
+                tasks: 2
+            }
+        ];
+
+        let currentDeleteId = null;
+
+        // Load agents
+        function loadAgents() {
+            const tbody = document.getElementById('agentTableBody');
+            tbody.innerHTML = '';
+
+            agents.forEach(agent => {
+                const row = document.createElement('tr');
+                
+                const statusClass = agent.status === 'active' ? 'active' : 
+                                   agent.status === 'inactive' ? 'inactive' : 'pending';
+                const statusText = agent.status === 'active' ? 'Active' : 
+                                  agent.status === 'inactive' ? 'Inactive' : 'On Leave';
+                const statusTextSw = agent.status === 'active' ? 'Anafanya Kazi' : 
+                                     agent.status === 'inactive' ? 'Hafanyi Kazi' : 'Likizo';
+
+                row.innerHTML = `
+                    <td>
+                        <div class="agent-info">
+                            <div class="agent-avatar">${agent.firstName.charAt(0)}${agent.lastName.charAt(0)}</div>
+                            ${agent.firstName} ${agent.lastName}
+                        </div>
+                    </td>
+                    <td>${agent.email}</td>
+                    <td>${agent.phone}</td>
+                    <td>${agent.region}</td>
+                    <td><span class="badge ${statusClass}">
+                        <span class="sw">${statusTextSw}</span>
+                        <span class="en">${statusText}</span>
+                    </span></td>
+                    <td><span class="task-count">${agent.tasks}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn assign" onclick="assignTask(${agent.id})" title="Assign Task">
+                                <i class="fas fa-tasks"></i>
+                            </button>
+                            <button class="action-btn edit" onclick="editAgent(${agent.id})" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="showDeleteConfirm(${agent.id})" title="Delete">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Search functionality
+        document.getElementById('searchBtn').addEventListener('click', function() {
+            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+            const searchTermEn = document.getElementById('searchInputEn').value.toLowerCase();
+            const term = html.getAttribute('data-lang') === 'sw' ? searchTerm : searchTermEn;
+            
+            const filteredAgents = agents.filter(agent => 
+                agent.firstName.toLowerCase().includes(term) ||
+                agent.lastName.toLowerCase().includes(term) ||
+                agent.email.toLowerCase().includes(term) ||
+                agent.region.toLowerCase().includes(term)
+            );
+            
+            displayFilteredAgents(filteredAgents);
+        });
+
+        function displayFilteredAgents(filteredAgents) {
+            const tbody = document.getElementById('agentTableBody');
+            tbody.innerHTML = '';
+
+            filteredAgents.forEach(agent => {
+                const row = document.createElement('tr');
+                
+                const statusClass = agent.status === 'active' ? 'active' : 
+                                   agent.status === 'inactive' ? 'inactive' : 'pending';
+                const statusText = agent.status === 'active' ? 'Active' : 
+                                  agent.status === 'inactive' ? 'Inactive' : 'On Leave';
+                const statusTextSw = agent.status === 'active' ? 'Anafanya Kazi' : 
+                                     agent.status === 'inactive' ? 'Hafanyi Kazi' : 'Likizo';
+
+                row.innerHTML = `
+                    <td>
+                        <div class="agent-info">
+                            <div class="agent-avatar">${agent.firstName.charAt(0)}${agent.lastName.charAt(0)}</div>
+                            ${agent.firstName} ${agent.lastName}
+                        </div>
+                    </td>
+                    <td>${agent.email}</td>
+                    <td>${agent.phone}</td>
+                    <td>${agent.region}</td>
+                    <td><span class="badge ${statusClass}">
+                        <span class="sw">${statusTextSw}</span>
+                        <span class="en">${statusText}</span>
+                    </span></td>
+                    <td><span class="task-count">${agent.tasks}</span></td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="action-btn assign" onclick="assignTask(${agent.id})">
+                                <i class="fas fa-tasks"></i>
+                            </button>
+                            <button class="action-btn edit" onclick="editAgent(${agent.id})">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete" onclick="showDeleteConfirm(${agent.id})">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        // Modal functions
+        function showAddAgentModal() {
+            document.getElementById('agentId').value = '';
+            document.getElementById('firstName').value = '';
+            document.getElementById('lastName').value = '';
+            document.getElementById('email').value = '';
+            document.getElementById('phone').value = '';
+            document.getElementById('region').value = 'Unguja North';
+            document.getElementById('status').value = 'active';
+            document.getElementById('password').value = '';
+            
+            document.getElementById('modalTitle').style.display = 'inline';
+            document.getElementById('modalTitleEn').style.display = 'none';
+            if (html.getAttribute('data-lang') === 'en') {
+                document.getElementById('modalTitle').style.display = 'none';
+                document.getElementById('modalTitleEn').style.display = 'inline';
+            }
+            
+            document.getElementById('agentModal').classList.add('show');
+        }
+
+        function editAgent(id) {
+            const agent = agents.find(a => a.id === id);
+            if (agent) {
+                document.getElementById('agentId').value = agent.id;
+                document.getElementById('firstName').value = agent.firstName;
+                document.getElementById('lastName').value = agent.lastName;
+                document.getElementById('email').value = agent.email;
+                document.getElementById('phone').value = agent.phone;
+                document.getElementById('region').value = agent.region;
+                document.getElementById('status').value = agent.status;
+                document.getElementById('password').value = '';
+                
+                document.getElementById('modalTitle').innerHTML = 'Hariri Wakala';
+                document.getElementById('modalTitleEn').innerHTML = 'Edit Agent';
+                
+                document.getElementById('agentModal').classList.add('show');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('agentModal').classList.remove('show');
+        }
+
+        // Form submit
+        document.getElementById('agentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const agentId = document.getElementById('agentId').value;
+            const agentData = {
+                id: agentId ? parseInt(agentId) : Date.now(),
+                firstName: document.getElementById('firstName').value,
+                lastName: document.getElementById('lastName').value,
+                email: document.getElementById('email').value,
+                phone: document.getElementById('phone').value,
+                region: document.getElementById('region').value,
+                status: document.getElementById('status').value,
+                tasks: agentId ? agents.find(a => a.id === parseInt(agentId)).tasks : 0
+            };
+
+            if (agentId) {
+                // Update existing agent
+                const index = agents.findIndex(a => a.id === parseInt(agentId));
+                agents[index] = agentData;
+                showNotification(html.getAttribute('data-lang') === 'sw' ? 'Wakala amehifadhiwa!' : 'Agent updated!');
+            } else {
+                // Add new agent
+                agents.push(agentData);
+                showNotification(html.getAttribute('data-lang') === 'sw' ? 'Wakala ameongezwa!' : 'Agent added!');
+            }
+
+            loadAgents();
+            closeModal();
+        });
+
+        // Delete confirmation
+        function showDeleteConfirm(id) {
+            currentDeleteId = id;
+            document.getElementById('confirmDialog').classList.add('show');
+        }
+
+        function closeConfirmDialog() {
+            document.getElementById('confirmDialog').classList.remove('show');
+            currentDeleteId = null;
+        }
+
+        function confirmDelete() {
+            if (currentDeleteId) {
+                agents = agents.filter(a => a.id !== currentDeleteId);
+                loadAgents();
+                showNotification(html.getAttribute('data-lang') === 'sw' ? 'Wakala amefutwa!' : 'Agent deleted!');
+                closeConfirmDialog();
+            }
+        }
+
+        // Assign task
+        function assignTask(id) {
+            window.location.href = `tasks.html?agent=${id}`;
+        }
+
+        // Notification
+        function showNotification(message) {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-check-circle"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Logout
+        function logout() {
+            localStorage.removeItem('userRole');
+            window.location.href = 'login.html';
+        }
+
+        // Load agents on page load
+        document.addEventListener('DOMContentLoaded', loadAgents);
+
+        // Close modal when clicking outside
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('agentModal');
+            if (event.target === modal) {
+                closeModal();
+            }
+            
+            const confirm = document.getElementById('confirmDialog');
+            if (event.target === confirm) {
+                closeConfirmDialog();
+            }
+        });
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeModal();
+                closeConfirmDialog();
+            }
+        });
+    </script>
+</body>
+</html>

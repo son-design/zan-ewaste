@@ -1,0 +1,54 @@
+/* Additional admin styles */
+.admin-sidebar {
+    background: var(--primary);
+    color: white;
+    padding: 2rem;
+    height: 100vh;
+    position: fixed;
+    width: 280px;
+}
+
+.admin-main {
+    margin-left: 280px;
+    padding: 2rem;
+    background: var(--bg);
+    min-height: 100vh;
+}
+
+.admin-table {
+    background: rgb(85, 8, 8);
+    border-radius: 30px;
+    padding: 1.5rem;
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.admin-table th {
+    text-align: left;
+    padding: 1rem;
+    color: var(--primary);
+    border-bottom: 2px solid var(--border);
+}
+
+.admin-table td {
+    padding: 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.status-badge {
+    background: var(--accent);
+    color: white;
+    padding: 0.3rem 1rem;
+    border-radius: 30px;
+    font-size: 0.8rem;
+    display: inline-block;
+}
+
+.action-btn {
+    background: none;
+    border: none;
+    color: var(--accent);
+    cursor: pointer;
+    margin: 0 0.3rem;
+    font-size: 1.2rem;
+}

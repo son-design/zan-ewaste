@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reports - ZanEwaste Hub | Ripoti</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- SheetJS (Excel export) -->
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.2/package/dist/xlsx.full.min.js"></script>
+    
+    <!-- jsPDF (PDF export) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #0b3b2f;
+            --secondary: #1e6f5c;
+            --accent: #e67e22;
+            --bg: #f4fbf8;
+            --card: #ffffff;
+            --text: #0f2a23;
+            --text-muted: #4a5f58;
+            --border: #d5e6df;
+            --shadow: 0 20px 30px -10px rgba(0,40,20,0.1);
+            --shadow-hover: 0 30px 40px -15px rgba(230,126,34,0.3);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --transition: all 0.3s ease;
+            
+            --primary-dark: #2a9d8f;
+            --secondary-dark: #34a889;
+            --accent-dark: #f4a261;
+            --bg-dark: #1a2c28;
+            --card-dark: #2a4039;
+            --text-dark: #e9f5f0;
+            --text-muted-dark: #b0cfc2;
+            --border-dark: #3a5f53;
+            --shadow-dark: 0 20px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        .sw { display: inline; }
+        .en { display: none; }
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        ::-webkit-scrollbar { width: 10px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 5px; }
+
+        /* Admin Layout */
+        .admin-container { display: flex; min-height: 100vh; background: var(--bg); }
+        .admin-sidebar {
+            width: 280px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: var(--transition);
+            box-shadow: 5px 0 20px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+        }
+        .sidebar-header i { font-size: 2.5rem; color: var(--accent); animation: rotate 10s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .sidebar-header h2 { font-size: 1.5rem; font-weight: 600; }
+        .sidebar-header span { color: var(--accent); }
+
+        .admin-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+        }
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 3px solid var(--accent);
+            overflow: hidden;
+        }
+        .profile-avatar img { width: 100%; height: 100%; object-fit: cover; }
+        .profile-name { font-size: 1.2rem; font-weight: 600; }
+        .profile-role { font-size: 0.9rem; color: var(--accent); }
+
+        .admin-nav { list-style: none; }
+        .admin-nav li { margin-bottom: 0.5rem; }
+        .admin-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            transition: var(--transition);
+        }
+        .admin-nav a:hover, .admin-nav a.active { background: var(--accent); transform: translateX(5px); }
+        .admin-nav i { width: 25px; }
+
+        .admin-main {
+            flex: 1;
+            margin-left: 280px;
+            padding: 2rem;
+            background: var(--bg);
+            transition: var(--transition);
+        }
+
+        .admin-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+        }
+        .page-title h1 { color: var(--primary); font-size: 2rem; margin-bottom: 0.3rem; }
+        .page-title p { color: var(--text-muted); font-size: 0.9rem; }
+
+        .header-actions { display: flex; gap: 1rem; }
+        .header-actions button {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 0.6rem 1.2rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+        .header-actions button:hover { border-color: var(--accent); color: var(--accent); }
+        .mobile-menu { display: none; }
+
+        /* Stats Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .stat-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 30px;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+        }
+        .stat-card:hover { transform: translateY(-5px); border-color: var(--accent); }
+        .stat-icon {
+            width: 55px;
+            height: 55px;
+            background: var(--accent);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: white;
+        }
+        .stat-info h3 { font-size: 1.8rem; font-weight: 700; color: var(--primary); }
+        .stat-info p { color: var(--text-muted); font-size: 0.85rem; }
+
+        /* Filter Tabs */
+        .filter-section { margin-bottom: 2rem; }
+        .filter-tabs {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
+        }
+        .filter-tab {
+            padding: 0.6rem 1.5rem;
+            border: 2px solid var(--border);
+            background: var(--card);
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .filter-tab:hover, .filter-tab.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Notification Banner */
+        .notification-banner {
+            background: linear-gradient(135deg, var(--info), var(--primary));
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 40px;
+            margin-bottom: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .notification-banner i { font-size: 1.8rem; animation: bounce 2s infinite; }
+        .banner-content { display: flex; align-items: center; gap: 1rem; }
+        .dismiss-btn { background: white; color: var(--accent); border: none; padding: 0.4rem 1rem; border-radius: 30px; cursor: pointer; font-weight: 500; }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .chart-card {
+            background: var(--card);
+            padding: 1.5rem;
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+        }
+        .chart-card h3 { color: var(--primary); margin-bottom: 1rem; font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem; }
+        .chart-card h3 i { color: var(--accent); }
+        .chart-container { height: 250px; position: relative; }
+
+        /* Reports List */
+        .reports-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .reports-header h2 { color: var(--primary); font-size: 1.3rem; display: flex; align-items: center; gap: 0.5rem; }
+        .reports-header h2 i { color: var(--accent); }
+        .export-all {
+            background: var(--success);
+            color: white;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 40px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .reports-list { display: flex; flex-direction: column; gap: 1rem; }
+        .report-item {
+            background: var(--card);
+            border-radius: 30px;
+            padding: 1.2rem;
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+        .report-item:hover { border-color: var(--accent); transform: translateX(5px); }
+        .report-info h3 { color: var(--primary); font-size: 1.1rem; margin-bottom: 0.3rem; }
+        .report-info p { color: var(--text-muted); font-size: 0.85rem; }
+        .report-stats { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.5rem; }
+        .report-stats span { display: flex; align-items: center; gap: 0.3rem; color: var(--text-muted); font-size: 0.8rem; }
+        .report-stats i { color: var(--accent); }
+
+        .report-actions { display: flex; gap: 0.5rem; }
+        .report-actions button {
+            padding: 0.4rem 1rem;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+        .btn-pdf { background: var(--danger); color: white; }
+        .btn-excel { background: var(--success); color: white; }
+        .btn-preview { background: var(--info); color: white; }
+        .report-actions button:hover { transform: translateY(-2px); }
+
+        .empty-state { text-align: center; padding: 3rem; color: var(--text-muted); }
+        .empty-state i { font-size: 3rem; color: var(--accent); margin-bottom: 1rem; opacity: 0.5; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .admin-sidebar { width: 250px; }
+            .admin-main { margin-left: 250px; }
+            .charts-grid { grid-template-columns: 1fr; }
+        }
+        @media (max-width: 768px) {
+            .admin-sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+            }
+            .admin-sidebar.show { transform: translateX(0); }
+            .admin-main { margin-left: 0; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .report-item { flex-direction: column; align-items: stretch; }
+            .report-actions { justify-content: center; }
+            .mobile-menu { display: block; }
+        }
+        @media (max-width: 480px) {
+            .stats-grid { grid-template-columns: 1fr; }
+            .filter-tabs { overflow-x: auto; flex-wrap: nowrap; padding-bottom: 0.5rem; }
+            .report-stats { flex-direction: column; gap: 0.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="admin-container">
+        <!-- Sidebar -->
+        <div class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-recycle"></i>
+                <h2>Zan<span>Ewaste</span></h2>
+            </div>
+            <div class="admin-profile">
+                <div class="profile-avatar">
+                    <img src="https://ui-avatars.com/api/?name=Admin+User&size=80&background=e67e22&color=fff" alt="Admin">
+                </div>
+                <div class="profile-name">Admin User</div>
+                <div class="profile-role"><span class="sw">Msimamizi Mkuu</span><span class="en">Super Admin</span></div>
+            </div>
+            <ul class="admin-nav">
+                <li><a href="index.html"><i class="fas fa-dashboard"></i> <span class="sw">Dashibodi</span><span class="en">Dashboard</span></a></li>
+                <li><a href="agents.html"><i class="fas fa-users"></i> <span class="sw">Wakala</span><span class="en">Agents</span></a></li>
+                <li><a href="tasks.html"><i class="fas fa-tasks"></i> <span class="sw">Kazi</span><span class="en">Tasks</span></a></li>
+                <li><a href="projects.html"><i class="fas fa-project-diagram"></i> <span class="sw">Miradi</span><span class="en">Projects</span></a></li>
+                <li><a href="reports.html" class="active"><i class="fas fa-chart-bar"></i> <span class="sw">Ripoti</span><span class="en">Reports</span></a></li>
+                <li><a href="settings.html"><i class="fas fa-cog"></i> <span class="sw">Mipangilio</span><span class="en">Settings</span></a></li>
+                <li style="margin-top:2rem;"><a href="#" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span class="sw">Toka</span><span class="en">Logout</span></a></li>
+            </ul>
+        </div>
+
+        <!-- Main Content -->
+        <div class="admin-main">
+            <!-- Header -->
+            <div class="admin-header">
+                <div class="page-title">
+                    <h1><span class="sw">Ripoti na Takwimu</span><span class="en">Reports & Analytics</span></h1>
+                    <p class="sw">Takwimu za ukusanyaji na uchakataji taka</p>
+                    <p class="en">Waste collection and recycling statistics</p>
+                </div>
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
+                    <button class="lang-toggle" id="langToggle"><span class="lang-sw">SW</span> | <span class="lang-en">EN</span></button>
+                    <button class="mobile-menu" id="mobileMenu"><i class="fas fa-bars"></i></button>
+                </div>
+            </div>
+
+            <!-- Stats Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-weight"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalWaste">2,450</h3>
+                        <p class="sw">Jumla ya Taka (kg)</p>
+                        <p class="en">Total Waste (kg)</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-users"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalAgents">24</h3>
+                        <p class="sw">Jumla ya Wakala</p>
+                        <p class="en">Total Agents</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-tasks"></i></div>
+                    <div class="stat-info">
+                        <h3 id="totalTasks">156</h3>
+                        <p class="sw">Jumla ya Kazi</p>
+                        <p class="en">Total Tasks</p>
+                    </div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon"><i class="fas fa-recycle"></i></div>
+                    <div class="stat-info">
+                        <h3 id="recycledRate">68%</h3>
+                        <p class="sw">Kiwango cha Uchakataji</p>
+                        <p class="en">Recycling Rate</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Notification Banner (Demo) -->
+            <div class="notification-banner" id="notificationBanner">
+                <div class="banner-content">
+                    <i class="fas fa-bell"></i>
+                    <div>
+                        <strong class="sw">Ripoti Mpya Inapatikana!</strong>
+                        <strong class="en">New Report Available!</strong>
+                        <p class="sw">Ripoti ya mwezi Machi 2026 imetolewa</p>
+                        <p class="en">March 2026 report has been generated</p>
+                    </div>
+                </div>
+                <button class="dismiss-btn" onclick="dismissNotification()"><span class="sw">Sawa</span><span class="en">Dismiss</span></button>
+            </div>
+
+            <!-- Filter Tabs -->
+            <div class="filter-section">
+                <div class="filter-tabs">
+                    <button class="filter-tab active" data-filter="all"><i class="fas fa-calendar"></i> <span class="sw">Zote</span><span class="en">All</span></button>
+                    <button class="filter-tab" data-filter="daily"><i class="fas fa-calendar-day"></i> <span class="sw">Leo</span><span class="en">Today</span></button>
+                    <button class="filter-tab" data-filter="weekly"><i class="fas fa-calendar-week"></i> <span class="sw">Wiki hii</span><span class="en">This Week</span></button>
+                    <button class="filter-tab" data-filter="monthly"><i class="fas fa-calendar-alt"></i> <span class="sw">Mwezi huu</span><span class="en">This Month</span></button>
+                    <button class="filter-tab" data-filter="yearly"><i class="fas fa-calendar-year"></i> <span class="sw">Mwaka huu</span><span class="en">This Year</span></button>
+                </div>
+            </div>
+
+            <!-- Charts -->
+            <div class="charts-grid">
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-line"></i> <span class="sw">Ukusanyaji kwa Mwezi</span><span class="en">Monthly Collection (kg)</span></h3>
+                    <div class="chart-container">
+                        <canvas id="monthlyChart"></canvas>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <h3><i class="fas fa-chart-pie"></i> <span class="sw">Aina za Taka</span><span class="en">Waste Types</span></h3>
+                    <div class="chart-container">
+                        <canvas id="wasteTypeChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports List Header -->
+            <div class="reports-header">
+                <h2><i class="fas fa-file-alt"></i> <span class="sw">Ripoti Zilizopo</span><span class="en">Available Reports</span></h2>
+                <button class="export-all" onclick="exportAllReports()"><i class="fas fa-download"></i> <span class="sw">Pakua Zote</span><span class="en">Export All</span></button>
+            </div>
+
+            <!-- Reports List -->
+            <div class="reports-list" id="reportsList"></div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        AOS.init({ duration: 800, once: true, offset: 80 });
+
+        // ===== THEME TOGGLE =====
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        themeToggle.innerHTML = savedTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        
+        themeToggle.addEventListener('click', () => {
+            const newTheme = html.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
+        });
+
+        // ===== LANGUAGE TOGGLE =====
+        const langToggle = document.getElementById('langToggle');
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        
+        langToggle.addEventListener('click', () => {
+            const currentLang = html.getAttribute('data-lang');
+            const newLang = currentLang === 'sw' ? 'en' : 'sw';
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+            // Refresh reports to update language
+            loadReports(currentFilter);
+        });
+
+        // ===== MOBILE MENU =====
+        const mobileMenu = document.getElementById('mobileMenu');
+        const sidebar = document.getElementById('adminSidebar');
+        mobileMenu.addEventListener('click', () => sidebar.classList.toggle('show'));
+
+        // ===== FUNCTIONS =====
+        function logout() {
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            localStorage.removeItem('user');
+            localStorage.removeItem('token');
+            window.location.href = 'login.html';
+        }
+
+        function dismissNotification() {
+            document.getElementById('notificationBanner').style.display = 'none';
+        }
+
+        // ===== DEMO REPORT DATA (Rahisi kuunganisha na database baadaye) =====
+        let reports = [
+            {
+                id: 1,
+                title: 'Ripoti ya Ukusanyaji - Machi 2026',
+                titleEn: 'Collection Report - March 2026',
+                date: '2026-03-31',
+                period: 'monthly',
+                totalWaste: '850 kg',
+                agents: 24,
+                tasks: 45,
+                recycled: '578 kg',
+                description: 'Ripoti ya ukusanyaji taka kwa mwezi wa Machi'
+            },
+            {
+                id: 2,
+                title: 'Ripoti ya Ukusanyaji - Februari 2026',
+                titleEn: 'Collection Report - February 2026',
+                date: '2026-02-28',
+                period: 'monthly',
+                totalWaste: '720 kg',
+                agents: 22,
+                tasks: 38,
+                recycled: '490 kg',
+                description: 'Ripoti ya ukusanyaji taka kwa mwezi wa Februari'
+            },
+            {
+                id: 3,
+                title: 'Ripoti ya Wiki - 1-7 Machi 2026',
+                titleEn: 'Weekly Report - March 1-7, 2026',
+                date: '2026-03-07',
+                period: 'weekly',
+                totalWaste: '210 kg',
+                agents: 18,
+                tasks: 12,
+                recycled: '143 kg',
+                description: 'Ripoti ya wiki ya kwanza ya Machi'
+            },
+            {
+                id: 4,
+                title: 'Ripoti ya Wiki - 8-14 Machi 2026',
+                titleEn: 'Weekly Report - March 8-14, 2026',
+                date: '2026-03-14',
+                period: 'weekly',
+                totalWaste: '195 kg',
+                agents: 20,
+                tasks: 10,
+                recycled: '132 kg',
+                description: 'Ripoti ya wiki ya pili ya Machi'
+            },
+            {
+                id: 5,
+                title: 'Ripoti ya Mwaka 2025',
+                titleEn: 'Annual Report 2025',
+                date: '2025-12-31',
+                period: 'yearly',
+                totalWaste: '5,400 kg',
+                agents: 18,
+                tasks: 320,
+                recycled: '3,672 kg',
+                description: 'Ripoti ya mwaka mzima wa 2025'
+            }
+        ];
+
+        let currentFilter = 'all';
+
+        // Filtered data based on period
+        const periodData = {
+            daily: { waste: 85, agents: 12, tasks: 8, recycled: 58, wastePerDay: [65, 72, 78, 85, 82, 90, 88] },
+            weekly: { waste: 580, agents: 22, tasks: 42, recycled: 394, wastePerDay: [80, 85, 78, 92, 88, 95, 82, 90, 85, 78, 88, 92, 85, 90] },
+            monthly: { waste: 2450, agents: 24, tasks: 156, recycled: 1666, wastePerDay: [200, 220, 245, 230, 260, 280, 250, 240, 235, 250, 245, 240] },
+            yearly: { waste: 12450, agents: 28, tasks: 850, recycled: 8466, wastePerDay: [1000, 1100, 1200, 1150, 1300, 1400, 1250, 1200, 1180, 1250, 1300, 1280] }
+        };
+
+        function loadReports(filter = 'all') {
+            currentFilter = filter;
+            const container = document.getElementById('reportsList');
+            let filtered = filter === 'all' ? reports : reports.filter(r => r.period === filter);
+            
+            if (filtered.length === 0) {
+                container.innerHTML = `<div class="empty-state"><i class="fas fa-file-alt"></i><p class="sw">Hakuna ripoti za kipindi hiki</p><p class="en">No reports for this period</p></div>`;
+                return;
+            }
+
+            container.innerHTML = filtered.map(report => `
+                <div class="report-item" data-id="${report.id}">
+                    <div class="report-info">
+                        <h3>${html.getAttribute('data-lang') === 'sw' ? report.title : report.titleEn}</h3>
+                        <p>${report.description}</p>
+                        <div class="report-stats">
+                            <span><i class="fas fa-weight"></i> ${report.totalWaste}</span>
+                            <span><i class="fas fa-users"></i> ${report.agents} <span class="sw">Wakala</span><span class="en">Agents</span></span>
+                            <span><i class="fas fa-tasks"></i> ${report.tasks} <span class="sw">Kazi</span><span class="en">Tasks</span></span>
+                            <span><i class="fas fa-recycle"></i> ${report.recycled}</span>
+                        </div>
+                    </div>
+                    <div class="report-actions">
+                        <button class="btn-preview" onclick="previewReport(${report.id})"><i class="fas fa-eye"></i> <span class="sw">Angalia</span><span class="en">Preview</span></button>
+                        <button class="btn-pdf" onclick="downloadPDF(${report.id})"><i class="fas fa-file-pdf"></i> PDF</button>
+                        <button class="btn-excel" onclick="downloadExcel(${report.id})"><i class="fas fa-file-excel"></i> Excel</button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update stats based on filter
+        function updateStats(filter) {
+            const data = periodData[filter] || periodData.monthly;
+            document.getElementById('totalWaste').textContent = data.waste.toLocaleString();
+            document.getElementById('totalAgents').textContent = data.agents;
+            document.getElementById('totalTasks').textContent = data.tasks;
+            document.getElementById('recycledRate').textContent = Math.round((data.recycled / data.waste) * 100) + '%';
+            
+            // Update chart
+            updateMonthlyChart(data.wastePerDay, filter);
+        }
+
+        // Monthly Chart (reusable)
+        let monthlyChart = null;
+        function updateMonthlyChart(data, period) {
+            const ctx = document.getElementById('monthlyChart').getContext('2d');
+            let labels = [];
+            
+            if (period === 'daily') labels = ['Jumatatu', 'Jumanne', 'Jumatano', 'Alhamisi', 'Ijumaa', 'Jumamosi', 'Jumapili'];
+            else if (period === 'weekly') labels = ['Siku 1', 'Siku 2', 'Siku 3', 'Siku 4', 'Siku 5', 'Siku 6', 'Siku 7', 'Siku 8', 'Siku 9', 'Siku 10', 'Siku 11', 'Siku 12', 'Siku 13', 'Siku 14'];
+            else if (period === 'monthly') labels = ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Ago', 'Sep', 'Okt', 'Nov', 'Dec'];
+            else labels = ['2020', '2021', '2022', '2023', '2024', '2025', '2026'];
+            
+            if (monthlyChart) monthlyChart.destroy();
+            monthlyChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: html.getAttribute('data-lang') === 'sw' ? 'Taka (kg)' : 'Waste (kg)',
+                        data: data,
+                        borderColor: '#e67e22',
+                        backgroundColor: 'rgba(230, 126, 34, 0.1)',
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#e67e22',
+                        pointBorderColor: 'white',
+                        pointBorderWidth: 2,
+                        pointRadius: 4,
+                        pointHoverRadius: 7
+                    }]
+                },
+                options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { display: false } } }
+            });
+        }
+
+        // Waste Type Chart (static for all)
+        const wasteCtx = document.getElementById('wasteTypeChart').getContext('2d');
+        new Chart(wasteCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Simu', 'Laptop', 'TV', 'Betri', 'Nyingine'],
+                datasets: [{
+                    data: [35, 25, 20, 15, 5],
+                    backgroundColor: ['#e67e22', '#2a9d8f', '#264653', '#e9c46a', '#f4a261'],
+                    borderWidth: 0
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: { position: 'bottom' } }, cutout: '65%' }
+        });
+
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                const filter = this.dataset.filter;
+                updateStats(filter);
+                loadReports(filter);
+            });
+        });
+
+        // Preview Report
+        function previewReport(id) {
+            const report = reports.find(r => r.id === id);
+            if (report) {
+                const msg = html.getAttribute('data-lang') === 'sw' 
+                    ? `📄 RIPOTI\n\nJina: ${report.title}\nTarehe: ${report.date}\nJumla ya Taka: ${report.totalWaste}\nWakala: ${report.agents}\nKazi: ${report.tasks}\nTaka Zilizochakatwa: ${report.recycled}`
+                    : `📄 REPORT\n\nTitle: ${report.titleEn}\nDate: ${report.date}\nTotal Waste: ${report.totalWaste}\nAgents: ${report.agents}\nTasks: ${report.tasks}\nRecycled Waste: ${report.recycled}`;
+                alert(msg);
+            }
+        }
+
+        // Download PDF
+        function downloadPDF(id) {
+            const report = reports.find(r => r.id === id);
+            if (!report) return;
+            
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF();
+            const lang = html.getAttribute('data-lang');
+            
+            doc.setFontSize(18);
+            doc.setTextColor(11, 59, 47);
+            doc.text(lang === 'sw' ? report.title : report.titleEn, 14, 22);
+            
+            doc.setFontSize(11);
+            doc.setTextColor(100);
+            doc.text(`Date: ${report.date}`, 14, 35);
+            
+            const tableColumn = [lang === 'sw' ? 'Kipimo' : 'Metric', lang === 'sw' ? 'Thamani' : 'Value'];
+            const tableRows = [
+                [lang === 'sw' ? 'Jumla ya Taka (kg)' : 'Total Waste (kg)', report.totalWaste],
+                [lang === 'sw' ? 'Wakala' : 'Agents', report.agents],
+                [lang === 'sw' ? 'Kazi' : 'Tasks', report.tasks],
+                [lang === 'sw' ? 'Taka Zilizochakatwa (kg)' : 'Recycled Waste (kg)', report.recycled]
+            ];
+            
+            doc.autoTable({
+                head: [tableColumn],
+                body: tableRows,
+                startY: 45,
+                theme: 'grid',
+                headStyles: { fillColor: [230, 126, 34], textColor: [255, 255, 255], fontStyle: 'bold' },
+                styles: { fontSize: 10, cellPadding: 5 }
+            });
+            
+            doc.save(`report_${report.id}.pdf`);
+        }
+
+        // Download Excel
+        function downloadExcel(id) {
+            const report = reports.find(r => r.id === id);
+            if (!report) return;
+            const lang = html.getAttribute('data-lang');
+            
+            const data = [
+                { Metric: lang === 'sw' ? 'Tarehe' : 'Date', Value: report.date },
+                { Metric: lang === 'sw' ? 'Jumla ya Taka (kg)' : 'Total Waste (kg)', Value: report.totalWaste },
+                { Metric: lang === 'sw' ? 'Wakala' : 'Agents', Value: report.agents },
+                { Metric: lang === 'sw' ? 'Kazi' : 'Tasks', Value: report.tasks },
+                { Metric: lang === 'sw' ? 'Taka Zilizochakatwa (kg)' : 'Recycled Waste (kg)', Value: report.recycled }
+            ];
+            
+            const ws = XLSX.utils.json_to_sheet(data);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'Report');
+            XLSX.writeFile(wb, `report_${report.id}.xlsx`);
+        }
+
+        // Export all reports
+        function exportAllReports() {
+            const lang = html.getAttribute('data-lang');
+            const wsData = reports.map(r => ({
+                [lang === 'sw' ? 'Jina' : 'Title']: lang === 'sw' ? r.title : r.titleEn,
+                [lang === 'sw' ? 'Tarehe' : 'Date']: r.date,
+                [lang === 'sw' ? 'Taka (kg)' : 'Waste (kg)']: r.totalWaste,
+                [lang === 'sw' ? 'Wakala' : 'Agents']: r.agents,
+                [lang === 'sw' ? 'Kazi' : 'Tasks']: r.tasks,
+                [lang === 'sw' ? 'Taka Zilizochakatwa (kg)' : 'Recycled (kg)']: r.recycled
+            }));
+            const ws = XLSX.utils.json_to_sheet(wsData);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, 'All Reports');
+            XLSX.writeFile(wb, 'all_reports.xlsx');
+        }
+
+        // Initialize with monthly data
+        updateStats('monthly');
+        loadReports('all');
+    </script>
+</body>
+</html>

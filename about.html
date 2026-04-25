@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us - ZanEwaste Hub | Kuhusu Sisi</title>
+
+    <!-- Fonts & Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <style>
+        /* ===== BASE STYLES ===== */
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+        }
+
+        /* ===== LANGUAGE CONTROL ===== */
+        [data-lang="sw"] .en { display: none; }
+        [data-lang="en"] .sw { display: none; }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 120px 5% 60px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .header-content h1 i {
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 1.1rem;
+            animation: fadeInUp 1s ease;
+        }
+
+        .breadcrumb a {
+            color: white;
+            text-decoration: none;
+            opacity: 0.8;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            opacity: 1;
+            color: var(--accent);
+        }
+
+        .breadcrumb i {
+            font-size: 0.8rem;
+            opacity: 0.6;
+        }
+
+        /* Floating elements */
+        .floating-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .float-item {
+            position: absolute;
+            font-size: 3rem;
+            color: rgba(255,255,255,0.1);
+            animation: float 8s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(5deg); }
+        }
+
+        .float-item:nth-child(1) { top: 20%; left: 10%; animation-delay: 0s; }
+        .float-item:nth-child(2) { top: 60%; right: 15%; animation-delay: 2s; }
+        .float-item:nth-child(3) { bottom: 20%; left: 20%; animation-delay: 1s; }
+        .float-item:nth-child(4) { top: 30%; right: 25%; animation-delay: 3s; }
+
+        /* ===== ABOUT SECTION ===== */
+        .about-section {
+            padding: 5rem 5%;
+            background: var(--bg);
+        }
+
+        .about-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .about-image {
+            position: relative;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            animation: fadeInLeft 1s ease;
+            border: 2px solid var(--border);
+        }
+
+        @keyframes fadeInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .about-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .about-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .experience-badge {
+            position: absolute;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--accent);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            animation: pulse 2s infinite;
+            border: 3px solid var(--card);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .experience-badge span:first-child {
+            font-size: 2.5rem;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        .experience-badge span:last-child {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .about-content {
+            animation: fadeInRight 1s ease;
+            background: var(--card);
+            padding: 2.5rem;
+            border-radius: 40px;
+            border: 1px solid var(--border);
+        }
+
+        @keyframes fadeInRight {
+            from {
+                opacity: 0;
+                transform: translateX(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .about-content h2 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+        }
+
+        .about-content h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 80px;
+            height: 4px;
+            background: var(--accent);
+            border-radius: 2px;
+        }
+
+        .about-content p {
+            color: var(--text);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        /* ===== MISSION VISION SECTION ===== */
+        .mission-vision-section {
+            padding: 5rem 5%;
+            background: linear-gradient(135deg, var(--bg), var(--card));
+        }
+
+        .mv-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+        }
+
+        .mv-card {
+            padding: 3rem;
+            border-radius: 40px;
+            background: var(--card);
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            animation: fadeInUp 1s ease;
+        }
+
+        .mv-card:nth-child(1) { animation-delay: 0.2s; }
+        .mv-card:nth-child(2) { animation-delay: 0.4s; }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .mv-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .mv-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .mv-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+        }
+
+        .mv-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .mv-icon i {
+            font-size: 2.5rem;
+            color: white;
+        }
+
+        .mv-card h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .mv-card p {
+            color: var(--text);
+            line-height: 1.8;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* ===== VALUES SECTION ===== */
+        .values-section {
+            padding: 5rem 5%;
+            background: var(--bg);
+            text-align: center;
+        }
+
+        .section-title {
+            font-size: 2.5rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 100px;
+            height: 4px;
+            background: var(--accent);
+            margin: 1rem auto 0;
+            border-radius: 2px;
+        }
+
+        .values-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 3rem auto 0;
+        }
+
+        .value-card {
+            text-align: center;
+            padding: 2rem;
+            background: var(--card);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+        }
+
+        .value-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+        }
+
+        .value-card i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .value-card h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        /* ===== TEAM SECTION ===== */
+        .team-section {
+            padding: 5rem 5%;
+            background: var(--card);
+        }
+
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 3rem auto 0;
+        }
+
+        .team-card {
+            background: var(--bg);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            text-align: center;
+            border: 2px solid var(--border);
+        }
+
+        .team-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+        }
+
+        .team-image {
+            height: 250px;
+            overflow: hidden;
+        }
+
+        .team-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .team-card:hover .team-image img {
+            transform: scale(1.1);
+        }
+
+        .team-card h3 {
+            color: var(--primary);
+            margin: 1.5rem 1rem 0.5rem;
+        }
+
+        .team-card p {
+            color: var(--text-muted);
+            margin-bottom: 1.5rem;
+        }
+
+        .team-social {
+            padding: 1rem;
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            border-top: 2px solid var(--border);
+        }
+
+        .team-social a {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            transition: var(--transition);
+        }
+
+        .team-social a:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        /* ===== DARK THEME SPECIFIC ===== */
+        [data-theme="dark"] .about-content {
+            background: var(--card-dark);
+        }
+
+        [data-theme="dark"] .mv-card {
+            background: var(--card-dark);
+        }
+
+        [data-theme="dark"] .value-card {
+            background: var(--card-dark);
+        }
+
+        [data-theme="dark"] .team-card {
+            background: var(--card-dark);
+        }
+
+        [data-theme="dark"] .team-social {
+            border-top-color: var(--border-dark);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .about-container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+            
+            .mv-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .experience-badge {
+                width: 100px;
+                height: 100px;
+                padding: 1rem;
+                bottom: 1rem;
+                right: 1rem;
+            }
+            
+            .experience-badge span:first-child {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-recycle"></i>
+                <span>Zan<span>Ewaste</span></span>
+            </div>
+
+            <div class="nav-menu">
+                <a href="index.html" class="sw">Nyumbani</a>
+                <a href="index.html" class="en">Home</a>
+
+                <a href="about.html" class="sw active">Kuhusu</a>
+                <a href="about.html" class="en active">About</a>
+
+                <a href="projects.html" class="sw">Miradi</a>
+                <a href="projects.html" class="en">Projects</a>
+
+                <a href="gallery.html" class="sw">Matunzio</a>
+                <a href="gallery.html" class="en">Gallery</a>
+
+                <a href="report.html" class="sw">Ripoti Taka</a>
+                <a href="report.html" class="en">Report</a>
+
+                <a href="contact.html" class="sw">Mawasiliano</a>
+                <a href="contact.html" class="en">Contact</a>
+
+                <a href="founder.html" class="sw">Founder</a>
+                <a href="founder.html" class="en">Founder</a>
+
+                <a href="partners.html" class="sw">Washirika</a>
+                <a href="partners.html" class="en">Partners</a>
+            </div>
+
+            <div class="nav-controls">
+                <button id="themeToggle"><i class="fas fa-moon"></i></button>
+                <button id="langToggle">
+                    <span class="lang-sw">SW</span>
+                    <span class="lang-separator">|</span>
+                    <span class="lang-en">EN</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header with Floating Elements -->
+    <section class="page-header">
+        <div class="floating-elements">
+            <i class="fas fa-leaf float-item"></i>
+            <i class="fas fa-recycle float-item"></i>
+            <i class="fas fa-globe float-item"></i>
+            <i class="fas fa-hand-holding-heart float-item"></i>
+        </div>
+        
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-info-circle"></i>
+                <span class="sw">Kuhusu Sisi</span>
+                <span class="en">About Us</span>
+            </h1>
+            <div class="breadcrumb">
+                <a href="index.html" class="sw">Nyumbani</a>
+                <a href="index.html" class="en">Home</a>
+                <i class="fas fa-chevron-right"></i>
+                <span class="sw">Kuhusu</span>
+                <span class="en">About</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section class="about-section">
+        <div class="about-container">
+            <div class="about-image">
+                <img src="https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=500" alt="About Us">
+                <div class="experience-badge">
+                    <span>5+</span>
+                    <span class="sw">Miaka</span>
+                    <span class="en">Years</span>
+                </div>
+            </div>
+            
+            <div class="about-content">
+                <h2>
+                    <span class="sw">Sisi ni Nani?</span>
+                    <span class="en">Who We Are?</span>
+                </h2>
+                
+                <p class="sw">
+                    ZanEwaste Hub ni mfumo wa kwanza wa kidijitali wa usimamizi wa taka za kielektroniki Zanzibar. 
+                    Tumejitolea kusaidia jamii kuchakata taka kwa njia rafiki kwa mazingira.
+                </p>
+                
+                <p class="en">
+                    ZanEwaste Hub is the first digital e-waste management system in Zanzibar. 
+                    We are committed to helping the community recycle waste in an environmentally friendly way.
+                </p>
+                
+                <p class="sw">
+                    Tumeanza Kama wazo na tunakusudia kukusanya zaidi ya tani 5 za taka za kielektroniki 
+                    na kuajiri vijana kama wakusanyaji Wabunifu na mafundi.
+                </p>
+                
+                <p class="en">
+                    We started as an idea and we are aim to collect over 5 tons of e-waste 
+                    and employed youth as collectors , innovators and technicians.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Mission Vision Section -->
+    <section class="mission-vision-section">
+        <div class="mv-container">
+            <div class="mv-card mission">
+                <div class="mv-icon">
+                    <i class="fas fa-bullseye"></i>
+                </div>
+                <h3>
+                    <span class="sw">Dhamira Yetu</span>
+                    <span class="en">Our Mission</span>
+                </h3>
+                <p class="sw">
+                    Kuwawezesha Wazanzibari wote kuchakata taka za kielektroniki kwa uwajibikaji 
+                    kupitia mfumo rahisi wa kidijitali. Tunakusanya kutoka wilaya zote za Unguja na Pemba.
+                </p>
+                <p class="en">
+                    Empower all Zanzibaris to responsibly recycle e-waste through a simple digital system. 
+                    We collect from all districts of Unguja and Pemba.
+                </p>
+            </div>
+            
+            <div class="mv-card vision">
+                <div class="mv-icon">
+                    <i class="fas fa-eye"></i>
+                </div>
+                <h3>
+                    <span class="sw">Maono Yetu</span>
+                    <span class="en">Our Vision</span>
+                </h3>
+                <p class="sw">
+                    Kutokomeza taka za kielektroniki Zanzibar ifikapo 2030 - kugeuza taka kuwa 
+                    rasilimali mpya na kuchochea uchumi wa mzunguko.
+                </p>
+                <p class="en">
+                    Eliminate e-waste in Zanzibar by 2030 - turning waste into new resources 
+                    and promoting a circular economy.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Values Section -->
+    <section class="values-section">
+        <h2 class="section-title">
+            <span class="sw">Maadili Yetu</span>
+            <span class="en">Our Values</span>
+        </h2>
+        
+        <div class="values-grid">
+            <div class="value-card">
+                <i class="fas fa-heart"></i>
+                <h3>
+                    <span class="sw">Uaminifu</span>
+                    <span class="en">Integrity</span>
+                </h3>
+            </div>
+            
+            <div class="value-card">
+                <i class="fas fa-hand-holding-heart"></i>
+                <h3>
+                    <span class="sw">Kujali</span>
+                    <span class="en">Care</span>
+                </h3>
+            </div>
+            
+            <div class="value-card">
+                <i class="fas fa-lightbulb"></i>
+                <h3>
+                    <span class="sw">Ubunifu</span>
+                    <span class="en">Innovation</span>
+                </h3>
+            </div>
+            
+            <div class="value-card">
+                <i class="fas fa-handshake"></i>
+                <h3>
+                    <span class="sw">Ushirikiano</span>
+                    <span class="en">Partnership</span>
+                </h3>
+            </div>
+        </div>
+    </section>
+
+    <!-- Team Section -->
+    <section class="team-section">
+        <h2 class="section-title">
+            <span class="sw">Timu Yetu</span>
+            <span class="en">Our Team</span>
+        </h2>
+        
+        <div class="team-grid">
+            <div class="team-card">
+                <div class="team-image">
+                    <img src="assets/image/founder/Son ibrahim.png" alt="Ibrahim Son">
+                </div>
+                <h3>Hamidu Nchalikwao</h3>
+                <p class="sw">Mwanzilishi & Mkurugenzi</p>
+                <p class="en">Founder & CEO</p>
+                <div class="team-social">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            
+            <div class="team-card">
+                <div class="team-image">
+                    <img src="assets/image/founder/Rauhiya.jpg" alt="Rauhiya Mussa Abdi">
+                </div>
+                <h3>Rauhiya Mussa Abdi</h3>
+                <p class="sw">Meneja Operesheni</p>
+                <p class="en">Operations Manager</p>
+                <div class="team-social">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+            
+            <div class="team-card">
+                <div class="team-image">
+                    <img src="assets/image/founder/PXL_20241215_073128644.jpg" alt="Zidadi Badru">
+                </div>
+                <h3>Zidadi Badru</h3>
+                <p class="sw">Mtaalamu wa Teknolojia</p>
+                <p class="en">Technology Expert</p>
+                <div class="team-social">
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-recycle"></i>
+                    <span>Zan<span>Ewaste</span></span>
+                </div>
+                <p class="sw">Mfumo wa kwanza wa kidijitali wa usimamizi wa taka za kielektroniki Zanzibar.</p>
+                <p class="en">First digital e-waste management system in Zanzibar.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Viungo vya Haraka</h4>
+                <h4 class="en">Quick Links</h4>
+                <ul>
+                    <li><a href="index.html" class="sw">Nyumbani</a></li>
+                    <li><a href="index.html" class="en">Home</a></li>
+                    <li><a href="about.html" class="sw">Kuhusu</a></li>
+                    <li><a href="about.html" class="en">About</a></li>
+                    <li><a href="projects.html" class="sw">Miradi</a></li>
+                    <li><a href="projects.html" class="en">Projects</a></li>
+                    <li><a href="contact.html" class="sw">Mawasiliano</a></li>
+                    <li><a href="contact.html" class="en">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Taarifa za Mawasiliano</h4>
+                <h4 class="en">Contact Info</h4>
+                <p><i class="fas fa-envelope"></i> sonibrahimdigtech@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +255 775 05 780</p>
+                <p><i class="fab fa-instagram"></i> e_wastezanzibar25</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Tufuate</h4>
+                <h4 class="en">Follow Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 <strong>SonDigital</strong> | 
+                <span class="sw">Haki zote zimehifadhiwa</span>
+                <span class="en">All rights reserved</span>
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        const html = document.documentElement;
+
+        /* ===== THEME TOGGLE ===== */
+        const themeToggle = document.getElementById("themeToggle");
+        const savedTheme = localStorage.getItem("theme") || "light";
+        html.setAttribute("data-theme", savedTheme);
+        updateThemeIcon(savedTheme);
+
+        themeToggle.addEventListener("click", () => {
+            const currentTheme = html.getAttribute("data-theme");
+            const newTheme = currentTheme === "light" ? "dark" : "light";
+            html.setAttribute("data-theme", newTheme);
+            localStorage.setItem("theme", newTheme);
+            updateThemeIcon(newTheme);
+        });
+
+        function updateThemeIcon(theme) {
+            themeToggle.innerHTML = theme === "light" 
+                ? '<i class="fas fa-moon"></i>' 
+                : '<i class="fas fa-sun"></i>';
+        }
+
+        /* ===== LANGUAGE TOGGLE ===== */
+        const langToggle = document.getElementById("langToggle");
+        const savedLang = localStorage.getItem("language") || "sw";
+        html.setAttribute("data-lang", savedLang);
+        updateLangButtons(savedLang);
+
+        langToggle.addEventListener("click", () => {
+            const currentLang = html.getAttribute("data-lang");
+            const newLang = currentLang === "sw" ? "en" : "sw";
+            html.setAttribute("data-lang", newLang);
+            localStorage.setItem("language", newLang);
+            updateLangButtons(newLang);
+        });
+
+        function updateLangButtons(lang) {
+            const langSw = document.querySelector('.lang-sw');
+            const langEn = document.querySelector('.lang-en');
+            
+            if (langSw && langEn) {
+                if (lang === 'sw') {
+                    langSw.style.color = 'var(--accent)';
+                    langSw.style.fontWeight = '700';
+                    langEn.style.color = '';
+                    langEn.style.fontWeight = '';
+                } else {
+                    langEn.style.color = 'var(--accent)';
+                    langEn.style.fontWeight = '700';
+                    langSw.style.color = '';
+                    langSw.style.fontWeight = '';
+                }
+            }
+        }
+
+        /* ===== MOBILE MENU ===== */
+        const mobileMenu = document.getElementById('mobileMenu');
+        if (mobileMenu) {
+            mobileMenu.addEventListener('click', function() {
+                const navMenu = document.querySelector('.nav-menu');
+                navMenu.classList.toggle('show');
+                const icon = this.querySelector('i');
+                icon.className = navMenu.classList.contains('show') ? 'fas fa-times' : 'fas fa-bars';
+            });
+        }
+    </script>
+</body>
+</html>

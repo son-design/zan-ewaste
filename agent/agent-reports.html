@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Submit Report - ZanEwaste Hub</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="../css/style.css">
+    
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light Theme */
+            --primary: #0b3b2f;
+            --secondary: #1e6f5c;
+            --accent: #e67e22;
+            --bg: #f4fbf8;
+            --card: #ffffff;
+            --text: #0f2a23;
+            --text-muted: #4a5f58;
+            --border: #d5e6df;
+            --shadow: 0 20px 30px -10px rgba(0,40,20,0.1);
+            --shadow-hover: 0 30px 40px -15px rgba(230,126,34,0.3);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --transition: all 0.3s ease;
+            
+            /* Dark Theme */
+            --primary-dark: #2a9d8f;
+            --secondary-dark: #34a889;
+            --accent-dark: #f4a261;
+            --bg-dark: #1a2c28;
+            --card-dark: #2a4039;
+            --text-dark: #e9f5f0;
+            --text-muted-dark: #b0cfc2;
+            --border-dark: #3a5f53;
+            --shadow-dark: 0 20px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* ===== LANGUAGE TOGGLE ===== */
+        .sw { display: inline; }
+        .en { display: none; }
+        
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        /* ===== CUSTOM SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+            animation: scrollPulse 2s infinite;
+        }
+
+        @keyframes scrollPulse {
+            0%, 100% { background: var(--accent); }
+            50% { background: var(--primary); }
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 10px var(--accent); }
+            50% { box-shadow: 0 0 30px var(--accent); }
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== AGENT CONTAINER ===== */
+        .agent-container {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            background: var(--bg);
+        }
+
+        .agent-container::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 100%;
+            background: radial-gradient(circle at 20% 50%, rgba(230,126,34,0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 80%, rgba(11,59,47,0.03) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* ===== SIDEBAR ===== */
+        .agent-sidebar {
+            width: 300px;
+            background: linear-gradient(135deg, var(--secondary), var(--primary));
+            color: white;
+            padding: 2rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            transition: var(--transition);
+            box-shadow: 10px 0 30px rgba(0,0,0,0.2);
+            z-index: 100;
+            animation: slideInLeft 0.8s ease;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid var(--accent);
+            position: relative;
+        }
+
+        .sidebar-header::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background: var(--accent);
+            animation: glow 2s infinite;
+        }
+
+        .sidebar-header i {
+            font-size: 2.5rem;
+            color: var(--accent);
+            animation: rotate 10s linear infinite;
+        }
+
+        .sidebar-header h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .sidebar-header span {
+            color: var(--accent);
+        }
+
+        .agent-profile {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: rgba(255,255,255,0.1);
+            border-radius: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.2);
+            animation: float 5s infinite ease-in-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-profile::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 20s linear infinite;
+        }
+
+        .profile-avatar {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin: 0 auto 1rem;
+            border: 4px solid var(--accent);
+            overflow: hidden;
+            position: relative;
+            z-index: 2;
+            animation: pulse 2s infinite;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .profile-name {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.3rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .profile-role {
+            font-size: 1rem;
+            color: var(--accent);
+            position: relative;
+            z-index: 2;
+        }
+
+        .agent-nav {
+            list-style: none;
+        }
+
+        .agent-nav li {
+            margin-bottom: 0.5rem;
+            animation: slideInRight 0.5s ease;
+            animation-fill-mode: both;
+        }
+
+        .agent-nav li:nth-child(1) { animation-delay: 0.1s; }
+        .agent-nav li:nth-child(2) { animation-delay: 0.2s; }
+        .agent-nav li:nth-child(3) { animation-delay: 0.3s; }
+        .agent-nav li:nth-child(4) { animation-delay: 0.4s; }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .agent-nav a {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            color: white;
+            text-decoration: none;
+            border-radius: 40px;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .agent-nav a::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .agent-nav a:hover::before {
+            left: 100%;
+        }
+
+        .agent-nav a:hover,
+        .agent-nav a.active {
+            background: var(--accent);
+            transform: translateX(5px);
+            box-shadow: 0 10px 20px rgba(230,126,34,0.3);
+        }
+
+        .agent-nav i {
+            width: 25px;
+            font-size: 1.2rem;
+            z-index: 1;
+            transition: var(--transition);
+        }
+
+        .agent-nav a:hover i {
+            transform: scale(1.2);
+        }
+
+        .agent-nav span {
+            z-index: 1;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .agent-main {
+            flex: 1;
+            margin-left: 300px;
+            padding: 2rem;
+            background: var(--bg);
+            transition: var(--transition);
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 1s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== HEADER ===== */
+        .agent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--card);
+            border-radius: 30px;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            animation: slideInDown 0.8s ease;
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .agent-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent), var(--primary), var(--accent));
+            animation: gradientShift 3s linear infinite;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .page-title h1 {
+            color: var(--primary);
+            font-size: 2.2rem;
+            margin-bottom: 0.3rem;
+            animation: bounce 2s infinite;
+        }
+
+        .page-title p {
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .header-actions button {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 0.8rem 1.2rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header-actions button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(230,126,34,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .header-actions button:hover::before {
+            width: 200px;
+            height: 200px;
+        }
+
+        .header-actions button:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        /* ===== REPORT FORM ===== */
+        .report-section {
+            animation: fadeInUp 0.8s ease 0.2s both;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .form-container {
+            background: var(--card);
+            border-radius: 50px;
+            padding: 2.5rem;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            max-width: 700px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-container::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0.03;
+            animation: rotate 30s linear infinite;
+        }
+
+        .form-header {
+            text-align: center;
+            margin-bottom: 2rem;
+            position: relative;
+        }
+
+        .form-header i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            animation: float 3s infinite;
+        }
+
+        .form-header h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-header p {
+            color: var(--text-muted);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .form-group label i {
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 1rem 1.2rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            font-size: 1rem;
+            background: var(--bg);
+            color: var(--text);
+            transition: var(--transition);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+            box-shadow: 0 0 0 5px rgba(230,126,34,0.2);
+            transform: scale(1.02);
+        }
+
+        .form-group input[type="file"] {
+            padding: 0.8rem;
+            background: var(--card);
+        }
+
+        .form-group select[multiple] {
+            height: 120px;
+            border-radius: 30px;
+            padding: 0.8rem;
+        }
+
+        .form-group select[multiple] option {
+            padding: 0.5rem;
+            border-radius: 20px;
+            margin: 0.2rem 0;
+        }
+
+        .form-group select[multiple] option:hover {
+            background: var(--accent);
+            color: white;
+        }
+
+        .form-group textarea {
+            border-radius: 30px;
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 1.2rem;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent);
+            font-size: 1.2rem;
+        }
+
+        .input-with-icon input {
+            padding-left: 3rem;
+        }
+
+        .photo-upload-area {
+            border: 3px dashed var(--border);
+            border-radius: 40px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            transition: var(--transition);
+            background: var(--bg);
+        }
+
+        .photo-upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(230,126,34,0.05);
+            transform: translateY(-5px);
+        }
+
+        .photo-upload-area i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            animation: bounce 2s infinite;
+        }
+
+        .photo-upload-area input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .photo-previews {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .preview-item {
+            position: relative;
+            aspect-ratio: 1;
+            border-radius: 15px;
+            overflow: hidden;
+            border: 2px solid var(--border);
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .preview-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .preview-item .remove-btn {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 25px;
+            height: 25px;
+            background: var(--danger);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            transition: var(--transition);
+        }
+
+        .preview-item .remove-btn:hover {
+            transform: scale(1.1);
+            background: #c82333;
+        }
+
+        /* ===== BUTTONS ===== */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            position: relative;
+            z-index: 2;
+        }
+
+        .btn-primary {
+            flex: 1;
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: white;
+            border: none;
+            padding: 1.2rem;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.5s, height 0.5s;
+        }
+
+        .btn-primary:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 30px rgba(230,126,34,0.3);
+        }
+
+        .btn-primary i {
+            transition: transform 0.3s;
+        }
+
+        .btn-primary:hover i {
+            transform: translateX(5px);
+        }
+
+        .btn-secondary {
+            flex: 1;
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+            padding: 1.2rem;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-secondary:hover {
+            background: var(--accent);
+            color: white;
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(230,126,34,0.2);
+        }
+
+        /* ===== SUCCESS MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeInModal 0.3s ease;
+        }
+
+        @keyframes fadeInModal {
+            from {
+                opacity: 0;
+                backdrop-filter: blur(0);
+            }
+            to {
+                opacity: 1;
+                backdrop-filter: blur(10px);
+            }
+        }
+
+        .modal-content {
+            background: var(--card);
+            padding: 3rem;
+            border-radius: 60px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.4);
+            animation: slideInUpModal 0.5s ease;
+            text-align: center;
+            border: 3px solid var(--accent);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--accent) 0%, transparent 70%);
+            opacity: 0.1;
+            animation: rotate 20s linear infinite;
+        }
+
+        @keyframes slideInUpModal {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal-content i {
+            font-size: 5rem;
+            color: var(--success);
+            margin-bottom: 1rem;
+            animation: bounce 1s infinite;
+        }
+
+        .modal-content h2 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-content p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+            font-size: 1.1rem;
+        }
+
+        .modal-btn {
+            background: linear-gradient(135deg, var(--accent), var(--primary));
+            color: white;
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 40px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 100%;
+        }
+
+        .modal-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(230,126,34,0.3);
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            position: fixed;
+            top: 30px;
+            right: 30px;
+            background: linear-gradient(135deg, var(--success), #34ce57);
+            color: white;
+            padding: 1.2rem 2.5rem;
+            border-radius: 50px;
+            box-shadow: 0 15px 30px rgba(40,167,69,0.3);
+            z-index: 1200;
+            animation: slideInRightNotif 0.5s ease, pulse 2s infinite;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1.1rem;
+            border: 2px solid white;
+        }
+
+        @keyframes slideInRightNotif {
+            from {
+                opacity: 0;
+                transform: translateX(100px) scale(0.8);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        .notification i {
+            font-size: 1.5rem;
+            animation: bounce 1s infinite;
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1024px) {
+            .agent-sidebar {
+                width: 250px;
+            }
+            
+            .agent-main {
+                margin-left: 250px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .agent-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s;
+            }
+            
+            .agent-sidebar.show {
+                transform: translateX(0);
+            }
+            
+            .agent-main {
+                margin-left: 0;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .form-actions {
+                flex-direction: column;
+            }
+            
+            .agent-header {
+                flex-direction: column;
+                gap: 1rem;
+                text-align: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="agent-container">
+        <!-- Sidebar -->
+        <div class="agent-sidebar" id="agentSidebar">
+            <div class="sidebar-header">
+                <i class="fas fa-recycle"></i>
+                <h2>Zan<span>Ewaste</span></h2>
+            </div>
+            
+            <div class="agent-profile">
+                <div class="profile-avatar">
+                    <img src="https://ui-avatars.com/api/?name=John+Agent&size=100&background=e67e22&color=fff" alt="Agent">
+                </div>
+                <div class="profile-name">John Agent</div>
+                <div class="profile-role">
+                    <span class="sw">Wakala</span>
+                    <span class="en">Agent</span>
+                </div>
+            </div>
+            
+            <ul class="agent-nav">
+                <li><a href="dashboard.html">
+                    <i class="fas fa-dashboard"></i>
+                    <span class="sw">Dashibodi</span>
+                    <span class="en">Dashboard</span>
+                </a></li>
+                <li><a href="tasks.html">
+                    <i class="fas fa-tasks"></i>
+                    <span class="sw">Kazi Zangu</span>
+                    <span class="en">My Tasks</span>
+                </a></li>
+                <li><a href="reports.html" class="active">
+                    <i class="fas fa-file-alt"></i>
+                    <span class="sw">Ripoti</span>
+                    <span class="en">Reports</span>
+                </a></li>
+                <li><a href="#" onclick="logout()">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span class="sw">Toka</span>
+                    <span class="en">Logout</span>
+                </a></li>
+            </ul>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="agent-main">
+            <!-- Header -->
+            <div class="agent-header">
+                <div class="page-title">
+                    <h1>
+                        <span class="sw">Wasilisha Ripoti</span>
+                        <span class="en">Submit Report</span>
+                    </h1>
+                    <p class="sw">Jaza maelezo ya ukusanyaji wa taka</p>
+                    <p class="en">Fill in waste collection details</p>
+                </div>
+                
+                <div class="header-actions">
+                    <button class="theme-toggle" id="themeToggle">
+                        <i class="fas fa-moon"></i>
+                    </button>
+                    
+                    <button class="lang-toggle" id="langToggle">
+                        <span class="lang-sw">SW</span>
+                        <span class="lang-separator">|</span>
+                        <span class="lang-en">EN</span>
+                    </button>
+                    
+                    <button class="mobile-menu" id="mobileMenu">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <!-- Report Form -->
+            <div class="report-section">
+                <div class="form-container">
+                    <div class="form-header">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h2>
+                            <span class="sw">Fomu ya Ukusanyaji</span>
+                            <span class="en">Collection Form</span>
+                        </h2>
+                        <p class="sw">Tafadhali jaza taarifa zote kwa usahihi</p>
+                        <p class="en">Please fill all information accurately</p>
+                    </div>
+                    
+                    <form id="reportForm">
+                        <div class="form-grid">
+                            <!-- Task/Collection ID -->
+                            <div class="form-group full-width">
+                                <label>
+                                    <i class="fas fa-tag"></i>
+                                    <span class="sw">Kazi / Namba ya Ukusanyaji</span>
+                                    <span class="en">Task / Collection ID</span>
+                                </label>
+                                <div class="input-with-icon">
+                                    <i class="fas fa-hashtag"></i>
+                                    <input type="text" id="taskId" placeholder="e.g., TASK-2026-001" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Date and Time -->
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-calendar"></i>
+                                    <span class="sw">Tarehe</span>
+                                    <span class="en">Date</span>
+                                </label>
+                                <input type="date" id="collectionDate" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-clock"></i>
+                                    <span class="sw">Muda</span>
+                                    <span class="en">Time</span>
+                                </label>
+                                <input type="time" id="collectionTime" required>
+                            </div>
+                            
+                            <!-- Waste Collected -->
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-weight"></i>
+                                    <span class="sw">Taka Zilizokusanywa (kg)</span>
+                                    <span class="en">Waste Collected (kg)</span>
+                                </label>
+                                <input type="number" id="wasteWeight" step="0.1" min="0" placeholder="0.0" required>
+                            </div>
+                            
+                            <!-- Number of Items -->
+                            <div class="form-group">
+                                <label>
+                                    <i class="fas fa-cubes"></i>
+                                    <span class="sw">Idadi ya Vifaa</span>
+                                    <span class="en">Number of Items</span>
+                                </label>
+                                <input type="number" id="itemCount" min="1" value="1" required>
+                            </div>
+                            
+                            <!-- Device Types -->
+                            <div class="form-group full-width">
+                                <label>
+                                    <i class="fas fa-mobile-alt"></i>
+                                    <span class="sw">Aina za Vifaa</span>
+                                    <span class="en">Device Types</span>
+                                </label>
+                                <select id="deviceTypes" multiple size="4">
+                                    <option value="phones" class="sw">Simu za Mkononi</option>
+                                    <option value="phones" class="en">Mobile Phones</option>
+                                    <option value="laptops" class="sw">Laptops</option>
+                                    <option value="laptops" class="en">Laptops</option>
+                                    <option value="tvs" class="sw">TV/Monitors</option>
+                                    <option value="tvs" class="en">TV/Monitors</option>
+                                    <option value="printers" class="sw">Printers</option>
+                                    <option value="printers" class="en">Printers</option>
+                                    <option value="batteries" class="sw">Batteries</option>
+                                    <option value="batteries" class="en">Batteries</option>
+                                    <option value="other" class="sw">Nyingine</option>
+                                    <option value="other" class="en">Other</option>
+                                </select>
+                                <small class="sw">Bonyeza CTRL kuchagua zaidi ya moja</small>
+                                <small class="en">Press CTRL to select multiple</small>
+                            </div>
+                            
+                            <!-- Condition -->
+                            <div class="form-group full-width">
+                                <label>
+                                    <i class="fas fa-info-circle"></i>
+                                    <span class="sw">Hali ya Vifaa</span>
+                                    <span class="en">Device Condition</span>
+                                </label>
+                                <select id="condition">
+                                    <option value="working" class="sw">Inafanya kazi</option>
+                                    <option value="working" class="en">Working</option>
+                                    <option value="repairable" class="sw">Inakarabati</option>
+                                    <option value="repairable" class="en">Repairable</option>
+                                    <option value="parts" class="sw">Ya vipuri</option>
+                                    <option value="parts" class="en">For parts</option>
+                                    <option value="scrap" class="sw">Chakavu</option>
+                                    <option value="scrap" class="en">Scrap</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Location -->
+                            <div class="form-group full-width">
+                                <label>
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    <span class="sw">Mahali pa Ukusanyaji</span>
+                                    <span class="en">Collection Location</span>
+                                </label>
+                                <input type="text" id="location" placeholder="e.g., Stone Town, Zanzibar" required>
+                            </div>
+                            
+                            <!-- Photos -->
+                            <div class="form-group full-width">
+                                <label>
+                                    <i class="fas fa-camera"></i>
+                                    <span class="sw">Picha za Ukusanyaji</span>
+                                    <span class="en">Collection Photos</span>
+                                </label>
+                                <div class="photo-upload-area" id="photoUploadArea">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                    <p class="sw">Bonyeza kupakia picha</p>
+                                    <p class="en">Click to upload photos</p>
+                                    <input type="file" id="collectionPhotos" multiple accept="image/*">
+                                </div>
+                                <div class="photo-previews" id="photoPreviews"></div>
+                            </div>
+                            
+                            <!-- Notes -->
+                            <div class="form-group full-width">
+                                <label>
+                                    <i class="fas fa-pencil-alt"></i>
+                                    <span class="sw">Maelezo ya Ziada</span>
+                                    <span class="en">Additional Notes</span>
+                                </label>
+                                <textarea id="notes" rows="4" placeholder="Andika maelezo yoyote muhimu..."></textarea>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn-secondary" onclick="resetForm()">
+                                <i class="fas fa-undo"></i>
+                                <span class="sw">Weka Upya</span>
+                                <span class="en">Reset</span>
+                            </button>
+                            <button type="submit" class="btn-primary">
+                                <i class="fas fa-paper-plane"></i>
+                                <span class="sw">Wasilisha Ripoti</span>
+                                <span class="en">Submit Report</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <i class="fas fa-check-circle"></i>
+            <h2 class="sw">Imefanikiwa!</h2>
+            <h2 class="en">Success!</h2>
+            <p class="sw">Ripoti yako imewasilishwa. Asante kwa kazi nzuri!</p>
+            <p class="en">Your report has been submitted. Thank you for your good work!</p>
+            <button class="modal-btn" onclick="closeModal()">
+                <span class="sw">Sawa</span>
+                <span class="en">OK</span>
+            </button>
+        </div>
+    </div>
+    
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100,
+            easing: 'ease-in-out'
+        });
+
+        // ===== THEME TOGGLE =====
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        
+        // ===== LANGUAGE TOGGLE =====
+        const langToggle = document.getElementById('langToggle');
+        
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        updateLangButtons(savedLang);
+        
+        langToggle.addEventListener('click', function() {
+            const currentLang = html.getAttribute('data-lang');
+            const newLang = currentLang === 'sw' ? 'en' : 'sw';
+            
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+            updateLangButtons(newLang);
+        });
+        
+        function updateLangButtons(lang) {
+            const langSw = document.querySelector('.lang-sw');
+            const langEn = document.querySelector('.lang-en');
+            
+            if (lang === 'sw') {
+                langSw.style.color = 'var(--accent)';
+                langSw.style.fontWeight = '700';
+                langEn.style.color = '';
+                langEn.style.fontWeight = '';
+            } else {
+                langEn.style.color = 'var(--accent)';
+                langEn.style.fontWeight = '700';
+                langSw.style.color = '';
+                langSw.style.fontWeight = '';
+            }
+        }
+        
+        // ===== MOBILE MENU =====
+        const mobileMenu = document.getElementById('mobileMenu');
+        const sidebar = document.getElementById('agentSidebar');
+        
+        mobileMenu.addEventListener('click', function() {
+            sidebar.classList.toggle('show');
+        });
+
+        // ===== PHOTO PREVIEW =====
+        document.getElementById('collectionPhotos').addEventListener('change', function(e) {
+            const preview = document.getElementById('photoPreviews');
+            preview.innerHTML = '';
+            
+            Array.from(this.files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    div.className = 'preview-item';
+                    div.innerHTML = `
+                        <img src="${e.target.result}" alt="Preview">
+                        <button class="remove-btn" onclick="this.parentElement.remove()">&times;</button>
+                    `;
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        // ===== FORM SUBMIT =====
+        document.getElementById('reportForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get form values
+            const taskId = document.getElementById('taskId').value;
+            const wasteWeight = document.getElementById('wasteWeight').value;
+            
+            // Validate
+            if (!taskId || !wasteWeight) {
+                showNotification(html.getAttribute('data-lang') === 'sw' 
+                    ? 'Tafadhali jaza sehemu zote zinazohitajika' 
+                    : 'Please fill all required fields', 'error');
+                return;
+            }
+            
+            // Show success modal
+            document.getElementById('successModal').classList.add('show');
+        });
+
+        // ===== RESET FORM =====
+        function resetForm() {
+            document.getElementById('reportForm').reset();
+            document.getElementById('photoPreviews').innerHTML = '';
+            showNotification(html.getAttribute('data-lang') === 'sw' 
+                ? 'Fomu imewekwa upya' 
+                : 'Form reset', 'info');
+        }
+
+        // ===== MODAL FUNCTIONS =====
+        function closeModal() {
+            document.getElementById('successModal').classList.remove('show');
+            // Redirect to dashboard
+            setTimeout(() => {
+                window.location.href = 'dashboard.html';
+            }, 500);
+        }
+
+        // ===== NOTIFICATION =====
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
+            notification.innerHTML = `
+                <i class="fas ${icon}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // ===== LOGOUT =====
+        function logout() {
+            localStorage.removeItem('userRole');
+            localStorage.removeItem('userEmail');
+            window.location.href = '../admin/login.html';
+        }
+
+        // ===== SET TODAY'S DATE =====
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('collectionDate').value = today;
+
+        // Close sidebar when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            if (window.innerWidth <= 768) {
+                const isClickInside = sidebar.contains(event.target) || mobileMenu.contains(event.target);
+                if (!isClickInside) {
+                    sidebar.classList.remove('show');
+                }
+            }
+        });
+    </script>
+</body>
+</html>

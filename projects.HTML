@@ -1,0 +1,1678 @@
+<!DOCTYPE html>
+<html lang="sw" data-theme="light" data-lang="sw">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - ZanEwaste Hub | Miradi</title>
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- AOS Animation -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    
+    <!-- Lightbox CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" rel="stylesheet">
+    
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="css/style.css">
+    
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            /* Light Theme */
+            --primary: #0b3b2f;
+            --secondary: #1e6f5c;
+            --accent: #e67e22;
+            --bg: #f4fbf8;
+            --card: #ffffff;
+            --text: #0f2a23;
+            --text-muted: #4a5f58;
+            --border: #d5e6df;
+            --shadow: 0 20px 30px -10px rgba(0,40,20,0.1);
+            --shadow-hover: 0 30px 40px -15px rgba(230,126,34,0.3);
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            --transition: all 0.3s ease;
+            
+            /* Dark Theme */
+            --primary-dark: #2a9d8f;
+            --secondary-dark: #34a889;
+            --accent-dark: #f4a261;
+            --bg-dark: #1a2c28;
+            --card-dark: #2a4039;
+            --text-dark: #e9f5f0;
+            --text-muted-dark: #b0cfc2;
+            --border-dark: #3a5f53;
+            --shadow-dark: 0 20px 30px -10px rgba(0,0,0,0.3);
+        }
+
+        [data-theme="dark"] {
+            --primary: var(--primary-dark);
+            --secondary: var(--secondary-dark);
+            --accent: var(--accent-dark);
+            --bg: var(--bg-dark);
+            --card: var(--card-dark);
+            --text: var(--text-dark);
+            --text-muted: var(--text-muted-dark);
+            --border: var(--border-dark);
+            --shadow: var(--shadow-dark);
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            transition: var(--transition);
+            overflow-x: hidden;
+        }
+
+        /* ===== LANGUAGE TOGGLE ===== */
+        .sw { display: inline; }
+        .en { display: none; }
+        
+        [data-lang="en"] .sw { display: none; }
+        [data-lang="en"] .en { display: inline; }
+
+        /* ===== CUSTOM SCROLLBAR ===== */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+
+        /* ===== NAVBAR ===== */
+        .navbar {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: var(--navbar-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 3px solid var(--accent);
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo i {
+            color: var(--accent);
+            font-size: 2rem;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .logo span span {
+            color: var(--accent);
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-menu a {
+            text-decoration: none;
+            color: var(--text);
+            font-weight: 500;
+            transition: var(--transition);
+            position: relative;
+            padding: 0.5rem 0;
+        }
+
+        .nav-menu a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .nav-menu a:hover::after,
+        .nav-menu a.active::after {
+            width: 100%;
+        }
+
+        .nav-menu a:hover,
+        .nav-menu a.active {
+            color: var(--accent);
+        }
+
+        .nav-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .theme-toggle,
+        .lang-toggle {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            color: var(--text);
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .theme-toggle:hover,
+        .lang-toggle:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        /* ===== PAGE HEADER ===== */
+        .page-header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            padding: 120px 5% 60px;
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .page-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            animation: rotate 30s linear infinite;
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .header-content h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .header-content h1 i {
+            color: var(--accent);
+            margin-right: 0.5rem;
+        }
+
+        .header-content p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ===== ADMIN CONTROLS ===== */
+        .admin-section {
+            padding: 2rem 5%;
+            text-align: center;
+        }
+
+        .admin-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            border: 2px solid var(--accent);
+        }
+
+        .admin-btn:hover {
+            background: transparent;
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .admin-panel {
+            background: var(--card);
+            border-radius: 50px;
+            padding: 2.5rem;
+            margin-top: 2rem;
+            box-shadow: var(--shadow);
+            border: 2px dashed var(--accent);
+            animation: slideIn 0.5s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .admin-panel h3 {
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-bottom: 2rem;
+        }
+
+        .upload-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+        }
+
+        .upload-area {
+            border: 3px dashed var(--border);
+            border-radius: 40px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            min-height: 200px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            background: var(--bg);
+        }
+
+        .upload-area:hover {
+            border-color: var(--accent);
+            background: rgba(230,126,34,0.05);
+        }
+
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .upload-area input {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            cursor: pointer;
+        }
+
+        .upload-details {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .upload-details input,
+        .upload-details select,
+        .upload-details textarea {
+            width: 100%;
+            padding: 1rem;
+            border: 2px solid var(--border);
+            border-radius: 40px;
+            background: var(--bg);
+            color: var(--text);
+            transition: var(--transition);
+        }
+
+        .upload-details input:focus,
+        .upload-details select:focus,
+        .upload-details textarea:focus {
+            border-color: var(--accent);
+            outline: none;
+        }
+
+        .upload-details textarea {
+            border-radius: 30px;
+            resize: vertical;
+        }
+
+        .file-preview {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: var(--bg);
+            border-radius: 20px;
+            text-align: center;
+        }
+
+        .file-preview img,
+        .file-preview video {
+            max-width: 100%;
+            max-height: 200px;
+            border-radius: 15px;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ===== FILTER TABS ===== */
+        .filter-section {
+            padding: 2rem 5%;
+            text-align: center;
+        }
+
+        .filter-tabs {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-tab {
+            padding: 0.8rem 2rem;
+            border: 2px solid var(--border);
+            background: var(--card);
+            color: var(--text);
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .filter-tab:hover,
+        .filter-tab.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        /* ===== PROJECTS GRID ===== */
+        .projects-section {
+            padding: 2rem 5% 5rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .project-card {
+            background: var(--card);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+            position: relative;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .project-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .project-media {
+            position: relative;
+            height: 250px;
+            overflow: hidden;
+            background: var(--bg);
+        }
+
+        .project-media img,
+        .project-media video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .project-card:hover .project-media img,
+        .project-card:hover .project-media video {
+            transform: scale(1.1);
+        }
+
+        /* Admin Controls (visible only to admin) */
+        .admin-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            z-index: 10;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .project-card:hover .admin-controls {
+            opacity: 1;
+        }
+
+        .admin-control-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            color: white;
+        }
+
+        .edit-btn {
+            background: var(--primary);
+        }
+
+        .delete-btn {
+            background: var(--danger);
+        }
+
+        .admin-control-btn:hover {
+            transform: scale(1.1);
+        }
+
+        .media-badge {
+            position: absolute;
+            top: 1rem;
+            left: 1rem;
+            background: rgba(0,0,0,0.7);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            z-index: 2;
+            backdrop-filter: blur(5px);
+        }
+
+        .media-badge i {
+            color: var(--accent);
+        }
+
+        .play-button {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60px;
+            height: 60px;
+            background: rgba(230,126,34,0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            z-index: 3;
+            transition: 0.3s;
+            backdrop-filter: blur(5px);
+        }
+
+        .play-button:hover {
+            transform: translate(-50%, -50%) scale(1.1);
+            background: var(--accent);
+        }
+
+        .project-content {
+            padding: 1.5rem;
+        }
+
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .project-header h3 {
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        .project-status {
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .status-ongoing {
+            background: var(--info);
+            color: white;
+        }
+
+        .status-completed {
+            background: var(--success);
+            color: white;
+        }
+
+        .project-location {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .project-location i {
+            color: var(--accent);
+        }
+
+        .project-description {
+            color: var(--text);
+            margin-bottom: 1rem;
+            line-height: 1.6;
+            font-size: 0.95rem;
+        }
+
+        .project-gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.5rem;
+            margin: 1rem 0;
+        }
+
+        .gallery-thumb {
+            height: 60px;
+            border-radius: 10px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: var(--transition);
+        }
+
+        .gallery-thumb:hover {
+            border-color: var(--accent);
+            transform: scale(1.05);
+        }
+
+        .gallery-thumb img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-progress {
+            margin: 1rem 0;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--accent);
+            border-radius: 4px;
+            transition: width 1s ease;
+        }
+
+        .progress-text {
+            margin-top: 0.5rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            text-align: right;
+        }
+
+        .project-stats {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px solid var(--border);
+        }
+
+        .project-stats span {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .project-stats i {
+            color: var(--accent);
+        }
+
+        /* ===== VIDEO MODAL ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.show {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-content {
+            position: relative;
+            width: 90%;
+            max-width: 800px;
+        }
+
+        .modal-content video {
+            width: 100%;
+            border-radius: 20px;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: white;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .close-modal:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+        }
+
+        /* ===== CONFIRMATION DIALOG ===== */
+        .confirm-dialog {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card);
+            padding: 2rem;
+            border-radius: 40px;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.3);
+            z-index: 3000;
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+            border: 2px solid var(--accent);
+        }
+
+        .confirm-dialog.show {
+            display: block;
+            animation: scaleIn 0.3s ease;
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        .confirm-dialog i {
+            font-size: 4rem;
+            color: var(--danger);
+            margin-bottom: 1rem;
+        }
+
+        .confirm-dialog h3 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .confirm-dialog p {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        .confirm-actions {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .confirm-actions button {
+            flex: 1;
+            padding: 1rem;
+            border: none;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .confirm-yes {
+            background: var(--danger);
+            color: white;
+        }
+
+        .confirm-yes:hover {
+            background: #c82333;
+        }
+
+        .confirm-no {
+            background: var(--border);
+            color: var(--text);
+        }
+
+        .confirm-no:hover {
+            background: var(--text-muted);
+            color: white;
+        }
+
+        /* ===== NOTIFICATION ===== */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: var(--success);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 40px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            z-index: 4000;
+            animation: slideInRight 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        @keyframes slideInRight {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* ===== FOOTER ===== */
+        footer {
+            background: var(--footer-bg);
+            color: var(--footer-text);
+            padding: 4rem 5% 2rem;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 3rem;
+        }
+
+        .footer-logo {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .footer-logo i {
+            color: var(--accent);
+        }
+
+        .footer-section h4 {
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .footer-section ul {
+            list-style: none;
+        }
+
+        .footer-section ul li {
+            margin-bottom: 0.5rem;
+        }
+
+        .footer-section ul li a {
+            color: var(--footer-text);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .footer-section ul li a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-links a {
+            color: white;
+            font-size: 1.5rem;
+            transition: var(--transition);
+        }
+
+        .social-links a:hover {
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 2px solid var(--border);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 968px) {
+            .nav-menu {
+                display: none;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                width: 100%;
+                background: var(--navbar-bg);
+                padding: 2rem;
+                flex-direction: column;
+                align-items: center;
+                border-bottom: 3px solid var(--accent);
+            }
+            
+            .nav-menu.show {
+                display: flex;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .upload-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header-content h1 {
+                font-size: 2.2rem;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .filter-tabs {
+                flex-wrap: wrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-recycle"></i>
+                <span>Zan<span>Ewaste</span></span>
+            </div>
+            
+            <div class="nav-menu">
+                <a href="index.html" class="sw">Nyumbani</a>
+                <a href="index.html" class="en">Home</a>
+                
+                <a href="about.html" class="sw">Kuhusu</a>
+                <a href="about.html" class="en">About</a>
+                
+                <a href="projects.html" class="active sw">Miradi</a>
+                <a href="projects.html" class="active en">Projects</a>
+                
+                <a href="gallery.html" class="sw">Matunzio</a>
+                <a href="gallery.html" class="en">Gallery</a>
+                
+                <a href="report.html" class="sw">Ripoti Taka</a>
+                <a href="report.html" class="en">Report</a>
+                
+                <a href="contact.html" class="sw">Mawasiliano</a>
+                <a href="contact.html" class="en">Contact</a>
+                
+                <a href="founder.html" class="sw">Founder</a>
+                <a href="founder.html" class="en">Founder</a>
+                
+                <a href="partners.html" class="sw">Washirika</a>
+                <a href="partners.html" class="en">Partners</a>
+            </div>
+            
+            <div class="nav-controls">
+                <button class="theme-toggle" id="themeToggle">
+                    <i class="fas fa-moon"></i>
+                </button>
+                
+                <button class="lang-toggle" id="langToggle">
+                    <span class="lang-sw">SW</span>
+                    <span class="lang-separator">|</span>
+                    <span class="lang-en">EN</span>
+                </button>
+                
+                <button class="mobile-menu" id="mobileMenu">
+                    <i class="fas fa-bars"></i>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Header -->
+    <section class="page-header">
+        <div class="header-content">
+            <h1>
+                <i class="fas fa-project-diagram"></i>
+                <span class="sw">Miradi Yetu</span>
+                <span class="en">Our Projects</span>
+            </h1>
+            <p class="sw">Angalia picha na video za miradi tuliyofanya</p>
+            <p class="en">View photos and videos of our projects</p>
+        </div>
+    </section>
+
+    <!-- Admin Login Section (Visible kwa wote, but admin features only kwa admin) -->
+    <section class="admin-section">
+        <button class="admin-btn" id="adminLoginBtn">
+            <i class="fas fa-lock"></i>
+            <span class="sw">Ingia kama Admin</span>
+            <span class="en">Admin Login</span>
+        </button>
+        
+        <!-- Admin Upload Panel (Inaonekana tu baada ya login) -->
+        <div class="admin-panel" id="adminPanel" style="display: none;">
+            <h3>
+                <i class="fas fa-upload"></i>
+                <span class="sw">Pakia Mradi Mpya</span>
+                <span class="en">Upload New Project</span>
+            </h3>
+            
+            <form id="uploadForm" enctype="multipart/form-data">
+                <div class="upload-grid">
+                    <div class="upload-area" id="dropArea">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p class="sw">Buruta picha/video hapa au bonyeza kuchagua</p>
+                        <p class="en">Drag photos/videos here or click to select</p>
+                        <input type="file" id="fileInput" multiple accept="image/*,video/*">
+                    </div>
+                    
+                    <div class="upload-details">
+                        <input type="text" id="projectTitle" placeholder="Jina la mradi" class="sw">
+                        <input type="text" id="projectTitleEn" placeholder="Project title" class="en">
+                        
+                        <input type="text" id="projectLocation" placeholder="Mahali" class="sw">
+                        <input type="text" id="projectLocationEn" placeholder="Location" class="en">
+                        
+                        <select id="projectStatus">
+                            <option value="ongoing" class="sw">Inaendelea</option>
+                            <option value="ongoing" class="en">Ongoing</option>
+                            <option value="completed" class="sw">Imekamilika</option>
+                            <option value="completed" class="en">Completed</option>
+                        </select>
+                        
+                        <textarea id="projectDescription" placeholder="Maelezo ya mradi" rows="3" class="sw"></textarea>
+                        <textarea id="projectDescriptionEn" placeholder="Project description" rows="3" class="en"></textarea>
+                        
+                        <input type="number" id="projectProgress" placeholder="Asilimia ya uendelezaji" min="0" max="100">
+                        
+                        <div class="file-preview" id="filePreview"></div>
+                        
+                        <button type="submit" class="admin-btn">
+                            <i class="fas fa-upload"></i>
+                            <span class="sw">Pakia Mradi</span>
+                            <span class="en">Upload Project</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Filter Tabs -->
+    <section class="filter-section">
+        <div class="filter-tabs">
+            <button class="filter-tab active" data-filter="all">
+                <i class="fas fa-th-large"></i>
+                <span class="sw">Zote</span>
+                <span class="en">All</span>
+            </button>
+            <button class="filter-tab" data-filter="ongoing">
+                <i class="fas fa-spinner"></i>
+                <span class="sw">Zinazoendelea</span>
+                <span class="en">Ongoing</span>
+            </button>
+            <button class="filter-tab" data-filter="completed">
+                <i class="fas fa-check-circle"></i>
+                <span class="sw">Zilizokamilika</span>
+                <span class="en">Completed</span>
+            </button>
+            <button class="filter-tab" data-filter="video">
+                <i class="fas fa-video"></i>
+                <span class="sw">Video</span>
+                <span class="en">Videos</span>
+            </button>
+        </div>
+    </section>
+
+    <!-- Projects Grid -->
+    <section class="projects-section">
+        <div class="projects-grid" id="projectsGrid">
+            <!-- Projects will be loaded here -->
+        </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div class="modal" id="videoModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeVideoModal()">&times;</span>
+            <video id="modalVideo" controls>
+                <source src="" type="video/mp4">
+            </video>
+        </div>
+    </div>
+
+    <!-- Confirmation Dialog -->
+    <div class="confirm-dialog" id="confirmDialog">
+        <i class="fas fa-exclamation-triangle"></i>
+        <h3 class="sw">Una uhakika?</h3>
+        <h3 class="en">Are you sure?</h3>
+        <p class="sw">Unakaribia kufuta mradi huu. Hatua hii haiwezi kutenduliwa.</p>
+        <p class="en">You are about to delete this project. This action cannot be undone.</p>
+        <div class="confirm-actions">
+            <button class="confirm-yes" onclick="confirmDelete()">
+                <span class="sw">Ndio, Futa</span>
+                <span class="en">Yes, Delete</span>
+            </button>
+            <button class="confirm-no" onclick="closeConfirmDialog()">
+                <span class="sw">Hapana</span>
+                <span class="en">Cancel</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <div class="footer-logo">
+                    <i class="fas fa-recycle"></i>
+                    <span>Zan<span>Ewaste</span></span>
+                </div>
+                <p class="sw">Mfumo wa kwanza wa kidijitali wa usimamizi wa taka za kielektroniki Zanzibar.</p>
+                <p class="en">First digital e-waste management system in Zanzibar.</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Viungo vya Haraka</h4>
+                <h4 class="en">Quick Links</h4>
+                <ul>
+                    <li><a href="index.html" class="sw">Nyumbani</a></li>
+                    <li><a href="index.html" class="en">Home</a></li>
+                    <li><a href="about.html" class="sw">Kuhusu</a></li>
+                    <li><a href="about.html" class="en">About</a></li>
+                    <li><a href="contact.html" class="sw">Mawasiliano</a></li>
+                    <li><a href="contact.html" class="en">Contact</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Taarifa za Mawasiliano</h4>
+                <h4 class="en">Contact Info</h4>
+                <p><i class="fas fa-envelope"></i> sonibrahimdigtech@gmail.com</p>
+                <p><i class="fas fa-phone"></i> +255 775 05 780</p>
+                <p><i class="fab fa-instagram"></i> e_wastezanzibar25</p>
+            </div>
+            
+            <div class="footer-section">
+                <h4 class="sw">Tufuate</h4>
+                <h4 class="en">Follow Us</h4>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <p>© 2026 <strong>SonDigital</strong> | 
+                <span class="sw">Haki zote zimehifadhiwa</span>
+                <span class="en">All rights reserved</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
+    
+    <script>
+        // Initialize AOS
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // ===== THEME TOGGLE =====
+        const themeToggle = document.getElementById('themeToggle');
+        const html = document.documentElement;
+        
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        updateThemeIcon(savedTheme);
+        
+        themeToggle.addEventListener('click', function() {
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'light' ? 'dark' : 'light';
+            
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            updateThemeIcon(newTheme);
+        });
+        
+        function updateThemeIcon(theme) {
+            const icon = themeToggle.querySelector('i');
+            icon.className = theme === 'light' ? 'fas fa-moon' : 'fas fa-sun';
+        }
+        
+        // ===== LANGUAGE TOGGLE =====
+        const langToggle = document.getElementById('langToggle');
+        
+        const savedLang = localStorage.getItem('language') || 'sw';
+        html.setAttribute('data-lang', savedLang);
+        updateLangButtons(savedLang);
+        
+        langToggle.addEventListener('click', function() {
+            const currentLang = html.getAttribute('data-lang');
+            const newLang = currentLang === 'sw' ? 'en' : 'sw';
+            
+            html.setAttribute('data-lang', newLang);
+            localStorage.setItem('language', newLang);
+            updateLangButtons(newLang);
+        });
+        
+        function updateLangButtons(lang) {
+            const langSw = document.querySelector('.lang-sw');
+            const langEn = document.querySelector('.lang-en');
+            
+            if (lang === 'sw') {
+                langSw.style.color = 'var(--accent)';
+                langSw.style.fontWeight = '700';
+                langEn.style.color = '';
+                langEn.style.fontWeight = '';
+            } else {
+                langEn.style.color = 'var(--accent)';
+                langEn.style.fontWeight = '700';
+                langSw.style.color = '';
+                langSw.style.fontWeight = '';
+            }
+        }
+        
+        // ===== MOBILE MENU =====
+        const mobileMenu = document.getElementById('mobileMenu');
+        const navMenu = document.querySelector('.nav-menu');
+        
+        mobileMenu.addEventListener('click', function() {
+            navMenu.classList.toggle('show');
+            const icon = this.querySelector('i');
+            icon.className = navMenu.classList.contains('show') ? 'fas fa-times' : 'fas fa-bars';
+        });
+
+        // ===== ADMIN AUTHENTICATION =====
+        let isAdmin = false;
+        let projects = [];
+        let currentDeleteId = null;
+        let currentFilter = 'all';
+
+        // Load projects from localStorage
+        function loadProjects() {
+            const saved = localStorage.getItem('projects');
+            if (saved) {
+                projects = JSON.parse(saved);
+            } else {
+                // Default projects
+                projects = [
+                    {
+                        id: 1,
+                        title: 'Ukusanyaji Taka Stone Town',
+                        titleEn: 'Stone Town Waste Collection',
+                        location: 'Stone Town, Zanzibar',
+                        status: 'ongoing',
+                        mediaType: 'image',
+                        images: [
+                            'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400',
+                            'https://images.unsplash.com/photo-1542293787935-c9e299b880cc?w=400',
+                            'https://images.unsplash.com/photo-1574180045827-681f8a1a9622?w=400'
+                        ],
+                        description: 'Mradi wa kukusanya taka za kielektroniki katika maeneo ya Stone Town. Tumekusanya zaidi ya kilo 500 za taka.',
+                        descriptionEn: 'Project to collect e-waste in Stone Town areas. We collected over 500kg of waste.',
+                        progress: 65,
+                        stats: { weight: '500 kg', participants: 20, year: 2026 }
+                    },
+                    {
+                        id: 2,
+                        title: 'Warsha za Mazingira Nungwi',
+                        titleEn: 'Environmental Workshops Nungwi',
+                        location: 'Nungwi, Unguja Kaskazini',
+                        status: 'completed',
+                        mediaType: 'video',
+                        video: 'https://www.w3schools.com/html/mov_bbb.mp4',
+                        thumbnail: 'https://images.unsplash.com/photo-1558008258-3256797b43f3?w=400',
+                        description: 'Warsha za kuelimisha jamii kuhusu umuhimu wa kuchakata taka za kielektroniki. Zaidi ya watu 200 walihudhuria.',
+                        descriptionEn: 'Workshops to educate the community about e-waste recycling. Over 200 people attended.',
+                        progress: 100,
+                        stats: { participants: '200+', year: 2025 }
+                    },
+                    {
+                        id: 3,
+                        title: 'Kituo cha Uchakataji Pemba',
+                        titleEn: 'Pemba Recycling Center',
+                        location: 'Chake Chake, Pemba',
+                        status: 'ongoing',
+                        mediaType: 'image',
+                        images: [
+                            'https://images.unsplash.com/photo-1574180045827-681f8a1a9622?w=400',
+                            'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400',
+                            'https://images.unsplash.com/photo-1542293787935-c9e299b880cc?w=400'
+                        ],
+                        description: 'Ujenzi wa kituo cha kisasa cha kuchakata taka za kielektroniki Pemba. Kituo kitasaidia kuchakata tani 10 za taka kwa mwezi.',
+                        descriptionEn: 'Construction of a modern e-waste recycling center in Pemba. The center will recycle 10 tons of waste per month.',
+                        progress: 45,
+                        stats: { weight: '10 t/mwezi', participants: 15, year: 2026 }
+                    }
+                ];
+                saveProjects();
+            }
+            displayProjects();
+        }
+
+        function saveProjects() {
+            localStorage.setItem('projects', JSON.stringify(projects));
+        }
+
+        function displayProjects() {
+            const grid = document.getElementById('projectsGrid');
+            grid.innerHTML = '';
+
+            let filteredProjects = projects;
+            if (currentFilter !== 'all') {
+                if (currentFilter === 'video') {
+                    filteredProjects = projects.filter(p => p.mediaType === 'video');
+                } else {
+                    filteredProjects = projects.filter(p => p.status === currentFilter);
+                }
+            }
+
+            filteredProjects.forEach((project, index) => {
+                const card = createProjectCard(project, index);
+                grid.appendChild(card);
+            });
+        }
+
+        function createProjectCard(project, index) {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+            card.dataset.id = project.id;
+            card.dataset.aos = 'fade-up';
+            card.dataset.aosDelay = (index * 100).toString();
+
+            const statusClass = project.status === 'ongoing' ? 'status-ongoing' : 'status-completed';
+            const statusText = project.status === 'ongoing' ? 'Ongoing' : 'Completed';
+            const statusTextSw = project.status === 'ongoing' ? 'Inaendelea' : 'Imekamilika';
+
+            // Admin controls (visible only if admin)
+            let adminControls = '';
+            if (isAdmin) {
+                adminControls = `
+                    <div class="admin-controls">
+                        <button class="admin-control-btn edit-btn" onclick="editProject(${project.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="admin-control-btn delete-btn" onclick="showDeleteConfirm(${project.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+            }
+
+            // Media display
+            let mediaHtml = '';
+            if (project.mediaType === 'image') {
+                mediaHtml = `
+                    <img src="${project.images[0]}" alt="${project.title}" onclick="openLightbox(${project.id}, 0)">
+                `;
+            } else {
+                mediaHtml = `
+                    <img src="${project.thumbnail}" alt="${project.title}">
+                    <div class="play-button" onclick="playVideo('${project.video}')">
+                        <i class="fas fa-play"></i>
+                    </div>
+                `;
+            }
+
+            // Gallery thumbnails
+            let galleryHtml = '';
+            if (project.mediaType === 'image' && project.images && project.images.length > 1) {
+                galleryHtml = '<div class="project-gallery">';
+                project.images.slice(1, 4).forEach((img, i) => {
+                    galleryHtml += `
+                        <div class="gallery-thumb" onclick="openLightbox(${project.id}, ${i + 1})">
+                            <img src="${img.replace('w=400', 'w=100')}" alt="Gallery">
+                        </div>
+                    `;
+                });
+                galleryHtml += '</div>';
+            }
+
+            // Stats
+            let statsHtml = '';
+            for (let [key, value] of Object.entries(project.stats || {})) {
+                let icon = 'fa-weight';
+                if (key === 'participants') icon = 'fa-users';
+                else if (key === 'year') icon = 'fa-calendar';
+                statsHtml += `<span><i class="fas ${icon}"></i> ${value}</span>`;
+            }
+
+            const currentLang = html.getAttribute('data-lang');
+
+            card.innerHTML = `
+                ${adminControls}
+                <div class="project-media">
+                    ${mediaHtml}
+                    <span class="media-badge"><i class="fas fa-${project.mediaType === 'image' ? 'images' : 'video'}"></i> ${project.mediaType === 'image' ? 'Picha' : 'Video'}</span>
+                </div>
+                <div class="project-content">
+                    <div class="project-header">
+                        <h3>${currentLang === 'sw' ? project.title : (project.titleEn || project.title)}</h3>
+                        <span class="project-status ${statusClass}">
+                            <span class="sw">${statusTextSw}</span>
+                            <span class="en">${statusText}</span>
+                        </span>
+                    </div>
+                    <p class="project-location"><i class="fas fa-map-marker-alt"></i> ${project.location}</p>
+                    <p class="project-description">${currentLang === 'sw' ? project.description : (project.descriptionEn || project.description)}</p>
+                    ${galleryHtml}
+                    <div class="project-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${project.progress}%"></div>
+                        </div>
+                        <div class="progress-text">${project.progress}%</div>
+                    </div>
+                    <div class="project-stats">
+                        ${statsHtml}
+                    </div>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Filter tabs
+        document.querySelectorAll('.filter-tab').forEach(tab => {
+            tab.addEventListener('click', function() {
+                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+                this.classList.add('active');
+                
+                currentFilter = this.dataset.filter;
+                displayProjects();
+            });
+        });
+
+        // Admin login
+        document.getElementById('adminLoginBtn').addEventListener('click', function() {
+            const password = prompt('Enter admin password:');
+            if (password === 'admin123') {
+                isAdmin = true;
+                document.getElementById('adminPanel').style.display = 'block';
+                showNotification('Logged in as admin', 'success');
+                displayProjects(); // Refresh to show admin controls
+            } else {
+                alert('Invalid password!');
+            }
+        });
+
+        // File upload preview
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const preview = document.getElementById('filePreview');
+            preview.innerHTML = '';
+            
+            Array.from(this.files).forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const div = document.createElement('div');
+                    if (file.type.startsWith('image/')) {
+                        div.innerHTML = `<img src="${e.target.result}" style="max-width:100%; max-height:150px; border-radius:15px; margin:0.5rem;">`;
+                    } else {
+                        div.innerHTML = `<video controls style="max-width:100%; max-height:150px; border-radius:15px;"><source src="${e.target.result}"></video>`;
+                    }
+                    preview.appendChild(div);
+                };
+                reader.readAsDataURL(file);
+            });
+        });
+
+        // Upload form
+        document.getElementById('uploadForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const files = document.getElementById('fileInput').files;
+            const title = document.getElementById('projectTitle').value;
+            const titleEn = document.getElementById('projectTitleEn').value;
+            const location = document.getElementById('projectLocation').value;
+            const status = document.getElementById('projectStatus').value;
+            const description = document.getElementById('projectDescription').value;
+            const descriptionEn = document.getElementById('projectDescriptionEn').value;
+            const progress = document.getElementById('projectProgress').value;
+
+            if (files.length === 0) {
+                alert('Please select files');
+                return;
+            }
+
+            const images = [];
+            const readers = [];
+
+            for (let i = 0; i < files.length; i++) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    images.push(e.target.result);
+                    if (images.length === files.length) {
+                        const newProject = {
+                            id: Date.now(),
+                            title: title || 'New Project',
+                            titleEn: titleEn || 'New Project',
+                            location: location || 'Zanzibar',
+                            status: status,
+                            mediaType: files[0].type.startsWith('image/') ? 'image' : 'video',
+                            images: images,
+                            video: files[0].type.startsWith('video/') ? images[0] : null,
+                            thumbnail: images[0],
+                            description: description || 'Project description',
+                            descriptionEn: descriptionEn || 'Project description',
+                            progress: parseInt(progress) || 0,
+                            stats: { year: new Date().getFullYear() }
+                        };
+
+                        projects.push(newProject);
+                        saveProjects();
+                        displayProjects();
+                        document.getElementById('adminPanel').style.display = 'none';
+                        showNotification('Project uploaded successfully!');
+                    }
+                };
+                reader.readAsDataURL(files[i]);
+                readers.push(reader);
+            }
+        });
+
+        // Edit project
+        function editProject(id) {
+            // Redirect to admin panel for editing
+            document.getElementById('adminPanel').style.display = 'block';
+            // You can implement edit functionality here
+        }
+
+        // Delete confirmation
+        function showDeleteConfirm(id) {
+            currentDeleteId = id;
+            document.getElementById('confirmDialog').classList.add('show');
+        }
+
+        function closeConfirmDialog() {
+            document.getElementById('confirmDialog').classList.remove('show');
+            currentDeleteId = null;
+        }
+
+        function confirmDelete() {
+            if (currentDeleteId) {
+                projects = projects.filter(p => p.id !== currentDeleteId);
+                saveProjects();
+                displayProjects();
+                closeConfirmDialog();
+                showNotification('Project deleted successfully!');
+            }
+        }
+
+        // Video player
+        function playVideo(src) {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+            video.src = src;
+            modal.classList.add('show');
+            video.play();
+        }
+
+        function closeVideoModal() {
+            const modal = document.getElementById('videoModal');
+            const video = document.getElementById('modalVideo');
+            video.pause();
+            modal.classList.remove('show');
+        }
+
+        // Lightbox for images
+        function openLightbox(projectId, imageIndex) {
+            const project = projects.find(p => p.id === projectId);
+            if (project && project.images) {
+                // You can implement a lightbox here
+                window.open(project.images[imageIndex], '_blank');
+            }
+        }
+
+        // Notification
+        function showNotification(message, type = 'success') {
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : 'exclamation-circle'}"></i>
+                <span>${message}</span>
+            `;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.remove();
+            }, 3000);
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeVideoModal();
+                closeConfirmDialog();
+            }
+        });
+
+        // Load projects on page load
+        document.addEventListener('DOMContentLoaded', loadProjects);
+    </script>
+</body>
+</html>
