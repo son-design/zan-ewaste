@@ -11,7 +11,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     
-    <!-- AOS Animation Library -->
+    <!-- AOS Animation -->
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
@@ -73,14 +73,31 @@
             overflow-x: hidden;
         }
 
+        /* Language Classes */
         .sw { display: inline; }
         .en { display: none; }
         [data-lang="en"] .sw { display: none; }
         [data-lang="en"] .en { display: inline; }
 
+        /* News section - Kiswahili tu (haitabadilika) */
+        .news-section .sw, .news-section .en {
+            display: inline;
+        }
+        .news-section .en {
+            display: inline;
+        }
+
         ::-webkit-scrollbar { width: 10px; }
         ::-webkit-scrollbar-track { background: var(--bg); }
         ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 5px; }
+
+        /* ===== ANIMATIONS ===== */
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        @keyframes float { 0%,100% { transform: translateY(0) rotate(0deg); } 50% { transform: translateY(-20px) rotate(5deg); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes slideInLeft { from { opacity: 0; transform: translateX(-60px); } to { opacity: 1; transform: translateX(0); } }
+        @keyframes bounce { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 
         /* ===== NAVBAR ===== */
         .navbar {
@@ -90,6 +107,7 @@
             background: var(--navbar-bg);
             backdrop-filter: blur(10px);
             z-index: 1000;
+            border-bottom: 3px solid var(--accent);
             box-shadow: var(--shadow);
             transition: var(--transition);
         }
@@ -111,36 +129,19 @@
             align-items: center;
             gap: 0.5rem;
         }
-
-        .logo i {
-            color: var(--accent);
-            font-size: 1.8rem;
-            animation: rotate 10s linear infinite;
-        }
-
-        @keyframes rotate {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-        }
-
+        .logo i { color: var(--accent); font-size: 1.8rem; animation: rotate 10s linear infinite; }
         .logo span span { color: var(--accent); }
 
-        /* Desktop Navigation */
-        .nav-menu {
-            display: flex;
-            gap: 1.8rem;
-        }
-
+        .nav-menu { display: flex; gap: 1.5rem; }
         .nav-menu a {
             text-decoration: none;
             color: var(--text);
             font-weight: 500;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
             transition: var(--transition);
             position: relative;
             padding: 0.5rem 0;
         }
-
         .nav-menu a::after {
             content: '';
             position: absolute;
@@ -151,11 +152,9 @@
             background: var(--accent);
             transition: width 0.3s;
         }
-
         .nav-menu a:hover::after, .nav-menu a.active::after { width: 100%; }
         .nav-menu a:hover, .nav-menu a.active { color: var(--accent); }
 
-        /* Mobile Menu Button */
         .mobile-menu-btn {
             display: none;
             background: none;
@@ -166,12 +165,7 @@
             padding: 0.5rem;
         }
 
-        .nav-controls {
-            display: flex;
-            align-items: center;
-            gap: 0.8rem;
-        }
-
+        .nav-controls { display: flex; align-items: center; gap: 0.8rem; }
         .theme-toggle, .lang-toggle {
             background: none;
             border: 2px solid var(--border);
@@ -185,34 +179,36 @@
             gap: 0.3rem;
             font-size: 0.85rem;
         }
-
         .theme-toggle:hover, .lang-toggle:hover {
             border-color: var(--accent);
             color: var(--accent);
         }
 
+        /* Portal Button - RANGI IMESAHIHISHWA */
         .portal-btn {
             background: linear-gradient(135deg, var(--accent), var(--primary));
             color: white;
             border: none;
-            padding: 0.4rem 1rem;
+            padding: 0.5rem 1.2rem;
             border-radius: 40px;
             cursor: pointer;
             transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 0.4rem;
-            font-weight: 500;
-            font-size: 0.85rem;
-            margin-left: 0.3rem;
+            gap: 0.5rem;
+            font-weight: 600;
+            font-size: 0.9rem;
+            border: 2px solid var(--accent);
         }
-
+        .portal-btn i { color: white; }
         .portal-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(230,126,34,0.3);
+            background: transparent;
+            color: var(--accent);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(230,126,34,0.3);
         }
+        .portal-btn:hover i { color: var(--accent); }
 
-        /* Mobile Navigation */
         .mobile-nav {
             display: none;
             position: fixed;
@@ -229,11 +225,7 @@
             max-height: calc(100vh - 65px);
             overflow-y: auto;
         }
-
-        .mobile-nav.show {
-            display: flex;
-        }
-
+        .mobile-nav.show { display: flex; }
         .mobile-nav a {
             padding: 0.8rem 1rem;
             color: var(--text);
@@ -242,7 +234,6 @@
             border-radius: 40px;
             transition: var(--transition);
         }
-
         .mobile-nav a:hover, .mobile-nav a.active {
             background: var(--accent);
             color: white;
@@ -273,23 +264,16 @@
             height: 100%;
             pointer-events: none;
         }
-
         .float-item {
             position: absolute;
             font-size: 3rem;
             color: rgba(255,255,255,0.12);
             animation: float 8s infinite ease-in-out;
         }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
-        }
-
-        .float-item:nth-child(1) { top: 15%; left: 5%; animation-delay: 0s; font-size: 3rem; }
+        .float-item:nth-child(1) { top: 15%; left: 5%; animation-delay: 0s; }
         .float-item:nth-child(2) { top: 65%; right: 8%; animation-delay: 2s; font-size: 4rem; }
-        .float-item:nth-child(3) { bottom: 15%; left: 12%; animation-delay: 1s; font-size: 3rem; }
-        .float-item:nth-child(4) { top: 35%; right: 20%; animation-delay: 3s; font-size: 2.5rem; }
+        .float-item:nth-child(3) { bottom: 15%; left: 12%; animation-delay: 1s; }
+        .float-item:nth-child(4) { top: 35%; right: 20%; animation-delay: 3s; }
         .float-item:nth-child(5) { top: 75%; left: 35%; animation-delay: 1.5s; }
         .float-item:nth-child(6) { bottom: 25%; right: 30%; animation-delay: 2.5s; }
 
@@ -312,11 +296,6 @@
             border: 1px solid rgba(255,255,255,0.1);
         }
 
-        @keyframes slideInLeft {
-            from { opacity: 0; transform: translateX(-50px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-
         .hero-content h1 {
             font-size: 2.8rem;
             line-height: 1.2;
@@ -324,14 +303,11 @@
             margin-bottom: 1rem;
             text-shadow: 2px 2px 4px rgba(0,0,0,0.2);
         }
-
         .hero-content h1 .highlight {
             color: var(--accent);
             display: block;
             font-size: 2.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
-
         .hero-content p {
             font-size: 1rem;
             color: rgba(255,255,255,0.9);
@@ -344,7 +320,6 @@
             margin: 1.5rem 0;
             flex-wrap: wrap;
         }
-
         .stat-card {
             flex: 1;
             text-align: center;
@@ -356,19 +331,15 @@
             transition: var(--transition);
             min-width: 100px;
         }
-
         .stat-card:hover {
             transform: translateY(-3px);
             background: rgba(255,255,255,0.2);
         }
-
         .stat-number {
             font-size: 2rem;
             font-weight: 700;
             color: white;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
         }
-
         .stat-label {
             font-size: 0.75rem;
             color: rgba(255,255,255,0.85);
@@ -380,7 +351,6 @@
             margin-top: 1.5rem;
             flex-wrap: wrap;
         }
-
         .btn {
             padding: 0.8rem 1.8rem;
             border-radius: 50px;
@@ -394,45 +364,39 @@
             gap: 0.5rem;
             border: 2px solid transparent;
         }
-
         .btn-primary {
             background: var(--accent);
             color: white;
             border-color: var(--accent);
         }
-
         .btn-primary:hover {
             background: transparent;
             color: white;
             border-color: white;
             transform: translateY(-3px);
         }
-
         .btn-outline {
             background: transparent;
             border-color: white;
             color: white;
         }
-
         .btn-outline:hover {
             background: white;
             color: var(--primary);
             transform: translateY(-3px);
         }
 
-        /* ===== FEATURES SECTION ===== */
-        .features {
+        /* ===== NEWS SECTION (KISWAHILI TU) ===== */
+        .news-section {
             padding: 4rem 5%;
             background: var(--bg);
         }
-
         .section-title {
             font-size: 2rem;
             color: var(--primary);
             text-align: center;
             margin-bottom: 2rem;
         }
-
         .section-title::after {
             content: '';
             display: block;
@@ -443,6 +407,255 @@
             border-radius: 2px;
         }
 
+        .news-slider {
+            position: relative;
+            max-width: 1200px;
+            margin: 0 auto 3rem;
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+        }
+        .slider-container {
+            position: relative;
+            height: 400px;
+            overflow: hidden;
+        }
+        .slider-slide {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0;
+            transition: opacity 0.5s ease;
+            background-size: cover;
+            background-position: center;
+            display: flex;
+            align-items: flex-end;
+        }
+        .slider-slide.active {
+            opacity: 1;
+        }
+        .slide-content {
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            color: white;
+            padding: 2rem;
+            width: 100%;
+            backdrop-filter: blur(5px);
+        }
+        .slide-content h3 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .slide-content p {
+            margin-bottom: 1rem;
+            opacity: 0.9;
+        }
+        .slide-btn {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 0.5rem 1.5rem;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: var(--transition);
+            font-weight: 500;
+        }
+        .slide-btn:hover {
+            background: white;
+            color: var(--accent);
+            transform: translateY(-3px);
+        }
+        .slider-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 45px;
+            height: 45px;
+            background: rgba(0,0,0,0.5);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            z-index: 10;
+        }
+        .slider-btn:hover {
+            background: var(--accent);
+            transform: translateY(-50%) scale(1.1);
+        }
+        .slider-prev { left: 20px; }
+        .slider-next { right: 20px; }
+        .slider-dots {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 10px;
+            z-index: 10;
+        }
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.5);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        .dot.active, .dot:hover {
+            background: var(--accent);
+            transform: scale(1.2);
+        }
+
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .news-card {
+            background: var(--card);
+            border-radius: 30px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            border: 2px solid var(--border);
+            transition: var(--transition);
+        }
+        .news-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent);
+            box-shadow: var(--shadow-hover);
+        }
+        .news-image {
+            height: 200px;
+            overflow: hidden;
+        }
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        .news-card:hover .news-image img {
+            transform: scale(1.1);
+        }
+        .news-content {
+            padding: 1.5rem;
+        }
+        .news-date {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+        }
+        .news-title {
+            color: var(--primary);
+            font-size: 1.2rem;
+            margin-bottom: 0.8rem;
+        }
+        .news-excerpt {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+        .read-more {
+            background: none;
+            border: none;
+            color: var(--accent);
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            transition: var(--transition);
+        }
+        .read-more:hover {
+            gap: 0.6rem;
+            color: var(--primary);
+        }
+
+        .news-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+        .news-modal.show { display: flex; animation: fadeInUp 0.3s ease; }
+        .modal-news-content {
+            background: var(--card);
+            border-radius: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            padding: 2rem;
+            position: relative;
+            border: 2px solid var(--accent);
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-muted);
+            transition: var(--transition);
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+        }
+        .modal-close:hover {
+            color: var(--accent);
+            transform: rotate(90deg);
+            background: rgba(230,126,34,0.1);
+        }
+        .modal-news-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 20px;
+            margin-bottom: 1rem;
+        }
+        .modal-news-title {
+            color: var(--primary);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .modal-news-date {
+            color: var(--accent);
+            font-size: 0.8rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .modal-news-content p {
+            color: var(--text);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+
+        /* ===== FEATURES SECTION ===== */
+        .features {
+            padding: 4rem 5%;
+            background: var(--bg);
+        }
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
@@ -450,7 +663,6 @@
             max-width: 1200px;
             margin: 0 auto;
         }
-
         .feature-card {
             background: var(--card);
             padding: 1.8rem;
@@ -460,25 +672,22 @@
             border: 2px solid var(--border);
             transition: var(--transition);
         }
-
         .feature-card:hover {
             transform: translateY(-8px);
             border-color: var(--accent);
             box-shadow: var(--shadow-hover);
         }
-
         .feature-card i {
             font-size: 2.5rem;
             color: var(--accent);
             margin-bottom: 1rem;
+            animation: bounce 2s infinite;
         }
-
         .feature-card h3 {
             color: var(--primary);
             margin-bottom: 0.8rem;
             font-size: 1.2rem;
         }
-
         .feature-card p {
             color: var(--text-muted);
             font-size: 0.85rem;
@@ -491,7 +700,6 @@
             position: relative;
             overflow: hidden;
         }
-
         .quick-stats::before {
             content: '';
             position: absolute;
@@ -502,7 +710,6 @@
             background: radial-gradient(circle, rgba(255,255,255,0.08) 0%, transparent 70%);
             animation: rotate 30s linear infinite;
         }
-
         .stats-grid {
             max-width: 1200px;
             margin: 0 auto;
@@ -512,7 +719,6 @@
             position: relative;
             z-index: 2;
         }
-
         .stat-item {
             display: flex;
             align-items: center;
@@ -524,26 +730,13 @@
             backdrop-filter: blur(5px);
             transition: var(--transition);
         }
-
         .stat-item:hover {
             transform: translateY(-3px);
             background: rgba(255,255,255,0.18);
         }
-
-        .stat-item i {
-            font-size: 2rem;
-            color: var(--accent);
-        }
-
-        .stat-info h3 {
-            font-size: 1.6rem;
-            font-weight: 700;
-        }
-
-        .stat-info p {
-            opacity: 0.9;
-            font-size: 0.8rem;
-        }
+        .stat-item i { font-size: 2rem; color: var(--accent); }
+        .stat-info h3 { font-size: 1.6rem; font-weight: 700; }
+        .stat-info p { opacity: 0.9; font-size: 0.8rem; }
 
         /* ===== CTA SECTION ===== */
         .cta-section {
@@ -551,7 +744,6 @@
             background: var(--card);
             text-align: center;
         }
-
         .cta-content { max-width: 700px; margin: 0 auto; }
         .cta-content h2 { font-size: 2rem; color: var(--primary); margin-bottom: 1rem; }
         .cta-content p { color: var(--text-muted); margin-bottom: 1.5rem; font-size: 1rem; }
@@ -563,7 +755,6 @@
             color: var(--footer-text);
             padding: 3rem 5% 1.5rem;
         }
-
         .footer-content {
             max-width: 1200px;
             margin: 0 auto;
@@ -571,56 +762,18 @@
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 2rem;
         }
-
-        .footer-logo {
-            font-size: 1.6rem;
-            font-weight: 700;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
+        .footer-logo { font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem; }
         .footer-logo i { color: var(--accent); }
         .footer-section h4 { color: var(--accent); margin-bottom: 1rem; font-size: 1rem; }
         .footer-section ul { list-style: none; }
         .footer-section ul li { margin-bottom: 0.5rem; }
-        .footer-section ul li a {
-            color: var(--footer-text);
-            text-decoration: none;
-            transition: var(--transition);
-            font-size: 0.85rem;
-        }
-        .footer-section ul li a:hover {
-            color: var(--accent);
-            padding-left: 5px;
-        }
-        .footer-section p {
-            margin-bottom: 0.5rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.85rem;
-        }
+        .footer-section ul li a { color: var(--footer-text); text-decoration: none; transition: var(--transition); font-size: 0.85rem; }
+        .footer-section ul li a:hover { color: var(--accent); padding-left: 5px; }
+        .footer-section p { margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; }
         .footer-section i { color: var(--accent); width: 20px; }
-
-        .social-links {
-            display: flex;
-            gap: 1rem;
-            margin-top: 0.5rem;
-        }
-
-        .social-links a {
-            color: var(--footer-text);
-            font-size: 1.4rem;
-            transition: var(--transition);
-        }
-
-        .social-links a:hover {
-            color: var(--accent);
-            transform: translateY(-3px);
-        }
-
+        .social-links { display: flex; gap: 1rem; margin-top: 0.5rem; flex-wrap: wrap; }
+        .social-links a { color: var(--footer-text); font-size: 1.3rem; transition: var(--transition); }
+        .social-links a:hover { color: var(--accent); transform: translateY(-3px) scale(1.1); }
         .footer-bottom {
             max-width: 1200px;
             margin: 2rem auto 0;
@@ -629,10 +782,9 @@
             text-align: center;
             font-size: 0.8rem;
         }
-
         .footer-bottom strong { color: var(--accent); }
 
-        /* ===== PORTAL MODAL ===== */
+        /* ===== LOGIN MODAL ===== */
         .portal-modal {
             display: none;
             position: fixed;
@@ -646,13 +798,7 @@
             align-items: center;
             justify-content: center;
         }
-
-        .portal-modal.show { display: flex; animation: fadeInModal 0.3s ease; }
-        @keyframes fadeInModal {
-            from { opacity: 0; backdrop-filter: blur(0); }
-            to { opacity: 1; backdrop-filter: blur(10px); }
-        }
-
+        .portal-modal.show { display: flex; animation: fadeInUp 0.3s ease; }
         .modal-content {
             background: var(--card);
             border-radius: 40px;
@@ -660,17 +806,12 @@
             width: 90%;
             padding: 2rem;
             box-shadow: 0 30px 60px rgba(0,0,0,0.4);
-            animation: slideInUpModal 0.5s ease;
+            animation: slideIn 0.5s ease;
             border: 2px solid var(--accent);
             max-height: 85vh;
             overflow-y: auto;
         }
-
-        @keyframes slideInUpModal {
-            from { opacity: 0; transform: translateY(50px) scale(0.9); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
+        @keyframes slideIn { from { opacity: 0; transform: translateY(50px); } to { opacity: 1; transform: translateY(0); } }
         .modal-header {
             display: flex;
             justify-content: space-between;
@@ -679,9 +820,7 @@
             padding-bottom: 0.8rem;
             border-bottom: 2px solid var(--accent);
         }
-
         .modal-header h3 { color: var(--primary); font-size: 1.4rem; }
-
         .close-modal {
             font-size: 1.8rem;
             cursor: pointer;
@@ -694,20 +833,8 @@
             justify-content: center;
             border-radius: 50%;
         }
-
-        .close-modal:hover {
-            color: var(--accent);
-            transform: rotate(90deg);
-            background: rgba(230,126,34,0.1);
-        }
-
-        .role-buttons {
-            display: flex;
-            gap: 0.8rem;
-            margin-bottom: 1.5rem;
-            flex-wrap: wrap;
-        }
-
+        .close-modal:hover { color: var(--accent); transform: rotate(90deg); background: rgba(230,126,34,0.1); }
+        .role-buttons { display: flex; gap: 0.8rem; margin-bottom: 1.5rem; flex-wrap: wrap; }
         .role-btn {
             flex: 1;
             padding: 0.8rem;
@@ -721,24 +848,12 @@
             font-size: 0.85rem;
             color: var(--text);
         }
-
-        .role-btn i {
-            font-size: 1.2rem;
-            display: block;
-            margin-bottom: 0.2rem;
-            color: var(--accent);
-        }
-
-        .role-btn:hover, .role-btn.active {
-            background: var(--accent);
-            color: white;
-            border-color: var(--accent);
-        }
+        .role-btn i { font-size: 1.2rem; display: block; margin-bottom: 0.2rem; color: var(--accent); }
+        .role-btn:hover, .role-btn.active { background: var(--accent); color: white; border-color: var(--accent); }
         .role-btn:hover i, .role-btn.active i { color: white; }
-
         .login-form, .register-form { display: none; }
         .login-form.active, .register-form.active { display: block; animation: fadeIn 0.3s ease; }
-
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .form-group { margin-bottom: 1rem; }
         .form-group label { display: block; margin-bottom: 0.3rem; color: var(--primary); font-weight: 500; font-size: 0.85rem; }
         .form-group input, .form-group select {
@@ -750,11 +865,7 @@
             color: var(--text);
             font-size: 0.85rem;
         }
-        .form-group input:focus, .form-group select:focus {
-            border-color: var(--accent);
-            outline: none;
-        }
-
+        .form-group input:focus, .form-group select:focus { border-color: var(--accent); outline: none; }
         .btn-submit {
             width: 100%;
             padding: 0.8rem;
@@ -768,69 +879,41 @@
             transition: var(--transition);
             margin-top: 0.8rem;
         }
-
-        .btn-submit:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
-        }
-
-        .switch-form {
-            text-align: center;
-            margin-top: 1rem;
-            font-size: 0.8rem;
-        }
-
-        .switch-form a {
-            color: var(--accent);
-            cursor: pointer;
-            text-decoration: none;
-            font-weight: 500;
-        }
+        .btn-submit:hover { background: var(--primary); transform: translateY(-2px); }
+        .switch-form { text-align: center; margin-top: 1rem; font-size: 0.8rem; }
+        .switch-form a { color: var(--accent); cursor: pointer; }
 
         /* Responsive */
         @media (max-width: 992px) {
             .nav-menu { gap: 1rem; }
             .nav-menu a { font-size: 0.85rem; }
-            .hero-content h1 { font-size: 2.2rem; }
-            .hero-content h1 .highlight { font-size: 2rem; }
         }
-
         @media (max-width: 768px) {
             .nav-menu { display: none; }
             .mobile-menu-btn { display: block; }
             .nav-container { padding: 0.7rem 1rem; }
             .logo { font-size: 1.3rem; }
-            .logo i { font-size: 1.5rem; }
-            .theme-toggle, .lang-toggle, .portal-btn { padding: 0.3rem 0.7rem; font-size: 0.75rem; }
-            
             .hero-content { padding: 1.5rem; margin: 0 4%; }
             .hero-content h1 { font-size: 1.8rem; }
             .hero-content h1 .highlight { font-size: 1.6rem; }
-            .hero-content p { font-size: 0.85rem; }
-            
             .stats-container { flex-wrap: wrap; }
             .stat-card { min-width: calc(50% - 0.5rem); flex: none; }
-            
             .hero-buttons { flex-direction: column; }
             .btn { text-align: center; justify-content: center; }
-            
+            .slider-container { height: 350px; }
+            .slide-content h3 { font-size: 1.3rem; }
+            .slider-btn { width: 35px; height: 35px; font-size: 1rem; }
+            .news-grid { grid-template-columns: 1fr; }
             .features-grid { grid-template-columns: 1fr; }
             .stats-grid { grid-template-columns: 1fr; }
-            
-            .section-title { font-size: 1.6rem; }
-            
             .footer-content { grid-template-columns: 1fr; text-align: center; }
             .footer-section p { justify-content: center; }
             .social-links { justify-content: center; }
-            
-            .role-buttons { flex-direction: column; }
         }
-
         @media (max-width: 480px) {
-            .stat-card { min-width: 100%; }
-            .hero-content h1 { font-size: 1.5rem; }
-            .hero-content h1 .highlight { font-size: 1.3rem; }
-            .stat-number { font-size: 1.5rem; }
+            .slider-container { height: 300px; }
+            .slide-content { padding: 1rem; }
+            .slide-content h3 { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -842,7 +925,6 @@
                 <i class="fas fa-recycle"></i>
                 <span>Zan<span>Ewaste</span></span>
             </div>
-            
             <div class="nav-menu">
                 <a href="index.html" class="active sw">Nyumbani</a><a href="index.html" class="active en">Home</a>
                 <a href="about.html" class="sw">Kuhusu</a><a href="about.html" class="en">About</a>
@@ -853,7 +935,6 @@
                 <a href="founder.html" class="sw">Founder</a><a href="founder.html" class="en">Founder</a>
                 <a href="partners.html" class="sw">Washirika</a><a href="partners.html" class="en">Partners</a>
             </div>
-            
             <div class="nav-controls">
                 <button class="theme-toggle" id="themeToggle"><i class="fas fa-moon"></i></button>
                 <button class="lang-toggle" id="langToggle"><span class="lang-sw">SW</span> | <span class="lang-en">EN</span></button>
@@ -863,7 +944,6 @@
         </div>
     </nav>
 
-    <!-- Mobile Navigation Menu -->
     <div class="mobile-nav" id="mobileNav">
         <a href="index.html" class="active sw">Nyumbani</a><a href="index.html" class="active en">Home</a>
         <a href="about.html" class="sw">Kuhusu</a><a href="about.html" class="en">About</a>
@@ -905,7 +985,7 @@
                     <div class="form-group"><label class="sw">Thibitisha Nywila</label><label class="en">Confirm Password</label><input type="password" id="regConfirmPassword" required></div>
                     <div class="form-group" id="technicianFields" style="display: none;">
                         <label class="sw">Eneo la Utaalam</label><label class="en">Specialization</label>
-                        <select id="regSpecialization"><option value="Laptop Repair">Laptop Repair</option><option value="Mobile Phone Repair">Mobile Phone Repair</option><option value="Printer Repair">Printer Repair</option><option value="TV/Monitor Repair">TV/Monitor Repair</option><option value="Battery Recycling">Battery Recycling</option></select>
+                        <select id="regSpecialization"><option>Laptop Repair</option><option>Mobile Phone Repair</option><option>Printer Repair</option><option>TV/Monitor Repair</option><option>Battery Recycling</option></select>
                     </div>
                     <button type="submit" class="btn-submit"><span class="sw">Jisajili</span><span class="en">Register</span></button>
                 </form>
@@ -937,44 +1017,80 @@
         </div>
     </section>
 
+    <!-- News Section (Kiswahili Tu - Hugeuwi) -->
+    <section class="news-section">
+        <h2 class="section-title">Habari na Matukio</h2>
+        
+        <!-- News Slider -->
+        <div class="news-slider">
+            <div class="slider-container" id="sliderContainer">
+                <div class="slider-slide active" style="background-image: linear-gradient(to top, rgba(0,0,0,0.7), transparent), url('https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=800')">
+                    <div class="slide-content">
+                        <h3>Ukusanyaji Taka Stone Town</h3>
+                        <p>Zaidi ya kilo 500 za taka zimekusanywa katika mradi wa ukusanyaji Stone Town.</p>
+                        <button class="slide-btn" onclick="openNewsModal(0)">Soma Zaidi</button>
+                    </div>
+                </div>
+                <div class="slider-slide" style="background-image: linear-gradient(to top, rgba(0,0,0,0.7), transparent), url('https://images.unsplash.com/photo-1558008258-3256797b43f3?w=800')">
+                    <div class="slide-content">
+                        <h3>Warsha za Mazingira Nungwi</h3>
+                        <p>Watu 200+ walihudhuria warsha za kuelimisha jamii kuhusu uchakataji taka.</p>
+                        <button class="slide-btn" onclick="openNewsModal(1)">Soma Zaidi</button>
+                    </div>
+                </div>
+                <div class="slider-slide" style="background-image: linear-gradient(to top, rgba(0,0,0,0.7), transparent), url('https://images.unsplash.com/photo-1574180045827-681f8a1a9622?w=800')">
+                    <div class="slide-content">
+                        <h3>Kituo cha Uchakataji Pemba</h3>
+                        <p>Ujenzi wa kituo cha kisasa cha kuchakata taka Pemba unaendelea kwa kasi.</p>
+                        <button class="slide-btn" onclick="openNewsModal(2)">Soma Zaidi</button>
+                    </div>
+                </div>
+                <div class="slider-slide" style="background-image: linear-gradient(to top, rgba(0,0,0,0.7), transparent), url('https://images.unsplash.com/photo-1588072432836-e100327ed50e?w=800')">
+                    <div class="slide-content">
+                        <h3>Mpango wa Shule za Msingi</h3>
+                        <p>Kuelimisha wanafunzi kuhusu umuhimu wa kuchakata taka za kielektroniki.</p>
+                        <button class="slide-btn" onclick="openNewsModal(3)">Soma Zaidi</button>
+                    </div>
+                </div>
+                <button class="slider-btn slider-prev" id="sliderPrev"><i class="fas fa-chevron-left"></i></button>
+                <button class="slider-btn slider-next" id="sliderNext"><i class="fas fa-chevron-right"></i></button>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
+        </div>
+
+        <!-- News Grid -->
+        <div class="news-grid" id="newsGrid"></div>
+    </section>
+
+    <!-- News Modal (Kiswahili Tu) -->
+    <div class="news-modal" id="newsModal">
+        <div class="modal-news-content">
+            <span class="modal-close" onclick="closeNewsModal()">&times;</span>
+            <img class="modal-news-image" id="modalNewsImage" src="" alt="">
+            <h3 class="modal-news-title" id="modalNewsTitle"></h3>
+            <div class="modal-news-date"><i class="fas fa-calendar-alt"></i> <span id="modalNewsDate"></span></div>
+            <div id="modalNewsFullContent"></div>
+        </div>
+    </div>
+
     <!-- Features Section -->
     <section class="features">
         <h2 class="section-title"><span class="sw">Kwa Nini Tuchague?</span><span class="en">Why Choose Us?</span></h2>
         <div class="features-grid">
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="100">
-                <i class="fas fa-leaf"></i><h3><span class="sw">Rafiki wa Mazingira</span><span class="en">Eco-Friendly</span></h3>
-                <p class="sw">Tunachakata taka kwa njia rafiki kwa mazingira na kuzuia uchafuzi.</p><p class="en">We recycle waste in an environmentally friendly way.</p>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="200">
-                <i class="fas fa-clock"></i><h3><span class="sw">Huduma ya Haraka</span><span class="en">Fast Service</span></h3>
-                <p class="sw">Tunachukua taka ndani ya siku 2-3 baada ya kuripoti.</p><p class="en">We collect waste within 2-3 days after reporting.</p>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="300">
-                <i class="fas fa-money-bill-wave"></i><h3><span class="sw">Bei ya Haki</span><span class="en">Fair Prices</span></h3>
-                <p class="sw">Tunatoa bei nzuri kwa vifaa vinavyoweza kutumika tena.</p><p class="en">We offer good prices for reusable devices.</p>
-            </div>
-            <div class="feature-card" data-aos="fade-up" data-aos-delay="400">
-                <i class="fas fa-map-marker-alt"></i><h3><span class="sw">Maeneo Yote Zanzibar</span><span class="en">All Zanzibar Areas</span></h3>
-                <p class="sw">Tunafanya kazi Unguja na Pemba, wilaya zote na shehia 50+.</p><p class="en">We operate in Unguja and Pemba, all districts and 50+ wards.</p>
-            </div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="100"><i class="fas fa-leaf"></i><h3><span class="sw">Rafiki wa Mazingira</span><span class="en">Eco-Friendly</span></h3><p class="sw">Tunachakata taka kwa njia rafiki kwa mazingira.</p><p class="en">We recycle waste in an environmentally friendly way.</p></div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="200"><i class="fas fa-clock"></i><h3><span class="sw">Huduma ya Haraka</span><span class="en">Fast Service</span></h3><p class="sw">Tunachukua taka ndani ya siku 2-3 baada ya kuripoti.</p><p class="en">We collect waste within 2-3 days after reporting.</p></div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="300"><i class="fas fa-money-bill-wave"></i><h3><span class="sw">Bei ya Haki</span><span class="en">Fair Prices</span></h3><p class="sw">Tunatoa bei nzuri kwa vifaa vinavyoweza kutumika tena.</p><p class="en">We offer good prices for reusable devices.</p></div>
+            <div class="feature-card" data-aos="fade-up" data-aos-delay="400"><i class="fas fa-map-marker-alt"></i><h3><span class="sw">Maeneo Yote Zanzibar</span><span class="en">All Zanzibar Areas</span></h3><p class="sw">Tunafanya kazi Unguja na Pemba, wilaya zote.</p><p class="en">We operate in Unguja and Pemba, all districts.</p></div>
         </div>
     </section>
 
     <!-- Quick Stats -->
     <section class="quick-stats">
         <div class="stats-grid">
-            <div class="stat-item" data-aos="zoom-in" data-aos-delay="100">
-                <i class="fas fa-recycle"></i><div class="stat-info"><h3 data-target="5000">0</h3><p class="sw">CO2 Kuokolewa (kg)</p><p class="en">CO2 Saved (kg)</p></div>
-            </div>
-            <div class="stat-item" data-aos="zoom-in" data-aos-delay="200">
-                <i class="fas fa-tree"></i><div class="stat-info"><h3 data-target="150">0</h3><p class="sw">Miti Kuokolewa</p><p class="en">Trees Saved</p></div>
-            </div>
-            <div class="stat-item" data-aos="zoom-in" data-aos-delay="300">
-                <i class="fas fa-users"></i><div class="stat-info"><h3 data-target="1200">0</h3><p class="sw">Wateja</p><p class="en">Customers</p></div>
-            </div>
-            <div class="stat-item" data-aos="zoom-in" data-aos-delay="400">
-                <i class="fas fa-battery-full"></i><div class="stat-info"><h3 data-target="3000">0</h3><p class="sw">Betri Zilizochakatwa</p><p class="en">Batteries Recycled</p></div>
-            </div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="100"><i class="fas fa-recycle"></i><div class="stat-info"><h3 data-target="5000">0</h3><p class="sw">CO2 Kuokolewa (kg)</p><p class="en">CO2 Saved (kg)</p></div></div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="200"><i class="fas fa-tree"></i><div class="stat-info"><h3 data-target="150">0</h3><p class="sw">Miti Kuokolewa</p><p class="en">Trees Saved</p></div></div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="300"><i class="fas fa-users"></i><div class="stat-info"><h3 data-target="1200">0</h3><p class="sw">Wateja</p><p class="en">Customers</p></div></div>
+            <div class="stat-item" data-aos="zoom-in" data-aos-delay="400"><i class="fas fa-battery-full"></i><div class="stat-info"><h3 data-target="3000">0</h3><p class="sw">Betri Zilizochakatwa</p><p class="en">Batteries Recycled</p></div></div>
         </div>
     </section>
 
@@ -993,46 +1109,19 @@
     <!-- Footer -->
     <footer>
         <div class="footer-content">
-            <div class="footer-section">
-                <div class="footer-logo"><i class="fas fa-recycle"></i><span>Zan<span>Ewaste</span></span></div>
-                <p class="sw">Mfumo wa kwanza wa kidijitali wa usimamizi wa taka za kielektroniki Zanzibar.</p>
-                <p class="en">First digital e-waste management system in Zanzibar.</p>
-            </div>
-            <div class="footer-section">
-                <h4 class="sw">Viungo vya Haraka</h4><h4 class="en">Quick Links</h4>
-                <ul><li><a href="index.html" class="sw">Nyumbani</a><a href="index.html" class="en">Home</a></li>
-                <li><a href="about.html" class="sw">Kuhusu</a><a href="about.html" class="en">About</a></li>
-                <li><a href="projects.html" class="sw">Miradi</a><a href="projects.html" class="en">Projects</a></li>
-                <li><a href="contact.html" class="sw">Mawasiliano</a><a href="contact.html" class="en">Contact</a></li></ul>
-            </div>
-            <div class="footer-section">
-                <h4 class="sw">Taarifa za Mawasiliano</h4><h4 class="en">Contact Info</h4>
-                <p><i class="fas fa-envelope"></i> sonibrahimdigtech@gmail.com</p>
-                <p><i class="fas fa-phone-alt"></i> +255 775 05 780</p>
-                <p><i class="fab fa-whatsapp"></i> +255 775 05 780</p>
-                <p><i class="fab fa-instagram"></i> zan.ewaste</p>
-            </div>
-            <div class="footer-section">
-                <h4 class="sw">Tufuate</h4><h4 class="en">Follow Us</h4>
-                <div class="social-links">
-                    <a href="https://www.instagram.com/zan.ewaste" target="_blank"><i class="fab fa-instagram"></i></a>
-                    <a href="https://web.facebook.com/zanewaste" target="_blank"><i class="fab fa-facebook"></i></a>
-                    <a href="https://twitter.com/zanewaste" target="_blank"><i class="fab fa-twitter"></i></a>
-                    <a href="https://wa.me/255775057780" target="_blank"><i class="fab fa-whatsapp"></i></a>
-                    <a href="https://www.linkedin.com/company/zanewaste" target="_blank"><i class="fab fa-linkedin"></i></a>
-                </div>
-            </div>
+            <div class="footer-section"><div class="footer-logo"><i class="fas fa-recycle"></i><span>Zan<span>Ewaste</span></span></div><p class="sw">Mfumo wa kwanza wa kidijitali wa usimamizi wa taka za kielektroniki Zanzibar.</p><p class="en">First digital e-waste management system in Zanzibar.</p></div>
+            <div class="footer-section"><h4 class="sw">Viungo vya Haraka</h4><h4 class="en">Quick Links</h4><ul><li><a href="index.html" class="sw">Nyumbani</a><a href="index.html" class="en">Home</a></li><li><a href="about.html" class="sw">Kuhusu</a><a href="about.html" class="en">About</a></li><li><a href="projects.html" class="sw">Miradi</a><a href="projects.html" class="en">Projects</a></li><li><a href="contact.html" class="sw">Mawasiliano</a><a href="contact.html" class="en">Contact</a></li><li><a href="admin/login.html" class="sw">Ingia (Admin)</a><a href="admin/login.html" class="en">Login (Admin)</a></li></ul></div>
+            <div class="footer-section"><h4 class="sw">Taarifa za Mawasiliano</h4><h4 class="en">Contact Info</h4><p><i class="fas fa-envelope"></i> sonibrahimdigtech@gmail.com</p><p><i class="fas fa-phone-alt"></i> +255 775 05 780</p><p><i class="fab fa-whatsapp"></i> +255 775 05 780</p><p><i class="fab fa-instagram"></i> zan.ewaste</p></div>
+            <div class="footer-section"><h4 class="sw">Tufuate</h4><h4 class="en">Follow Us</h4><div class="social-links"><a href="https://www.instagram.com/zan.ewaste" target="_blank"><i class="fab fa-instagram"></i></a><a href="https://web.facebook.com/zanewaste" target="_blank"><i class="fab fa-facebook"></i></a><a href="https://twitter.com/zanewaste" target="_blank"><i class="fab fa-twitter"></i></a><a href="https://wa.me/255775057780" target="_blank"><i class="fab fa-whatsapp"></i></a><a href="https://www.linkedin.com/company/zanewaste" target="_blank"><i class="fab fa-linkedin"></i></a></div></div>
         </div>
-        <div class="footer-bottom">
-            <p>© 2026 <strong>SonDigital</strong> | <span class="sw">Haki zote zimehifadhiwa</span><span class="en">All rights reserved</span></p>
-        </div>
+        <div class="footer-bottom"><p>© 2026 <strong>SonDigital</strong> | <span class="sw">Haki zote zimehifadhiwa</span><span class="en">All rights reserved</span></p></div>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
         AOS.init({ duration: 800, once: true, offset: 80, easing: 'ease-in-out' });
 
-        // ===== THEME TOGGLE =====
+        // Theme Toggle
         const themeToggle = document.getElementById('themeToggle');
         const html = document.documentElement;
         const savedTheme = localStorage.getItem('theme') || 'light';
@@ -1045,7 +1134,7 @@
             themeToggle.innerHTML = newTheme === 'light' ? '<i class="fas fa-moon"></i>' : '<i class="fas fa-sun"></i>';
         });
 
-        // ===== LANGUAGE TOGGLE =====
+        // Language Toggle
         const langToggle = document.getElementById('langToggle');
         const savedLang = localStorage.getItem('language') || 'sw';
         html.setAttribute('data-lang', savedLang);
@@ -1055,7 +1144,7 @@
             localStorage.setItem('language', newLang);
         });
 
-        // ===== MOBILE MENU =====
+        // Mobile Menu
         const mobileMenuBtn = document.getElementById('mobileMenuBtn');
         const mobileNav = document.getElementById('mobileNav');
         mobileMenuBtn.addEventListener('click', () => {
@@ -1067,17 +1156,90 @@
             link.addEventListener('click', () => { mobileNav.classList.remove('show'); mobileMenuBtn.querySelector('i').className = 'fas fa-bars'; });
         });
 
-        // ===== PORTAL MODAL =====
+        // ===== NEWS DATA (Kiswahili tu) =====
+        const newsData = [
+            { id: 1, title: 'Ukusanyaji Taka Stone Town', date: '2026-03-15', image: 'https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?w=400', excerpt: 'Zaidi ya kilo 500 za taka zimekusanywa katika mradi wa ukusanyaji Stone Town.', fullContent: 'Mradi wa ukusanyaji taka Stone Town uliofanyika kwa ushirikiano na wakazi na wafanyabiashara umefanikiwa kukusanya zaidi ya kilo 500 za taka za kielektroniki. Washiriki 20 walihusika katika ukusanyaji huu na jamii ilielimishwa kuhusu umuhimu wa kuchakata taka. Tunashukuru kwa ushirikiano wote.' },
+            { id: 2, title: 'Warsha za Mazingira Nungwi', date: '2026-03-10', image: 'https://images.unsplash.com/photo-1558008258-3256797b43f3?w=400', excerpt: 'Watu 200+ walihudhuria warsha za kuelimisha jamii kuhusu uchakataji taka.', fullContent: 'Warsha za mazingira zilizofanyika Nungwi zilihudhuriwa na zaidi ya watu 200. Washiriki walijifunza namna bora ya kutenganisha na kuchakata taka za kielektroniki. Warsha hizi zitaendelea katika maeneo mengine ya Zanzibar.' },
+            { id: 3, title: 'Kituo cha Uchakataji Pemba', date: '2026-03-05', image: 'https://images.unsplash.com/photo-1574180045827-681f8a1a9622?w=400', excerpt: 'Ujenzi wa kituo cha kisasa cha kuchakata taka Pemba unaendelea kwa kasi.', fullContent: 'Ujenzi wa kituo cha kisasa cha kuchakata taka Pemba umefikia asilimia 65. Kituo kitasaidia kuchakata tani 10 za taka kwa mwezi na kuajiri vijana 15. Inatarajiwa kukamilika Juni 2026.' },
+            { id: 4, title: 'Mpango wa Shule za Msingi', date: '2026-02-28', image: 'https://images.unsplash.com/photo-1588072432836-e100327ed50e?w=400', excerpt: 'Kuelimisha wanafunzi kuhusu umuhimu wa kuchakata taka za kielektroniki.', fullContent: 'Mpango wa kuelimisha wanafunzi wa shule za msingi unaendelea vizuri. Shule 15 zimeshajumuika na zaidi ya wanafunzi 450 wamepatwa na elimu ya kuchakata taka. Tunatarajia kufikia shule 50 ifikapo mwisho wa mwaka.' },
+            { id: 5, title: 'Usafishaji Pwani Jambiani', date: '2026-02-20', image: 'https://images.unsplash.com/photo-1618477461853-cf6ed80faba5?w=400', excerpt: 'Washiriki 150 walikusanya taka zaidi ya kilo 300 kutoka pwani.', fullContent: 'Usafishaji wa pwani Jambiani uliofanyika kwa ushirikiano na wanajamii ulifanikiwa kukusanya zaidi ya kilo 300 za taka za kielektroniki na taka nyingine. Shukrani kwa washiriki wote.' },
+            { id: 6, title: 'Tuzo ya Mazingira', date: '2026-02-10', image: 'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=400', excerpt: 'ZanEwaste Hub imetunukiwa tuzo ya mazingira kwa mchango wake.', fullContent: 'ZanEwaste Hub imepokea tuzo ya kitaifa ya mazingira kwa mchango wake katika kukusanya na kuchakata taka za kielektroniki Zanzibar. Tunawashukuru wateja wetu wote na washirika kwa kuunga mkono juhudi hizi.' }
+        ];
+
+        function loadNewsGrid() {
+            const grid = document.getElementById('newsGrid');
+            grid.innerHTML = newsData.map(news => `
+                <div class="news-card">
+                    <div class="news-image"><img src="${news.image}" alt="${news.title}"></div>
+                    <div class="news-content">
+                        <div class="news-date"><i class="fas fa-calendar-alt"></i> ${news.date}</div>
+                        <h3 class="news-title">${news.title}</h3>
+                        <p class="news-excerpt">${news.excerpt}</p>
+                        <button class="read-more" onclick="openNewsModal(${news.id - 1})">Soma Zaidi <i class="fas fa-arrow-right"></i></button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function openNewsModal(index) {
+            const news = newsData[index];
+            document.getElementById('modalNewsImage').src = news.image;
+            document.getElementById('modalNewsTitle').textContent = news.title;
+            document.getElementById('modalNewsDate').textContent = news.date;
+            document.getElementById('modalNewsFullContent').innerHTML = `<p>${news.fullContent}</p>`;
+            document.getElementById('newsModal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeNewsModal() {
+            document.getElementById('newsModal').classList.remove('show');
+            document.body.style.overflow = '';
+        }
+
+        // News Slider
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slider-slide');
+        const dotsContainer = document.getElementById('sliderDots');
+        
+        function createDots() {
+            dotsContainer.innerHTML = '';
+            slides.forEach((_, i) => {
+                const dot = document.createElement('div');
+                dot.classList.add('dot');
+                if (i === currentSlide) dot.classList.add('active');
+                dot.addEventListener('click', () => goToSlide(i));
+                dotsContainer.appendChild(dot);
+            });
+        }
+        
+        function goToSlide(index) {
+            slides.forEach(slide => slide.classList.remove('active'));
+            slides[index].classList.add('active');
+            currentSlide = index;
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
+        }
+        
+        function nextSlide() { goToSlide((currentSlide + 1) % slides.length); }
+        function prevSlide() { goToSlide((currentSlide - 1 + slides.length) % slides.length); }
+        
+        document.getElementById('sliderNext')?.addEventListener('click', nextSlide);
+        document.getElementById('sliderPrev')?.addEventListener('click', prevSlide);
+        setInterval(nextSlide, 5000);
+        createDots();
+
+        // Portal Modal Functions
         const portalBtn = document.getElementById('portalBtn');
         const portalModal = document.getElementById('portalModal');
         const closeModalBtn = document.getElementById('closeModalBtn');
         let selectedRole = 'admin';
-
+        
         portalBtn.addEventListener('click', () => { portalModal.classList.add('show'); document.body.style.overflow = 'hidden'; });
-        function closeModal() { portalModal.classList.remove('show'); document.body.style.overflow = ''; }
-        closeModalBtn.addEventListener('click', closeModal);
-        portalModal.addEventListener('click', (e) => { if (e.target === portalModal) closeModal(); });
-
+        function closePortalModal() { portalModal.classList.remove('show'); document.body.style.overflow = ''; }
+        closeModalBtn.addEventListener('click', closePortalModal);
+        portalModal.addEventListener('click', (e) => { if (e.target === portalModal) closePortalModal(); });
+        
         document.querySelectorAll('.role-btn').forEach(btn => {
             btn.addEventListener('click', function() {
                 document.querySelectorAll('.role-btn').forEach(b => b.classList.remove('active'));
@@ -1086,15 +1248,14 @@
                 document.getElementById('technicianFields').style.display = selectedRole === 'technician' ? 'block' : 'none';
             });
         });
-
+        
         const loginForm = document.getElementById('loginForm');
         const registerForm = document.getElementById('registerForm');
-        document.getElementById('switchToRegister').addEventListener('click', () => { loginForm.classList.remove('active'); registerForm.classList.add('active'); });
-        document.getElementById('switchToRegisterEn').addEventListener('click', () => { loginForm.classList.remove('active'); registerForm.classList.add('active'); });
-        document.getElementById('switchToLogin').addEventListener('click', () => { registerForm.classList.remove('active'); loginForm.classList.add('active'); });
-        document.getElementById('switchToLoginEn').addEventListener('click', () => { registerForm.classList.remove('active'); loginForm.classList.add('active'); });
-
-        // DEMO LOGIN
+        document.getElementById('switchToRegister')?.addEventListener('click', () => { loginForm.classList.remove('active'); registerForm.classList.add('active'); });
+        document.getElementById('switchToRegisterEn')?.addEventListener('click', () => { loginForm.classList.remove('active'); registerForm.classList.add('active'); });
+        document.getElementById('switchToLogin')?.addEventListener('click', () => { registerForm.classList.remove('active'); loginForm.classList.add('active'); });
+        document.getElementById('switchToLoginEn')?.addEventListener('click', () => { registerForm.classList.remove('active'); loginForm.classList.add('active'); });
+        
         document.getElementById('portalLoginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
@@ -1112,7 +1273,7 @@
                 window.location.href = user.redirect;
             } else { alert('Invalid email or password!\n\nDemo:\nAdmin: admin@zanewaste.com / admin123\nAgent: agent@zanewaste.com / agent123\nTechnician: tech@example.com / tech123'); }
         });
-
+        
         document.getElementById('portalRegisterForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const password = document.getElementById('regPassword').value;
@@ -1123,7 +1284,7 @@
             loginForm.classList.add('active');
         });
 
-        // ===== STATS COUNTER =====
+        // Stats Counter
         const statNumbers = document.querySelectorAll('.stat-number');
         const observer = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
@@ -1136,7 +1297,7 @@
             });
         }, { threshold: 0.5 });
         statNumbers.forEach(stat => observer.observe(stat));
-
+        
         function animateNumber(element, start, end, duration) {
             let current = start;
             const increment = end > start ? 1 : -1;
@@ -1148,13 +1309,9 @@
             }, stepTime);
         }
 
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function(e) {
-                e.preventDefault();
-                const target = document.querySelector(this.getAttribute('href'));
-                if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            });
-        });
+        loadNewsGrid();
+        window.addEventListener('click', (e) => { if (e.target === document.getElementById('newsModal')) closeNewsModal(); });
+        document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeNewsModal(); closePortalModal(); } });
     </script>
 </body>
 </html>
